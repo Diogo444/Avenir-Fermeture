@@ -1,0 +1,48 @@
+:host {
+  width: 100%;
+}
+
+.clients-container {
+  padding: 24px 32px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.clients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.clients-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #1e293b; /* slate-800 */
+}
+
+.clients-header .search-bar {
+  /* Prend plus de place pour se centrer */
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+/* Cible le conteneur interne de mat-form-field pour arrondir les coins */
+.clients-header .search-bar .mdc-notched-outline > * {
+  border-radius: 9999px !important;
+}
+
+.client-list {
+  border: 1px solid #e2e8f0; /* slate-200 */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.client-list .mat-mdc-list-item {
+  border-bottom: 1px solid #e2e8f0; /* slate-200 */
+}
+
+.client-list .mat-mdc-list-item:last-child {
+  border-bottom: none;
+}
