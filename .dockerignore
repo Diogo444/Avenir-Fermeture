@@ -1,0 +1,25 @@
+# Node/Nx
+node_modules
+**/node_modules
+dist
+**/dist
+.nx
+**/.nx
+
+# VCS & IDE
+.git
+.gitignore
+.gitattributes
+.DS_Store
+.idea
+.vscode
+
+# Logs & temp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+tmp
+temp
+

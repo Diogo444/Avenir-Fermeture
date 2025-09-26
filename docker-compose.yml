@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: avenir_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Root_password
+      MYSQL_DATABASE: AvenirFermeture
+      MYSQL_USER: avenir
+      MYSQL_PASSWORD: GestionAvenir
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"  # optional: expose for local tools
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pexample_root_password"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: avenir_backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: app_user
+      DB_PASSWORD: app_password
+      DB_NAME: app_db
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/avenirFermeture/Dockerfile
+    container_name: avenir_frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
