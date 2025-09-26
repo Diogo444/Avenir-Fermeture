@@ -1,30 +1,29 @@
-# ---- Angular frontend build (Nx) ----
+# ---- Angular build (Nx) ----
 FROM node:20-alpine AS builder
 
 WORKDIR /workspace
 
-# Install workspace deps (includes dev deps for Angular build)
+# 1) Install deps
 COPY package*.json ./
 RUN npm ci
 
-# Copy minimal files needed for Nx/Angular build
-COPY nx.json ./
-COPY tsconfig.base.json ./
-COPY apps ./apps
+# 2) Copier le workspace (protégé par .dockerignore)
+COPY . .
 
-# Build Angular app in production mode
-RUN npx nx build avenirFermeture --configuration=production
+# 3) Build Angular en prod (sortie: dist/apps/avenirFermeture/browser)
+RUN npx nx build avenirFermeture -c production
 
-# ---- Nginx runtime image ----
-FROM nginx:1.27-alpine AS runner
+# ---- Nginx runtime ----
+FROM nginx:1.25-alpine AS runner
 
-# Nginx config with SPA fallback and /api proxy to backend service
+# Nginx conf: SPA + proxy /api -> backend
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built Angular assets
+# Assets Angular
 COPY --from=builder /workspace/dist/apps/avenirFermeture/browser /usr/share/nginx/html
 
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost/ >/dev/null 2>&1 || exit 1
-
+# Healthcheck HTTP simple via wget (alpine en a un)
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://localhost/ > /dev/null 2>&1 || exit 1

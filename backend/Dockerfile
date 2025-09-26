@@ -1,33 +1,41 @@
-# ---- NestJS backend build (Nx + Webpack) ----
+# ---- Build backend ----
 FROM node:20-alpine AS builder
 
 WORKDIR /workspace
 
-# Install workspace deps (includes dev deps for build tooling)
+# Installer les deps racine
 COPY package*.json ./
 RUN npm ci
 
-# Copy minimal files for backend build
-COPY nx.json ./
-COPY tsconfig.base.json ./
-COPY backend ./backend
+# Copier le workspace complet (protégé par .dockerignore)
+COPY . .
 
-# Build backend (outputs to dist/backend and generates minimal package.json)
-RUN cd backend && npx webpack-cli build --node-env=production
+# Build webpack via Nx (sortie: dist/backend)
+RUN npx nx build backend -c production
 
-# ---- Runtime image ----
+# ---- Runtime ----
 FROM node:20-alpine AS runner
 
 ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy compiled backend bundle and generated package files
+# Copier le package.json généré par Nx
+COPY --from=builder /workspace/dist/backend/package*.json ./
+
+# Installer uniquement les deps prod prunées
+RUN npm ci --omit=dev
+
+# Copier le code compilé backend
 COPY --from=builder /workspace/dist/backend ./
 
-# Install only production dependencies for the generated package.json
-RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev --no-audit --no-fund; fi
+# Hygiène: utilisateur non-root
+RUN addgroup -S nodegroup && adduser -S nodeuser -G nodegroup \
+  && chown -R nodeuser:nodegroup /app
+USER nodeuser
 
 EXPOSE 3000
 
-CMD ["node", "main.js"]
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://localhost:3000/health > /dev/null 2>&1 || exit 1
 
+CMD ["node", "main.js"]

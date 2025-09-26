@@ -1,12 +1,17 @@
-# Node/Nx
+# Node & Nx
 node_modules
 **/node_modules
 dist
 **/dist
 .nx
 **/.nx
+.angular
+.angular/*
+.cache
+tmp
+temp
 
-# VCS & IDE
+# IDE & VCS
 .git
 .gitignore
 .gitattributes
@@ -14,12 +19,9 @@ dist
 .idea
 .vscode
 
-# Logs & temp
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
-tmp
-temp
-
