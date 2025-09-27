@@ -1,0 +1,143 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.subvalue {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.meta {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Simple color accents */
+.primary { color: #1976d2; }
+.accent { color: #ff4081; }
+.warn { color: #d32f2f; }
+
+.warn-card .value { color: #d32f2f; }
+.treasury .value { color: #2e7d32; }
+
+/* Bloc 2 : Plans d’action */
+.plans-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.plan-card { padding: 12px 16px; }
+
+.section-title {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.plan-list { list-style: none; margin: 0; padding: 0; }
+.plan-item {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.plan-item:last-child { border-bottom: none; }
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #bdbdbd;
+}
+.dot.ok { background: #2e7d32; }
+.dot.ko { background: #d32f2f; }
+.dot.todo { background: #f9a825; }
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.status-ok { color: #2e7d32; background: rgba(46,125,50,0.08); border-color: rgba(46,125,50,0.25); }
+.status-ko { color: #d32f2f; background: rgba(211,47,47,0.08); border-color: rgba(211,47,47,0.25); }
+.status-todo { color: #f57f17; background: rgba(251,192,45,0.12); border-color: rgba(251,192,45,0.35); }
+
+/* Bloc 3 : Détail de la semaine */
+.details-section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.detail-card { padding: 12px 16px; }
+
+.compact-table { width: 100%; border-collapse: collapse; }
+.compact-table th, .compact-table td {
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.compact-table thead th { font-weight: 600; }
+
+/* Bloc 4 : Trésorerie */
+.treasury-section { margin-top: 20px; }
+.treasury-card { padding: 12px 16px; }
+.chart { width: 100%; height: 140px; }
+.chart svg { width: 100%; height: 100%; display: block; }
+.chart-legend { margin-top: 6px; display: flex; gap: 16px; font-size: 0.85rem; }
+.legend .line { display: inline-block; width: 16px; height: 2px; margin-right: 6px; vertical-align: middle; }
+.legend.real .line { background: #1976d2; }
+.legend.forecast .line { background: repeating-linear-gradient(90deg, #ff4081, #ff4081 8px, transparent 8px, transparent 16px); }
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .details-section { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 800px) {
+  .plans-section { grid-template-columns: 1fr; }
+  .details-section { grid-template-columns: 1fr; }
+}

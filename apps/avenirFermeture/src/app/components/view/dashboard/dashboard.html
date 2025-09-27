@@ -1,1 +1,220 @@
-<p>dashboard works!</p>
+<section class="dashboard-grid" aria-label="Aperçu des indicateurs clés">
+  <!-- Clients actifs -->
+  <mat-card class="stat-card">
+    <div class="card-header">
+      <mat-icon class="icon primary" aria-hidden="true">groups</mat-icon>
+      <div class="titles">
+        <div class="label">Clients actifs</div>
+        <div class="value" aria-label="Nombre de clients actifs">128</div>
+      </div>
+    </div>
+    <div class="meta">Dernier ajout: il y a 2 jours</div>
+  </mat-card>
+
+  <!-- Devis en attente de validation -->
+  <mat-card class="stat-card">
+    <div class="card-header">
+      <mat-icon class="icon accent" aria-hidden="true">assignment</mat-icon>
+      <div class="titles">
+        <div class="label">Devis en attente</div>
+        <div class="value" aria-label="Devis en attente de validation">14</div>
+      </div>
+    </div>
+    <div class="meta">Prioritaires: 3 à traiter</div>
+  </mat-card>
+
+  <!-- Commandes en cours -->
+  <mat-card class="stat-card">
+    <div class="card-header">
+      <mat-icon class="icon primary" aria-hidden="true">shopping_cart</mat-icon>
+      <div class="titles">
+        <div class="label">Commandes en cours</div>
+        <div class="value" aria-label="Nombre de commandes en cours">23</div>
+      </div>
+    </div>
+    <div class="meta">Livraison cette semaine: 6</div>
+  </mat-card>
+
+  <!-- Factures en retard de paiement -->
+  <mat-card class="stat-card warn-card">
+    <div class="card-header">
+      <mat-icon class="icon warn" aria-hidden="true">receipt_long</mat-icon>
+      <div class="titles">
+        <div class="label">Factures en retard</div>
+        <div class="value" aria-label="Factures en retard de paiement">5</div>
+      </div>
+    </div>
+    <div class="meta">Montant total: 3 240 €</div>
+  </mat-card>
+
+  <!-- Trésorerie actuelle -->
+  <mat-card class="stat-card treasury">
+    <div class="card-header">
+      <mat-icon class="icon accent" aria-hidden="true">account_balance_wallet</mat-icon>
+      <div class="titles">
+        <div class="label">Trésorerie actuelle</div>
+        <div class="value" aria-label="Solde disponible">42 500 €</div>
+        <div class="subvalue" aria-label="Prévisionnel">Prévisionnel: 57 300 €</div>
+      </div>
+    </div>
+    <div class="meta">Mise à jour: aujourd'hui 09:12</div>
+  </mat-card>
+</section>
+
+<!-- Bloc 2 : Plans d’action -->
+<section class="plans-section" aria-label="Plans d’action">
+  <mat-card class="plan-card">
+    <h3 class="section-title">Plan d’action de la semaine</h3>
+    <ul class="plan-list">
+      <li *ngFor="let item of weekActions" class="plan-item">
+        <span class="dot" [class.ok]="item.status==='done'" [class.ko]="item.status==='blocked'" [class.todo]="item.status==='todo'"></span>
+        <span class="text">{{ item.title }}</span>
+        <span class="status-badge" [class.status-ok]="item.status==='done'" [class.status-ko]="item.status==='blocked'" [class.status-todo]="item.status==='todo'">
+          {{ item.status === 'done' ? 'Fait' : item.status === 'blocked' ? 'Bloqué' : 'À faire' }}
+        </span>
+      </li>
+    </ul>
+  </mat-card>
+
+  <mat-card class="plan-card">
+    <h3 class="section-title">Plan d’action dépassé</h3>
+    <ul class="plan-list">
+      <li *ngFor="let item of overdueActions" class="plan-item">
+        <span class="dot" [class.ok]="item.status==='done'" [class.ko]="item.status==='blocked'" [class.todo]="item.status==='todo'"></span>
+        <span class="text">{{ item.title }}</span>
+        <span class="status-badge" [class.status-ok]="item.status==='done'" [class.status-ko]="item.status==='blocked'" [class.status-todo]="item.status==='todo'">
+          {{ item.status === 'done' ? 'Fait' : item.status === 'blocked' ? 'Bloqué' : 'À faire' }}
+        </span>
+      </li>
+    </ul>
+  </mat-card>
+
+  <mat-card class="plan-card">
+    <h3 class="section-title">Plan d’action de la semaine prochaine</h3>
+    <ul class="plan-list">
+      <li *ngFor="let item of nextWeekActions" class="plan-item">
+        <span class="dot" [class.ok]="item.status==='done'" [class.ko]="item.status==='blocked'" [class.todo]="item.status==='todo'"></span>
+        <span class="text">{{ item.title }}</span>
+        <span class="status-badge" [class.status-ok]="item.status==='done'" [class.status-ko]="item.status==='blocked'" [class.status-todo]="item.status==='todo'">
+          {{ item.status === 'done' ? 'Fait' : item.status === 'blocked' ? 'Bloqué' : 'À faire' }}
+        </span>
+      </li>
+    </ul>
+  </mat-card>
+</section>
+
+<!-- Bloc 3 : Détail de la semaine -->
+<section class="details-section" aria-label="Détail de la semaine">
+  <mat-card class="detail-card">
+    <h3 class="section-title">Acompte métrés</h3>
+    <table class="compact-table" aria-label="Acompte métrés">
+      <thead>
+        <tr><th>Client</th><th>Montant</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of acompteMetres">
+          <td>{{ r.client }}</td>
+          <td>{{ r.montant }}</td>
+          <td>
+            <span class="status-badge" [class.status-ok]="r.statut==='OK'" [class.status-ko]="r.statut==='KO'">{{ r.statut }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+  <mat-card class="detail-card">
+    <h3 class="section-title">Acompte livraisons</h3>
+    <table class="compact-table" aria-label="Acompte livraisons">
+      <thead>
+        <tr><th>Client</th><th>Montant</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of acompteLivraisons">
+          <td>{{ r.client }}</td>
+          <td>{{ r.montant }}</td>
+          <td>
+            <span class="status-badge" [class.status-ok]="r.statut==='OK'" [class.status-ko]="r.statut==='KO'">{{ r.statut }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+  <mat-card class="detail-card">
+    <h3 class="section-title">Soldes</h3>
+    <table class="compact-table" aria-label="Soldes">
+      <thead>
+        <tr><th>Client</th><th>Montant</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of soldes">
+          <td>{{ r.client }}</td>
+          <td>{{ r.montant }}</td>
+          <td>
+            <span class="status-badge" [class.status-ok]="r.statut==='OK'" [class.status-ko]="r.statut==='KO'">{{ r.statut }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+  <mat-card class="detail-card">
+    <h3 class="section-title">Livraisons fournisseurs</h3>
+    <table class="compact-table" aria-label="Livraisons fournisseurs">
+      <thead>
+        <tr><th>Fournisseur</th><th>Montant</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of livraisonsFournisseurs">
+          <td>{{ r.client }}</td>
+          <td>{{ r.montant }}</td>
+          <td>
+            <span class="status-badge" [class.status-ok]="r.statut==='OK'" [class.status-ko]="r.statut==='KO'">{{ r.statut }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+</section>
+
+<!-- Bloc 4 : Trésorerie & Paiements -->
+<section class="treasury-section" aria-label="Trésorerie & Paiements">
+  <mat-card class="treasury-card">
+    <h3 class="section-title">Trésorerie (réel vs prévisionnel)</h3>
+    <!-- Mini-graphique SVG statique (données factices) -->
+    <div class="chart">
+      <svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-label="Graphique de trésorerie">
+        <defs>
+          <linearGradient id="realFill" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#1976d2" stop-opacity="0.25" />
+            <stop offset="100%" stop-color="#1976d2" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <!-- Axes simplifiés -->
+        <line x1="0" y1="59" x2="100" y2="59" stroke="#e0e0e0" stroke-width="0.5"/>
+        <!-- Réel -->
+        <polyline points="0,45 20,42 40,44 60,38 80,42 100,35" fill="none" stroke="#1976d2" stroke-width="1.5" />
+        <!-- Prévisionnel -->
+        <polyline points="0,47 20,41 40,40 60,34 80,30 100,26" fill="none" stroke="#ff4081" stroke-width="1.5" stroke-dasharray="2 2"/>
+      </svg>
+      <div class="chart-legend">
+        <span class="legend real"><span class="line"></span>Réel</span>
+        <span class="legend forecast"><span class="line"></span>Prévisionnel</span>
+      </div>
+    </div>
+
+    <table class="compact-table" aria-label="Synthèse Trésorerie & Paiements">
+      <thead>
+        <tr><th>Catégorie</th><th>Effectué</th><th>Prévisionnel</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of treasurySummary">
+          <td>{{ r.categorie }}</td>
+          <td>{{ r.effectue }}</td>
+          <td>{{ r.previsionnel }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+</section>
