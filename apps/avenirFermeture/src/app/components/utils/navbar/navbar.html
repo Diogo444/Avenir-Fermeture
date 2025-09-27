@@ -1,21 +1,33 @@
 <nav class="sidebar" aria-label="Navigation principale">
   <ul class="nav-list">
-    <li class="nav-item" tabindex="0">
-      <mat-icon aria-hidden="true" fontIcon="dashboard"></mat-icon>
-      <span class="label">Tableau de bord / Dashboard</span>
-    </li>
-    <li class="nav-item" tabindex="0">
-      <mat-icon aria-hidden="true" fontIcon="person"></mat-icon>
-      <span class="label">Page Clients</span>
-    </li>
-    <li class="nav-item" tabindex="0">
-      <mat-icon aria-hidden="true" fontIcon="handshake"></mat-icon>
-      <span class="label">Page Commercial</span>
-    </li>
-    <li class="nav-item" tabindex="0">
-      <mat-icon aria-hidden="true" fontIcon="attach_money"></mat-icon>
-      <span class="label">Page Comptabilité</span>
-    </li>
+    <a routerLink="/">
+
+      <li class="nav-item" tabindex="0">
+        <mat-icon aria-hidden="true" fontIcon="dashboard"></mat-icon>
+        <span class="label">Tableau de bord / Dashboard</span>
+      </li>
+    </a>
+    <a routerLink="/clients">
+
+      <li class="nav-item" tabindex="0">
+        <mat-icon aria-hidden="true" fontIcon="person"></mat-icon>
+        <span class="label">Page Clients</span>
+      </li>
+    </a>
+    <a routerLink="/commercial">
+
+      <li class="nav-item" tabindex="0">
+        <mat-icon aria-hidden="true" fontIcon="handshake"></mat-icon>
+        <span class="label">Page Commercial</span>
+      </li>
+    </a>
+    <a href="/comptabilite">
+
+      <li class="nav-item" tabindex="0">
+        <mat-icon aria-hidden="true" fontIcon="attach_money"></mat-icon>
+        <span class="label">Page Comptabilité</span>
+      </li>
+    </a>
 
   </ul>
 </nav>

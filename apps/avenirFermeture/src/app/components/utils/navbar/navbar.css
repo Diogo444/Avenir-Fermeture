@@ -10,6 +10,10 @@
   padding: 16px 12px;
   box-sizing: border-box;
 }
+a{
+  text-decoration: none;
+  color: inherit;
+}
 
 .nav-list {
   list-style: none;
