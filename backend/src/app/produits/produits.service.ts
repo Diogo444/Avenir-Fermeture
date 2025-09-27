@@ -9,4 +9,12 @@ export class ProduitsService {
     @InjectRepository(Produit)
     private readonly produitRepository: Repository<Produit>,
   ) {}
+
+  async findAll(): Promise<Produit[]> {
+    return this.produitRepository.find();
+  }
+
+  async create(produit: Produit): Promise<Produit> {
+    return this.produitRepository.save(produit);
+  }
 }
