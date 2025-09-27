@@ -2,7 +2,7 @@ services:
   db:
     image: mysql:8.0
     container_name: avenir_mysql
-    restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: Root_password
       MYSQL_DATABASE: AvenirFermeture
@@ -12,56 +12,6 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"  # dev uniquement
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pRoot_password"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
-
-  backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    container_name: avenir_backend
-    environment:
-      NODE_ENV: production
-      PORT: 3000
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_USER: avenir
-      DB_PASSWORD: GestionAvenir
-      DB_NAME: AvenirFermeture
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health > /dev/null 2>&1 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 6
-      start_period: 20s
-
-  frontend:
-    build:
-      context: .
-      dockerfile: apps/avenirFermeture/Dockerfile
-    container_name: avenir_frontend
-    depends_on:
-      backend:
-        condition: service_healthy
-    ports:
-      - "8080:80"
-    restart: unless-stopped
-    # (optionnel) healthcheck si tu veux aussi l’avoir côté Compose
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost/ > /dev/null 2>&1 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 6
-      start_period: 10s
 
 volumes:
   mysql_data:
