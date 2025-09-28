@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { Api } from '../../../services/api/api';
+import { number_client } from '../../../models/number_clients.model';
 
 
 @Component({
@@ -12,7 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard {
+export class Dashboard implements OnInit{
+  client_number: number_client | null = null;
+  private readonly api = inject(Api)
+
   // Plans d'action
   weekActions = [
     { title: 'Relancer devis #D-203', status: 'todo' },
@@ -60,4 +65,16 @@ export class Dashboard {
     { categorie: 'Récurrent', effectue: '3 100 €', previsionnel: '3 100 €' },
     { categorie: 'Occasionnel', effectue: '1 450 €', previsionnel: '2 300 €' },
   ];
+
+  ngOnInit(): void {
+      this.api.getNumberClients().subscribe({
+        next: (data) => {
+          this.client_number = data;
+          console.log(data);
+        },
+        error: (error) => {
+          console.error('Error fetching client number:', error);
+        }
+      });
+  }
 }

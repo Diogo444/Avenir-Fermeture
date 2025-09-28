@@ -12,25 +12,8 @@
   </header>
 
   <mat-list class="client-list" role="list">
-    <mat-list-item role="listitem">Dupont Jean</mat-list-item>
-    <mat-list-item role="listitem">Martin Claire</mat-list-item>
-    <mat-list-item role="listitem">Bernard Louis</mat-list-item>
-    <mat-list-item role="listitem">Petit Sophie</mat-list-item>
-    <mat-list-item role="listitem">Robert Julien</mat-list-item>
-    <mat-list-item role="listitem">Richard Emma</mat-list-item>
-    <mat-list-item role="listitem">Durand Paul</mat-list-item>
-    <mat-list-item role="listitem">Moreau Camille</mat-list-item>
-    <mat-list-item role="listitem">Laurent Nicolas</mat-list-item>
-    <mat-list-item role="listitem">Simon Alice</mat-list-item>
-    <mat-list-item role="listitem">Michel Antoine</mat-list-item>
-    <mat-list-item role="listitem">Lefebvre Julie</mat-list-item>
-    <mat-list-item role="listitem">Mercier Hugo</mat-list-item>
-    <mat-list-item role="listitem">Garcia Elise</mat-list-item>
-    <mat-list-item role="listitem">David Lucas</mat-list-item>
-    <mat-list-item role="listitem">Roux Sarah</mat-list-item>
-    <mat-list-item role="listitem">Vincent Thomas</mat-list-item>
-    <mat-list-item role="listitem">Fournier Eva</mat-list-item>
-    <mat-list-item role="listitem">Girard Adrien</mat-list-item>
-    <mat-list-item role="listitem">Andre Chloé</mat-list-item>
+    <mat-list-item *ngFor="let client of client" role="listitem" class="client-item">
+      {{ client.lastName}} - {{ client.firstName }} - {{ client.email }}
+    </mat-list-item>
   </mat-list>
 </div>
