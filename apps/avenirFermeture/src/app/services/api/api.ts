@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Client } from '../../models/clients.model';
+import { Client, Produit } from '../../models/clients.model';
 import { NumberClients } from '../../models/number_clients.model';
 
 @Injectable({
@@ -17,6 +17,14 @@ export class Api {
 
   getNumberClients() {
     return this.http.get<NumberClients>(`${this.apiurl}/dashboard/number_clients`);
+  }
+
+  getProduits() {
+    return this.http.get<Produit[]>(`${this.apiurl}/produits`);
+  }
+
+  ajoutProduit(produit: Produit) {
+    return this.http.post<Produit>(`${this.apiurl}/produits`, produit);
   }
 
 }
