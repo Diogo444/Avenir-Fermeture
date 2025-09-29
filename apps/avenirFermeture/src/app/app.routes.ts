@@ -21,5 +21,9 @@ export const appRoutes: Route[] = [
   {
     path: 'dev-ajout-produit',
     loadComponent: () => import('./components/view/ajoutProduit/ajoutProduit').then(m => m.AjoutProduit),
+  },
+  {
+    path: 'cree-client',
+    loadComponent: () => import('./components/view/addClient/addClient').then(m => m.AddClient),
   }
 ];

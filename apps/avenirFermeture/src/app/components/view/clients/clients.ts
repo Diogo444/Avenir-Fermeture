@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { Api } from '../../../services/api/api';
 import { CommonModule } from '@angular/common';
 import { Client } from '../../../models/clients.model';
+import { Router } from '@angular/router';
 
 
 
@@ -24,11 +25,16 @@ export class Clients implements OnInit {
 
 
   private readonly api = inject(Api)
+  private readonly router = inject(Router)
 
   ngOnInit(): void {
       this.api.getClients().subscribe((data) => {
         this.client = data;
       });
+  }
+
+  addClient(){
+    this.router.navigate(['/cree-client']);
   }
 
 }
