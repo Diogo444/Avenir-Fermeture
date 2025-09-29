@@ -78,7 +78,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant acompte métré</mat-label>
-              <input matInput type="number" formControlName="montant_acompte_metre" required>
+              <input matInput type="number" formControlName="montant_acompte_metre" min="0" required>
               <span matSuffix>€</span>
               <mat-error *ngIf="clientForm.get('montant_acompte_metre')?.hasError('required')">
                 Le montant est requis
@@ -90,7 +90,7 @@
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
-              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_metre" required>
+              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_metre" min="0" required>
               <mat-error *ngIf="clientForm.get('semaine_evoi_demande_acompte_metre')?.hasError('required')">
                 La semaine est requise
               </mat-error>
@@ -123,7 +123,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant acompte livraison</mat-label>
-              <input matInput type="number" formControlName="montant_acompte_livraison" required>
+              <input matInput type="number" formControlName="montant_acompte_livraison" min="0" required>
               <span matSuffix>€</span>
               <mat-error *ngIf="clientForm.get('montant_acompte_livraison')?.hasError('required')">
                 Le montant est requis
@@ -135,7 +135,7 @@
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
-              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_livraison" required>
+              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_livraison" min="0" required>
               <mat-error *ngIf="clientForm.get('semaine_evoi_demande_acompte_livraison')?.hasError('required')">
                 La semaine est requise
               </mat-error>
@@ -168,7 +168,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant solde</mat-label>
-              <input matInput type="number" formControlName="montant_solde" required>
+              <input matInput type="number" formControlName="montant_solde" min="0" required>
               <span matSuffix>€</span>
               <mat-error *ngIf="clientForm.get('montant_solde')?.hasError('required')">
                 Le montant est requis
@@ -180,7 +180,7 @@
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande solde</mat-label>
-              <input matInput type="number" formControlName="semain_evoi_demande_solde" required>
+              <input matInput type="number" formControlName="semain_evoi_demande_solde" min="0" required>
               <mat-error *ngIf="clientForm.get('semain_evoi_demande_solde')?.hasError('required')">
                 La semaine est requise
               </mat-error>
@@ -213,12 +213,12 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine livraison souhaitée</mat-label>
-              <input matInput type="number" formControlName="semain_livraison_souhaite">
+              <input matInput type="number" formControlName="semain_livraison_souhaite" min="0">
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Livraison limite</mat-label>
-              <input matInput type="number" formControlName="livraison_limite" required>
+              <input matInput type="number" formControlName="livraison_limite" min="0" required>
               <mat-error *ngIf="clientForm.get('livraison_limite')?.hasError('required')">
                 La limite est requise
               </mat-error>
