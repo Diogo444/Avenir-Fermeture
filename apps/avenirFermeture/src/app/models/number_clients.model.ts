@@ -1,3 +1,3 @@
-export interface number_client {
-  number_clients: number
+export interface NumberClients {
+  number_client: number
 }

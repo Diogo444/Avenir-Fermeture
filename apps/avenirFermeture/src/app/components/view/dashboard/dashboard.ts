@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { Api } from '../../../services/api/api';
-import { number_client } from '../../../models/number_clients.model';
+import { NumberClients } from '../../../models/number_clients.model';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { number_client } from '../../../models/number_clients.model';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit{
-  client_number: number_client | null = null;
+  client_number: NumberClients | null = null;
   private readonly api = inject(Api)
 
   // Plans d'action

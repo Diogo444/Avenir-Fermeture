@@ -18,4 +18,8 @@ export const appRoutes: Route[] = [
     path: 'comptabilite',
     loadComponent: () => import('./components/view/comptabilite/comptabilite').then(m => m.Comptabilite),
   },
+  {
+    path: 'dev-ajout-produit',
+    loadComponent: () => import('./components/view/ajoutProduit/ajoutProduit').then(m => m.AjoutProduit),
+  }
 ];

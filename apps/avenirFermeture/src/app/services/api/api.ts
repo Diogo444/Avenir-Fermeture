@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Client } from '../../models/clients.model';
-import { number_client } from '../../models/number_clients.model';
+import { NumberClients } from '../../models/number_clients.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class Api {
   }
 
   getNumberClients() {
-    return this.http.get<number_client>(`${this.apiurl}/dashboard/number_clients`);
+    return this.http.get<NumberClients>(`${this.apiurl}/dashboard/number_clients`);
   }
 
 }
