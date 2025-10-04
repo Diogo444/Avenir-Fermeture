@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Client, Produit } from '../../models/clients.model';
+import { CreateClientDto } from '../../models/create-client.dto';
 import { NumberClients } from '../../models/number_clients.model';
 
 @Injectable({
@@ -25,6 +26,10 @@ export class Api {
 
   ajoutProduit(produit: Produit) {
     return this.http.post<Produit>(`${this.apiurl}/produits`, produit);
+  }
+
+  createClient(client: CreateClientDto) {
+    return this.http.post<Client>(`${this.apiurl}/clients`, client);
   }
 
 }

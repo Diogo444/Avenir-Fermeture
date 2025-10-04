@@ -8,28 +8,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
-
-export interface CreateClientDto {
-  lastName: string;
-  firstName: string;
-  email: string;
-  phone?: string | null;
-  produitIds?: number[];
-  montant_acompte_metre: number;
-  semaine_evoi_demande_acompte_metre: number;
-  etat_paiement_acompte_metre?: boolean;
-  note_acompte_metre?: string | null;
-  montant_acompte_livraison: number;
-  semaine_evoi_demande_acompte_livraison: number;
-  etat_paiement_acompte_livraison?: boolean;
-  note_acompte_livraison?: string | null;
-  montant_solde: number;
-  semain_evoi_demande_solde: number;
-  etat_paiement_solde?: boolean;
-  note_solde?: string | null;
-  semain_livraison_souhaite?: number | null;
-  livraison_limite: number;
-}
+import { Api } from '../../../services/api/api';
+import { Router } from '@angular/router';
+import { CreateClientDto } from '../../../models/create-client.dto';
+import { Produit } from '../../../models/clients.model';
 
 @Component({
   selector: 'app-add-client',
@@ -50,18 +32,14 @@ export interface CreateClientDto {
 export class AddClient implements OnInit {
   clientForm!: FormGroup;
   private fb = inject(FormBuilder);
+  private api = inject(Api);
+  private router = inject(Router);
 
-  // Liste des produits (à adapter selon vos données)
-  produits = [
-    { id: 1, name: 'Fenêtre PVC' },
-    { id: 2, name: 'Porte d\'entrée' },
-    { id: 3, name: 'Volet roulant' },
-    { id: 4, name: 'Porte-fenêtre' },
-    { id: 5, name: 'Fenêtre aluminium' }
-  ];
+  produits: Produit[] = [];
 
   ngOnInit(): void {
     this.initializeForm();
+    this.loadProduits();
   }
 
   initializeForm(): void {
@@ -92,7 +70,15 @@ export class AddClient implements OnInit {
     if (this.clientForm.valid) {
       const formData: CreateClientDto = this.clientForm.value;
       console.log('Données du formulaire:', formData);
-      // Ici vous pouvez appeler votre service pour envoyer les données
+      this.api.createClient(formData).subscribe({
+        next: () => {
+          console.log('Client créé avec succès');
+          this.router.navigate(['/clients']);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la création du client', err);
+        }
+      });
     } else {
       console.log('Formulaire invalide');
       this.markFormGroupTouched();
@@ -112,4 +98,16 @@ export class AddClient implements OnInit {
     this.clientForm.reset();
     this.initializeForm();
   }
+
+  private loadProduits(): void {
+    this.api.getProduits().subscribe({
+      next: (produits) => {
+        this.produits = produits;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des produits', err);
+      }
+    });
+  }
 }
+

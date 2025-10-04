@@ -60,7 +60,7 @@
               <mat-label>Produits</mat-label>
               <mat-select formControlName="produitIds" multiple>
                 <mat-option *ngFor="let produit of produits" [value]="produit.id">
-                  {{produit.name}}
+                  {{produit.nom}}
                 </mat-option>
               </mat-select>
               <mat-icon matSuffix>category</mat-icon>
