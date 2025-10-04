@@ -2,7 +2,6 @@ services:
   db:
     image: mysql:8.0
     container_name: avenir_mysql
-
     environment:
       MYSQL_ROOT_PASSWORD: Root_password
       MYSQL_DATABASE: AvenirFermeture
@@ -12,6 +11,41 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"  # dev uniquement
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: avenir
+      DB_PASS: GestionAvenir
+      DB_NAME: AvenirFermeture
+      DB_SYNC: "true"         # auto-create schema (disable in prod if using migrations)
+      TYPEORM_LOGGING: "false"
+      CORS_ORIGIN: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/avenirFermeture/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
 
 volumes:
   mysql_data:

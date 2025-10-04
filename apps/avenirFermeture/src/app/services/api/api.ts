@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Client, Produit } from '../../models/clients.model';
 import { CreateClientDto } from '../../models/create-client.dto';
 import { NumberClients } from '../../models/number_clients.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Api {
-  apiurl = 'http://localhost:3000/api';
+  apiurl = environment.apiUrl;
 
   private readonly http = inject(HttpClient);
 

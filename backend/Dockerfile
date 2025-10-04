@@ -10,7 +10,7 @@ RUN npm ci
 # Copier le workspace complet (protégé par .dockerignore)
 COPY . .
 
-# Build webpack via Nx (sortie: dist/backend)
+# Build webpack via Nx (sortie: dist/backend) et générer lock pruné
 RUN npx nx build backend -c production
 
 # ---- Runtime ----
@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=builder /workspace/dist/backend/package*.json ./
 
 # Installer uniquement les deps prod prunées
-RUN npm ci --omit=dev
+RUN npm install --omit=dev --no-audit --no-fund
 
 # Copier le code compilé backend
 COPY --from=builder /workspace/dist/backend ./
@@ -36,6 +36,6 @@ USER nodeuser
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-  CMD wget -qO- http://localhost:3000/health > /dev/null 2>&1 || exit 1
+  CMD wget -qO- http://localhost:3000/api > /dev/null 2>&1 || exit 1
 
 CMD ["node", "main.js"]
