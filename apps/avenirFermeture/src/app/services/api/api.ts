@@ -30,7 +30,8 @@ export class Api {
   }
 
   createClient(client: CreateClientDto) {
-    return this.http.post<Client>(`${this.apiurl}/clients`, client);
+    return this.http.post<Client>(`${this.apiurl}/clients/create`, client);
   }
+
 
 }

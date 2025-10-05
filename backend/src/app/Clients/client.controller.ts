@@ -12,7 +12,7 @@ export class ClientController {
     return this.clientService.findAll();
   }
 
-  @Post()
+  @Post('create')
   async create(@Body() createClientDto: CreateClientDto) {
     return this.clientService.create(createClientDto);
   }
