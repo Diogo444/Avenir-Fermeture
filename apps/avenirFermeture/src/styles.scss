@@ -41,3 +41,6 @@ body {
   overflow: hidden; /* Empêche le défilement sur le body */
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Styles for intl-tel-input flags and layout
+@import "intl-tel-input/build/css/intlTelInput.css";

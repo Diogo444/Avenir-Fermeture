@@ -19,6 +19,11 @@
           {
             "glob": "**/*",
             "input": "apps/avenirFermeture/public"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/intl-tel-input/build/img",
+            "output": "assets/intl-tel-input/img"
           }
         ],
         "styles": ["apps/avenirFermeture/src/styles.scss"]

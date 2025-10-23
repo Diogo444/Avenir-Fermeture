@@ -12,9 +12,11 @@ import { Api } from '../../../services/api/api';
 import { Router } from '@angular/router';
 import { CreateClientDto } from '../../../models/create-client.dto';
 import { Produit } from '../../../models/clients.model';
+import { NgxIntlTelInputModule, CountryISO, ChangeData } from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-add-client',
+  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -24,7 +26,8 @@ import { Produit } from '../../../models/clients.model';
     MatCheckboxModule,
     MatCardModule,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxIntlTelInputModule,
   ],
   templateUrl: './addClient.html',
   styleUrl: './addClient.css',
@@ -36,6 +39,8 @@ export class AddClient implements OnInit {
   private router = inject(Router);
 
   produits: Produit[] = [];
+  // Expose enums to the template
+  readonly CountryISO = CountryISO;
 
   ngOnInit(): void {
     this.initializeForm();
@@ -68,7 +73,14 @@ export class AddClient implements OnInit {
 
   onSubmit(): void {
     if (this.clientForm.valid) {
-      const formData: CreateClientDto = this.clientForm.value;
+      const formData: CreateClientDto = { ...this.clientForm.value } as CreateClientDto;
+      const phoneValue = this.clientForm.get('phone')?.value as string | ChangeData | null;
+      if (phoneValue && typeof phoneValue === 'object') {
+        const cd = phoneValue as ChangeData;
+        formData.phone = cd.e164Number ?? cd.internationalNumber ?? cd.number ?? null;
+      } else if (typeof phoneValue === 'string') {
+        formData.phone = phoneValue || null;
+      }
       console.log('Données du formulaire:', formData);
       this.api.createClient(formData).subscribe({
         next: () => {
@@ -110,4 +122,3 @@ export class AddClient implements OnInit {
     });
   }
 }
-

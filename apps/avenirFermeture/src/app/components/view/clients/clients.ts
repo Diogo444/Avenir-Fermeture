@@ -11,6 +11,9 @@ import { Api } from '../../../services/api/api';
 import { CommonModule } from '@angular/common';
 import { Client } from '../../../models/clients.model';
 import { Router } from '@angular/router';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 
 
 
@@ -18,7 +21,17 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clients',
-  imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatListModule, CommonModule, MatTableModule],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
+    CommonModule,
+    MatTableModule,
+    ReactiveFormsModule,
+    NgxIntlTelInputModule,
+  ],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
 })
@@ -33,6 +46,20 @@ export class Clients implements OnInit {
       this.api.getClients().subscribe((data) => {
         this.client = data;
       });
+
+
+  }
+
+  parseNumber(phoneNumber: string): string {
+    // Example: parse and format using google-libphonenumber
+      const phoneUtil = PhoneNumberUtil.getInstance();
+      try {
+        const parsed = phoneUtil.parse(phoneNumber, 'FR');
+        return phoneUtil.format(parsed, PhoneNumberFormat.INTERNATIONAL);
+      } catch (e) {
+        console.error('Invalid phone number', e);
+        return phoneNumber;
+      }
   }
 
   addClient(){
