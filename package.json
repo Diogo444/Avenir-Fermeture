@@ -2,7 +2,17 @@
   "name": "@avenir-fermeture/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "g": "nx g --",
+    "ngc": "nx g @nx/angular:component --project=avenirFermeture --",
+    "ngs": "nx g @nx/angular:service --project=avenirFermeture --",
+    "ngm": "nx g @nx/angular:module --project=avenirFermeture --",
+    "ngp": "nx g @nx/angular:page --project=avenirFermeture --",
+    "nc": "nx g @nx/nest:controller --project=backend --",
+    "ns": "nx g @nx/nest:service --project=backend --",
+    "nm": "nx g @nx/nest:module --project=backend --",
+    "nr": "nx g @nx/nest:resource --project=backend --"
+  },
   "private": true,
   "dependencies": {
     "@angular/cdk": "^20.2.5",
