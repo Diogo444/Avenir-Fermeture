@@ -46,3 +46,13 @@
 .client-list .mat-mdc-list-item:last-child {
   border-bottom: none;
 }
+
+
+
+/* Applique l'effet hover uniquement sur les lignes de données */
+.mat-row:hover,
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 255, 0.044); /* slate-100 */
+  transition: 30ms;
+  cursor: pointer;
+}
