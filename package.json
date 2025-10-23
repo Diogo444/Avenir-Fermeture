@@ -7,7 +7,7 @@
     "ngc": "nx g @nx/angular:component --project=avenirFermeture --",
     "ngs": "nx g @nx/angular:service --project=avenirFermeture --",
     "ngm": "nx g @nx/angular:module --project=avenirFermeture --",
-    "ngp": "nx g @nx/angular:page --project=avenirFermeture --",
+    "ngp": "nx g @nx/angular:component --project=avenirFermeture --",
     "nc": "nx g @nx/nest:controller --project=backend --",
     "ns": "nx g @nx/nest:service --project=backend --",
     "nm": "nx g @nx/nest:module --project=backend --",

@@ -70,6 +70,42 @@ Si vous préférez développer sans Docker (front et back lancés dans votre mac
 - Voir les cibles du projet front : `npx nx show project avenirFermeture`
 - Voir les cibles du projet back : `npx nx show project backend`
 
+## Génération de code (raccourcis)
+Pour éviter de taper des commandes Nx longues, des alias npm sont disponibles (voir `package.json`). Tout ce qui suit `--` est passé tel quel au générateur Nx.
+
+- Angular (projet `avenirFermeture`)
+  - `npm run ngc -- <chemin/nom>` → composant (`@nx/angular:component`)
+  - `npm run ngs -- <chemin/nom>` → service (`@nx/angular:service`)
+  - `npm run ngm -- <chemin/nom>` → module (`@nx/angular:module`)
+  - `npm run ngp -- <chemin/nom>` → alias de `ngc` pour vos pages (composants de vue)
+
+- Nest (projet `backend`)
+  - `npm run nc -- <nom>` → controller (`@nx/nest:controller`)
+  - `npm run ns -- <nom>` → service (`@nx/nest:service`)
+  - `npm run nm -- <nom>` → module (`@nx/nest:module`)
+  - `npm run nr -- <nom>` → resource (module + controller + service) (`@nx/nest:resource`)
+
+- Générique
+  - `npm run g -- <generator> <name>` → passe-plat vers `nx g` (ex: `npm run g -- @nx/angular:directive shared/trackBy`)
+
+Exemples rapides
+- `npm run ngc -- components/utils/navbar/navbar`
+- `npm run ngs -- services/api/api`
+- `npm run nc -- factures`
+- `npm run nr -- produits`
+
+Notes
+- Defaults des générateurs configurés dans `nx.json` → `generators` (ex.: style des composants Angular). Adaptez selon vos préférences.
+- Sous PowerShell, vous pouvez ajouter des fonctions pour encore raccourcir (optionnel):
+  - `function ngc { param($n) npm run ngc -- $n }`
+  - `function ngs { param($n) npm run ngs -- $n }`
+  - `function ngm { param($n) npm run ngm -- $n }`
+  - `function ngp { param($n) npm run ngp -- $n }`
+  - `function nc  { param($n) npm run nc  -- $n }`
+  - `function ns  { param($n) npm run ns  -- $n }`
+  - `function nm  { param($n) npm run nm  -- $n }`
+  - `function nr  { param($n) npm run nr  -- $n }`
+
 ## Architecture du projet
 - `apps/avenirFermeture` : application Angular 20 (standalone components)
   - `src/app/app.routes.ts` : définition des routes
@@ -187,4 +223,3 @@ TYPEORM_LOGGING=true
 ---
 
 Pour toute question ou amélioration (tests, données de démo/seed, CI/CD), n’hésitez pas à ouvrir une issue ou à proposer une PR.
-
