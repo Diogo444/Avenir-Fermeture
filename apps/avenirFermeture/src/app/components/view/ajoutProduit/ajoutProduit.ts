@@ -7,6 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 import { Api } from '../../../services/api/api';
 import { Produit } from './dto/produit.model';
 import { CommonModule } from '@angular/common';
+import { Commercial } from './dto/commercial.model';
 
 
 @Component({
@@ -18,14 +19,25 @@ import { CommonModule } from '@angular/common';
 export class AjoutProduit implements OnInit {
   produitName = '';
   produits: Produit[] = [];
+  commercial: Commercial[] = [];
+
+  commercialLastName = '';
+  commercialFirstName = '';
 
   private readonly api = inject(Api);
 
-  onSubmit() {
+  onSubmitProduit() {
     this.api.ajoutProduit({ nom: this.produitName } as Produit).subscribe(() => {
       this.getProduit();
     });
     this.produitName = '';
+  }
+  onSubmitCommercial() {
+    this.api.createCommercial({ firstName: this.commercialFirstName, lastName: this.commercialLastName } as Commercial).subscribe(() => {
+      this.getCommercial();
+    });
+    this.commercialFirstName = '';
+    this.commercialLastName = '';
   }
 
   getProduit(){
@@ -33,9 +45,15 @@ export class AjoutProduit implements OnInit {
         this.produits = produits;
       });
   }
+  getCommercial(){
+    this.api.getCommercials().subscribe((commercials) => {
+        this.commercial = commercials;
+      });
+  }
 
   ngOnInit(): void {
       this.getProduit();
+      this.getCommercial();
   }
 
 }

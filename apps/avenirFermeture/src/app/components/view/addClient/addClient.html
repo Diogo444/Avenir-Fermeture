@@ -32,9 +32,11 @@
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Prénom</mat-label>
               <input matInput formControlName="firstName" required>
-              <mat-error *ngIf="clientForm.get('firstName')?.hasError('required')">
-                Le prénom est requis
-              </mat-error>
+              @if(clientForm.get('firstName')?.hasError('required')) {
+                <mat-error>
+                  Le prénom est requis
+                </mat-error>
+              }
             </mat-form-field>
           </div>
 
@@ -43,19 +45,25 @@
               <mat-label>Email</mat-label>
               <input matInput type="email" formControlName="email" required>
               <mat-icon matSuffix>email</mat-icon>
-              <mat-error *ngIf="clientForm.get('email')?.hasError('required')">
-                L'email est requis
-              </mat-error>
-              <mat-error *ngIf="clientForm.get('email')?.hasError('email')">
-                Format d'email invalide
-              </mat-error>
+              @if(clientForm.get('email')?.hasError('required')) {
+                <mat-error>
+                  L'email est requis
+                </mat-error>
+              }
+              @if(clientForm.get('email')?.hasError('email')) {
+                <mat-error>
+                  Format d'email invalide
+                </mat-error>
+              }
             </mat-form-field>
 
             <div class="form-field">
               <label class="mat-label" for="phoneInput">Téléphone</label>
-              <div class="mat-like-field" [class.ng-invalid]="clientForm.get('phone')?.invalid" [class.ng-touched]="clientForm.get('phone')?.touched">
+              <div class="mat-like-field"
+                   [class.ng-invalid]="clientForm.get('phone')?.invalid"
+                   [class.ng-touched]="clientForm.get('phone')?.touched">
                 <ngx-intl-tel-input
-                  [cssClass]="'custom-intl-input mat-mdc-input-element'"
+                  [cssClass]="'custom-intl-input'"
                   [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
                   [enablePlaceholder]="true"
                   [searchCountryFlag]="true"
@@ -63,11 +71,17 @@
                   [separateDialCode]="true"
                   [phoneValidation]="true"
                   [selectedCountryISO]="CountryISO.France"
+                  [maxLength]="15"
                   name="phone"
                   [inputId]="'phoneInput'"
                   formControlName="phone">
                 </ngx-intl-tel-input>
               </div>
+              @if(clientForm.get('phone')?.invalid && clientForm.get('phone')?.touched) {
+                <span class="phone-error">
+                  Le numéro de téléphone n'est pas valide
+                </span>
+              }
             </div>
 
           </div>
@@ -76,9 +90,11 @@
             <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Produits</mat-label>
               <mat-select formControlName="produitIds" multiple>
-                <mat-option *ngFor="let produit of produits" [value]="produit.id">
-                  {{produit.nom}}
-                </mat-option>
+                @for(produit of produits; track produit.id) {
+                  <mat-option [value]="produit.id">
+                    {{produit.nom}}
+                  </mat-option>
+                }
               </mat-select>
               <mat-icon matSuffix>category</mat-icon>
             </mat-form-field>
@@ -97,20 +113,26 @@
               <mat-label>Montant acompte métré</mat-label>
               <input matInput type="number" formControlName="montant_acompte_metre" min="0" required>
               <span matSuffix>€</span>
-              <mat-error *ngIf="clientForm.get('montant_acompte_metre')?.hasError('required')">
-                Le montant est requis
-              </mat-error>
-              <mat-error *ngIf="clientForm.get('montant_acompte_metre')?.hasError('min')">
-                Le montant doit être positif
-              </mat-error>
+              @if(clientForm.get('montant_acompte_metre')?.hasError('required')) {
+                <mat-error>
+                  Le montant est requis
+                </mat-error>
+              }
+              @if(clientForm.get('montant_acompte_metre')?.hasError('min')) {
+                <mat-error>
+                  Le montant doit être positif
+                </mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
               <input matInput type="number" formControlName="semaine_evoi_demande_acompte_metre" min="0" required>
-              <mat-error *ngIf="clientForm.get('semaine_evoi_demande_acompte_metre')?.hasError('required')">
-                La semaine est requise
-              </mat-error>
+              @if(clientForm.get('semaine_evoi_demande_acompte_metre')?.hasError('required')) {
+                <mat-error>
+                  La semaine est requise
+                </mat-error>
+              }
             </mat-form-field>
           </div>
 
@@ -142,20 +164,26 @@
               <mat-label>Montant acompte livraison</mat-label>
               <input matInput type="number" formControlName="montant_acompte_livraison" min="0" required>
               <span matSuffix>€</span>
-              <mat-error *ngIf="clientForm.get('montant_acompte_livraison')?.hasError('required')">
-                Le montant est requis
-              </mat-error>
-              <mat-error *ngIf="clientForm.get('montant_acompte_livraison')?.hasError('min')">
-                Le montant doit être positif
-              </mat-error>
+              @if(clientForm.get('montant_acompte_livraison')?.hasError('required')) {
+                <mat-error>
+                  Le montant est requis
+                </mat-error>
+              }
+              @if(clientForm.get('montant_acompte_livraison')?.hasError('min')) {
+                <mat-error>
+                  Le montant doit être positif
+                </mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
               <input matInput type="number" formControlName="semaine_evoi_demande_acompte_livraison" min="0" required>
-              <mat-error *ngIf="clientForm.get('semaine_evoi_demande_acompte_livraison')?.hasError('required')">
-                La semaine est requise
-              </mat-error>
+              @if(clientForm.get('semaine_evoi_demande_acompte_livraison')?.hasError('required')) {
+                <mat-error>
+                  La semaine est requise
+                </mat-error>
+              }
             </mat-form-field>
           </div>
 
@@ -187,20 +215,26 @@
               <mat-label>Montant solde</mat-label>
               <input matInput type="number" formControlName="montant_solde" min="0" required>
               <span matSuffix>€</span>
-              <mat-error *ngIf="clientForm.get('montant_solde')?.hasError('required')">
-                Le montant est requis
-              </mat-error>
-              <mat-error *ngIf="clientForm.get('montant_solde')?.hasError('min')">
-                Le montant doit être positif
-              </mat-error>
+              @if(clientForm.get('montant_solde')?.hasError('required')) {
+                <mat-error>
+                  Le montant est requis
+                </mat-error>
+              }
+              @if(clientForm.get('montant_solde')?.hasError('min')) {
+                <mat-error>
+                  Le montant doit être positif
+                </mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande solde</mat-label>
               <input matInput type="number" formControlName="semain_evoi_demande_solde" min="0" required>
-              <mat-error *ngIf="clientForm.get('semain_evoi_demande_solde')?.hasError('required')">
-                La semaine est requise
-              </mat-error>
+              @if(clientForm.get('semain_evoi_demande_solde')?.hasError('required')) {
+                <mat-error>
+                  La semaine est requise
+                </mat-error>
+              }
             </mat-form-field>
           </div>
 
@@ -236,12 +270,16 @@
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Livraison limite</mat-label>
               <input matInput type="number" formControlName="livraison_limite" min="0" required>
-              <mat-error *ngIf="clientForm.get('livraison_limite')?.hasError('required')">
-                La limite est requise
-              </mat-error>
-              <mat-error *ngIf="clientForm.get('livraison_limite')?.hasError('min')">
-                La valeur doit être positive
-              </mat-error>
+              @if(clientForm.get('livraison_limite')?.hasError('required')) {
+                <mat-error>
+                  La limite est requise
+                </mat-error>
+              }
+              @if(clientForm.get('livraison_limite')?.hasError('min')) {
+                <mat-error>
+                  La valeur doit être positive
+                </mat-error>
+              }
             </mat-form-field>
           </div>
         </div>

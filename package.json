@@ -8,10 +8,10 @@
     "ngs": "nx g @nx/angular:service --project=avenirFermeture --",
     "ngm": "nx g @nx/angular:module --project=avenirFermeture --",
     "ngp": "nx g @nx/angular:component --project=avenirFermeture --",
-    "nc": "nx g @nx/nest:controller --project=backend --",
-    "ns": "nx g @nx/nest:service --project=backend --",
-    "nm": "nx g @nx/nest:module --project=backend --",
-    "nr": "nx g @nx/nest:resource --project=backend --"
+    "nc": "nx g @nx/nest:controller",
+    "ns": "nx g @nx/nest:service",
+    "nm": "nx g @nx/nest:module",
+    "nr": "nx g @nx/nest:resource"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +26,7 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/typeorm": "^11.0.0",
     "axios": "^1.6.0",

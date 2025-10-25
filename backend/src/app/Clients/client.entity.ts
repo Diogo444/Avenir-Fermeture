@@ -9,11 +9,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Produit } from '../produits/produits.entity';
+import { Commercial } from '../commercial/entities/commercial.entity';
 
 @Entity({ name: 'clients' })
 export class Client {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ unique: true })
+  code_client!: string;
 
   @Column({ length: 150 })
   lastName!: string;
@@ -28,6 +32,9 @@ export class Client {
   @Column({ length: 20, nullable: true })
   phone!: string | null;
 
+  @Column()
+  city: string;
+
   @ManyToMany(() => Produit, (produit) => produit.clients, {
     cascade: ['insert', 'update'],
   })
@@ -37,6 +44,16 @@ export class Client {
     inverseJoinColumn: { name: 'produit_id', referencedColumnName: 'id' },
   })
   produits!: Produit[];
+
+  @ManyToMany(() => Commercial, (commercial) => commercial.clients, {
+    cascade: ['insert', 'update'],
+  })
+  @JoinTable({
+    name: 'clients_commercials',
+    joinColumn: { name: 'client_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'commercial_id', referencedColumnName: 'id' },
+  })
+  commerciaux!: Commercial[];
 
   @Column({ type: 'float' })
   montant_acompte_metre!: number;

@@ -1,13 +1,12 @@
 <mat-card>
-
   <mat-card-header>
     <mat-card-title>Ajouter un produit</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmitProduit()">
       <mat-form-field appearance="fill">
         <mat-label>Nom du produit</mat-label>
-        <input matInput [(ngModel)]="produitName" name="productName" required>
+        <input matInput [(ngModel)]="produitName" name="productName" required />
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit">Ajouter</button>
     </form>
@@ -22,6 +21,50 @@
   <mat-card-content>
     <ul>
       <li *ngFor="let produit of produits">{{ produit.nom }}</li>
+    </ul>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Ajouter un commercial</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="onSubmitCommercial()">
+      <mat-form-field appearance="fill">
+        <mat-label>Nom du commercial</mat-label>
+        <input
+          matInput
+          [(ngModel)]="commercialLastName"
+          name="commercialLastName"
+          required
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Prénom du commercial</mat-label>
+        <input
+          matInput
+          [(ngModel)]="commercialFirstName"
+          name="commercialFirstName"
+          required
+        />
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Ajouter</button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Liste des produits existants -->
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Commercial existant</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      @for (commercial of commercial; track $index) {
+
+        <li>{{ commercial.lastName }} - {{ commercial.firstName }}</li>
+      }
     </ul>
   </mat-card-content>
 </mat-card>

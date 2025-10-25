@@ -1,9 +1,12 @@
 export interface CreateClientDto {
+  code_client: string;
   lastName: string;
   firstName: string;
   email: string;
   phone?: string | null;
+  city: string;
   produitIds?: number[];
+  commercialIds?: number[];
   montant_acompte_metre: number;
   semaine_evoi_demande_acompte_metre: number;
   etat_paiement_acompte_metre?: boolean;
@@ -19,4 +22,3 @@ export interface CreateClientDto {
   semain_livraison_souhaite?: number | null;
   livraison_limite: number;
 }
-

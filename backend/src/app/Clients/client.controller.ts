@@ -1,4 +1,4 @@
-﻿import { Body, Controller, Get, Post } from '@nestjs/common';
+﻿import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 
@@ -15,6 +15,12 @@ export class ClientController {
   @Post('create')
   async create(@Body() createClientDto: CreateClientDto) {
     return this.clientService.create(createClientDto);
+  }
+
+  // delete client by id
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return this.clientService.delete(id);
   }
 }
 
