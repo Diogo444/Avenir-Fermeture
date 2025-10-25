@@ -87,6 +87,44 @@
           </div>
 
           <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Code Client</mat-label>
+              <input matInput formControlName="codeClient" required>
+              @if(clientForm.get('codeClient')?.hasError('required')) {
+                <mat-error>
+                  Le code client est requis
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Ville</mat-label>
+              <input matInput formControlName="city" required>
+              @if(clientForm.get('city')?.hasError('required')) {
+                <mat-error>
+                  La ville est requise
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Commercial</mat-label>
+              <mat-select formControlName="commercial">
+                @for(commercial of commercials; track commercial.id) {
+                  <mat-option [value]="commercial.id">
+                    {{commercial.lastName}} - {{commercial.firstName}}
+                  </mat-option>
+                }
+              </mat-select>
+              @if(clientForm.get('commercial')?.hasError('required')) {
+                <mat-error>
+                  Le commercial est requis
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Produits</mat-label>
               <mat-select formControlName="produitIds" multiple>

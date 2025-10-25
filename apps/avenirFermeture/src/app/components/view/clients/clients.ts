@@ -37,7 +37,7 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 })
 export class Clients implements OnInit {
   client: Client[] = [];
-  displayedColumns: string[] = ['lastName', 'firstName', 'email', 'phone'];
+  displayedColumns: string[] = ['lastName', 'firstName', 'email', 'phone', 'city', 'commercial', 'action'];
 
   private readonly api = inject(Api)
   private readonly router = inject(Router)
@@ -65,5 +65,12 @@ export class Clients implements OnInit {
   addClient(){
     this.router.navigate(['/cree-client']);
   }
+
+deleteClient(id: number){
+  console.log(id);
+  this.api.deleteClient(id).subscribe(() => {
+    this.client = this.client.filter(c => c.id !== id);
+  });
+}
 
 }

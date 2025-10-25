@@ -41,5 +41,9 @@ export class Api {
     return this.http.get<Commercial[]>(`${this.apiurl}/commercial`);
   }
 
+  deleteClient(id: number) {
+    return this.http.delete(`${this.apiurl}/clients/${id}`);
+  }
+
 
 }
