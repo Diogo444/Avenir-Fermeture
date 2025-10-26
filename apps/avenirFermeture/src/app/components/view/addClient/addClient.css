@@ -504,3 +504,14 @@ textarea.mat-input-element {
 .form-field .mat-form-field-label {
   font-weight: 500;
 }
+
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: white;
+}
+
+mat-card-header{
+  position: relative;
+}

@@ -181,4 +181,8 @@ export class AddClient implements OnInit {
       }
     });
   }
+
+  onClose(): void {
+    this.router.navigate(['/clients']);
+  }
 }

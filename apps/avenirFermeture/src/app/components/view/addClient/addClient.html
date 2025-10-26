@@ -5,10 +5,14 @@
         <mat-icon>person_add</mat-icon>
         Ajouter un nouveau client
       </mat-card-title>
+      <button mat-icon-button class="close-btn" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+      </button>
     </mat-card-header>
 
     <mat-card-content>
-      <form *ngIf="clientForm" [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="client-form">
+      @if (clientForm) {
+        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="client-form">
 
         <!-- Section Informations personnelles -->
         <div class="form-section">
@@ -335,6 +339,7 @@
           </button>
         </div>
       </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>
