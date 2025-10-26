@@ -46,6 +46,11 @@ DELETE {{baseUrl}}/clients/9
 
 
 ###
+# Get a client by code
+GET {{baseUrl}}/clients/one-client/CLT-0001
+
+
+###
 # Get all products
 GET {{baseUrl}}/produits
 

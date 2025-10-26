@@ -72,7 +72,7 @@ export class Clients implements OnInit {
   }
 
   onClientClick(client: Client){
-    console.log(`${client.firstName} ${client.lastName}, le code client est ${client.code_client}`);
+    this.router.navigate([`/one-client/${client.code_client}`]);
   }
 
   deleteClient(id: number){

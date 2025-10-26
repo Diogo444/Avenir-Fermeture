@@ -45,5 +45,9 @@ export class Api {
     return this.http.delete(`${this.apiurl}/clients/${id}`);
   }
 
+  getClientByCode(codeClient: string) {
+    return this.http.get<Client>(`${this.apiurl}/clients/one-client/${codeClient}`);
+  }
+
 
 }

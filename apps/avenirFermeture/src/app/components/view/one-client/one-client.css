@@ -1,0 +1,389 @@
+/* Container principal */
+.client-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+}
+
+.loading-container p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Error state */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  text-align: center;
+}
+
+.error-container mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #f44336;
+}
+
+.error-container h2 {
+  margin: 0;
+  color: #333;
+}
+
+.error-container p {
+  color: #666;
+}
+
+/* Header */
+.client-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+  flex-shrink: 0;
+}
+
+.header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header-info h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+  color: #333;
+}
+
+.client-code {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+/* Tabs */
+.client-tabs {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Cards */
+.info-card,
+.payment-card,
+.products-card,
+.commercials-card,
+.total-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.info-card:hover,
+.payment-card:hover,
+.products-card:hover,
+.commercials-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-header mat-icon[mat-card-avatar] {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  color: #1976d2;
+  background: #e3f2fd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-icon {
+  background: #fff3e0 !important;
+  color: #f57c00 !important;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.info-item:hover {
+  background: #f0f0f0;
+}
+
+.info-item mat-icon {
+  color: #1976d2;
+  margin-top: 2px;
+}
+
+.info-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 16px;
+  color: #333;
+  font-weight: 400;
+}
+
+/* Payment Details */
+.payment-card mat-card-header {
+  position: relative;
+}
+
+.payment-card mat-chip {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.payment-item.note {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fff3e0;
+}
+
+.payment-item.note > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.payment-item mat-icon {
+  color: #f57c00;
+  margin-right: 8px;
+}
+
+.payment-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.payment-value {
+  font-size: 16px;
+  color: #333;
+}
+
+.payment-value.amount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+/* Payment Status Chips */
+mat-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.status-paid {
+  background-color: #c8e6c9 !important;
+  color: #2e7d32 !important;
+}
+
+.status-pending {
+  background-color: #ffecb3 !important;
+  color: #f57c00 !important;
+}
+
+/* Total Card */
+.total-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.total-payment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.total-label {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.total-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Lists */
+mat-list {
+  padding-top: 0;
+}
+
+mat-list-item {
+  min-height: 72px;
+}
+
+mat-list-item mat-icon[matListItemIcon] {
+  color: #1976d2;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  color: #999;
+}
+
+.empty-state mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .client-container {
+    padding: 12px;
+  }
+
+  .client-header {
+    padding: 16px;
+  }
+
+  .header-info h1 {
+    font-size: 22px;
+  }
+
+  .tab-content {
+    padding: 16px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .payment-card mat-chip {
+    position: static;
+    margin-top: 12px;
+  }
+
+  .payment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .total-payment {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.info-card,
+.payment-card,
+.products-card,
+.commercials-card {
+  animation: fadeIn 0.3s ease-out;
+}

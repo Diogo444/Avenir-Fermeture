@@ -48,5 +48,12 @@ export class ClientService {
   async delete(id: number): Promise<void> {
     await this.clientRepository.delete(id);
   }
+
+  async findOne(codeClient: string): Promise<Client | null> {
+    return this.clientRepository.findOne({
+      where: { code_client: codeClient },
+      relations: ['produits', 'commerciaux'],
+    });
+  }
 }
 
