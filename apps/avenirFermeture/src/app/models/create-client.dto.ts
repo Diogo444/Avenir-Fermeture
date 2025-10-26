@@ -4,7 +4,9 @@ export interface CreateClientDto {
   firstName: string;
   email: string;
   phone?: string | null;
-  city: string;
+  rue: string;
+  code_postal: number;
+  ville: string;
   produitIds?: number[];
   commercialIds?: number[];
   montant_acompte_metre: number;

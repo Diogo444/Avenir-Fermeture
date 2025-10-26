@@ -12,8 +12,11 @@
 
     <mat-card-content>
       @if (clientForm) {
-        <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="client-form">
-
+      <form
+        [formGroup]="clientForm"
+        (ngSubmit)="onSubmit()"
+        class="client-form"
+      >
         <!-- Section Informations personnelles -->
         <div class="form-section">
           <h3 class="section-title">
@@ -24,22 +27,17 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Nom</mat-label>
-              <input matInput formControlName="lastName" required>
+              <input matInput formControlName="lastName" required />
               @if(clientForm.get('lastName')?.hasError('required')) {
-                <mat-error>
-                  Le nom est requis
-                </mat-error>
+              <mat-error> Le nom est requis </mat-error>
               }
-
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Prénom</mat-label>
-              <input matInput formControlName="firstName" required>
+              <input matInput formControlName="firstName" required />
               @if(clientForm.get('firstName')?.hasError('required')) {
-                <mat-error>
-                  Le prénom est requis
-                </mat-error>
+              <mat-error> Le prénom est requis </mat-error>
               }
             </mat-form-field>
           </div>
@@ -47,25 +45,22 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Email</mat-label>
-              <input matInput type="email" formControlName="email" required>
+              <input matInput type="email" formControlName="email" required />
               <mat-icon matSuffix>email</mat-icon>
               @if(clientForm.get('email')?.hasError('required')) {
-                <mat-error>
-                  L'email est requis
-                </mat-error>
-              }
-              @if(clientForm.get('email')?.hasError('email')) {
-                <mat-error>
-                  Format d'email invalide
-                </mat-error>
+              <mat-error> L'email est requis </mat-error>
+              } @if(clientForm.get('email')?.hasError('email')) {
+              <mat-error> Format d'email invalide </mat-error>
               }
             </mat-form-field>
 
             <div class="form-field">
               <label class="mat-label" for="phoneInput">Téléphone</label>
-              <div class="mat-like-field"
-                   [class.ng-invalid]="clientForm.get('phone')?.invalid"
-                   [class.ng-touched]="clientForm.get('phone')?.touched">
+              <div
+                class="mat-like-field"
+                [class.ng-invalid]="clientForm.get('phone')?.invalid"
+                [class.ng-touched]="clientForm.get('phone')?.touched"
+              >
                 <ngx-intl-tel-input
                   [cssClass]="'custom-intl-input'"
                   [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
@@ -78,52 +73,88 @@
                   [maxLength]="15"
                   name="phone"
                   [inputId]="'phoneInput'"
-                  formControlName="phone">
+                  formControlName="phone"
+                >
                 </ngx-intl-tel-input>
               </div>
-              @if(clientForm.get('phone')?.invalid && clientForm.get('phone')?.touched) {
-                <span class="phone-error">
-                  Le numéro de téléphone n'est pas valide
-                </span>
+              @if(clientForm.get('phone')?.invalid &&
+              clientForm.get('phone')?.touched) {
+              <span class="phone-error">
+                Le numéro de téléphone n'est pas valide
+              </span>
               }
             </div>
+          </div>
 
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Code Client</mat-label>
+              <input matInput formControlName="codeClient" required />
+              @if(clientForm.get('codeClient')?.hasError('required')) {
+              <mat-error> Le code client est requis </mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Section Adresse -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>location_on</mat-icon>
+            Adresse
+          </h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Rue</mat-label>
+              <input matInput formControlName="rue" required />
+              <mat-icon matSuffix>home</mat-icon>
+              @if(clientForm.get('rue')?.hasError('required')) {
+              <mat-error> La rue est requise </mat-error>
+              }
+            </mat-form-field>
           </div>
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Code Client</mat-label>
-              <input matInput formControlName="codeClient" required>
-              @if(clientForm.get('codeClient')?.hasError('required')) {
-                <mat-error>
-                  Le code client est requis
-                </mat-error>
+              <mat-label>Code Postal</mat-label>
+              <input matInput type="number" formControlName="code_postal" required />
+              <mat-icon matSuffix>markunread_mailbox</mat-icon>
+              @if(clientForm.get('code_postal')?.hasError('required')) {
+              <mat-error> Le code postal est requis </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Ville</mat-label>
-              <input matInput formControlName="city" required>
+              <input matInput formControlName="city" required />
+              <mat-icon matSuffix>location_city</mat-icon>
               @if(clientForm.get('city')?.hasError('required')) {
-                <mat-error>
-                  La ville est requise
-                </mat-error>
+              <mat-error> La ville est requise </mat-error>
               }
             </mat-form-field>
+          </div>
+        </div>
 
+        <!-- Section Produits et Commercial -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>business_center</mat-icon>
+            Produits et Commercial
+          </h3>
+
+          <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Commercial</mat-label>
               <mat-select formControlName="commercial">
                 @for(commercial of commercials; track commercial.id) {
-                  <mat-option [value]="commercial.id">
-                    {{commercial.lastName}} - {{commercial.firstName}}
-                  </mat-option>
+                <mat-option [value]="commercial.id">
+                  {{commercial.lastName}} - {{commercial.firstName}}
+                </mat-option>
                 }
               </mat-select>
               @if(clientForm.get('commercial')?.hasError('required')) {
-                <mat-error>
-                  Le commercial est requis
-                </mat-error>
+              <mat-error> Le commercial est requis </mat-error>
               }
             </mat-form-field>
           </div>
@@ -133,9 +164,7 @@
               <mat-label>Produits</mat-label>
               <mat-select formControlName="produitIds" multiple>
                 @for(produit of produits; track produit.id) {
-                  <mat-option [value]="produit.id">
-                    {{produit.nom}}
-                  </mat-option>
+                <mat-option [value]="produit.id"> {{produit.nom}} </mat-option>
                 }
               </mat-select>
               <mat-icon matSuffix>category</mat-icon>
@@ -153,27 +182,34 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant acompte métré</mat-label>
-              <input matInput type="number" formControlName="montant_acompte_metre" min="0" required>
+              <input
+                matInput
+                type="number"
+                formControlName="montant_acompte_metre"
+                min="0"
+                required
+              />
               <span matSuffix>€</span>
-              @if(clientForm.get('montant_acompte_metre')?.hasError('required')) {
-                <mat-error>
-                  Le montant est requis
-                </mat-error>
-              }
-              @if(clientForm.get('montant_acompte_metre')?.hasError('min')) {
-                <mat-error>
-                  Le montant doit être positif
-                </mat-error>
+              @if(clientForm.get('montant_acompte_metre')?.hasError('required'))
+              {
+              <mat-error> Le montant est requis </mat-error>
+              } @if(clientForm.get('montant_acompte_metre')?.hasError('min')) {
+              <mat-error> Le montant doit être positif </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
-              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_metre" min="0" required>
-              @if(clientForm.get('semaine_evoi_demande_acompte_metre')?.hasError('required')) {
-                <mat-error>
-                  La semaine est requise
-                </mat-error>
+              <input
+                matInput
+                type="number"
+                formControlName="semaine_evoi_demande_acompte_metre"
+                min="0"
+                required
+              />
+              @if(clientForm.get('semaine_evoi_demande_acompte_metre')?.hasError('required'))
+              {
+              <mat-error> La semaine est requise </mat-error>
               }
             </mat-form-field>
           </div>
@@ -189,7 +225,11 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Note acompte métré</mat-label>
-              <textarea matInput formControlName="note_acompte_metre" rows="3"></textarea>
+              <textarea
+                matInput
+                formControlName="note_acompte_metre"
+                rows="3"
+              ></textarea>
             </mat-form-field>
           </div>
         </div>
@@ -204,27 +244,36 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant acompte livraison</mat-label>
-              <input matInput type="number" formControlName="montant_acompte_livraison" min="0" required>
+              <input
+                matInput
+                type="number"
+                formControlName="montant_acompte_livraison"
+                min="0"
+                required
+              />
               <span matSuffix>€</span>
-              @if(clientForm.get('montant_acompte_livraison')?.hasError('required')) {
-                <mat-error>
-                  Le montant est requis
-                </mat-error>
+              @if(clientForm.get('montant_acompte_livraison')?.hasError('required'))
+              {
+              <mat-error> Le montant est requis </mat-error>
               }
-              @if(clientForm.get('montant_acompte_livraison')?.hasError('min')) {
-                <mat-error>
-                  Le montant doit être positif
-                </mat-error>
+              @if(clientForm.get('montant_acompte_livraison')?.hasError('min'))
+              {
+              <mat-error> Le montant doit être positif </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande</mat-label>
-              <input matInput type="number" formControlName="semaine_evoi_demande_acompte_livraison" min="0" required>
-              @if(clientForm.get('semaine_evoi_demande_acompte_livraison')?.hasError('required')) {
-                <mat-error>
-                  La semaine est requise
-                </mat-error>
+              <input
+                matInput
+                type="number"
+                formControlName="semaine_evoi_demande_acompte_livraison"
+                min="0"
+                required
+              />
+              @if(clientForm.get('semaine_evoi_demande_acompte_livraison')?.hasError('required'))
+              {
+              <mat-error> La semaine est requise </mat-error>
               }
             </mat-form-field>
           </div>
@@ -240,7 +289,11 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Note acompte livraison</mat-label>
-              <textarea matInput formControlName="note_acompte_livraison" rows="3"></textarea>
+              <textarea
+                matInput
+                formControlName="note_acompte_livraison"
+                rows="3"
+              ></textarea>
             </mat-form-field>
           </div>
         </div>
@@ -255,27 +308,33 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Montant solde</mat-label>
-              <input matInput type="number" formControlName="montant_solde" min="0" required>
+              <input
+                matInput
+                type="number"
+                formControlName="montant_solde"
+                min="0"
+                required
+              />
               <span matSuffix>€</span>
               @if(clientForm.get('montant_solde')?.hasError('required')) {
-                <mat-error>
-                  Le montant est requis
-                </mat-error>
-              }
-              @if(clientForm.get('montant_solde')?.hasError('min')) {
-                <mat-error>
-                  Le montant doit être positif
-                </mat-error>
+              <mat-error> Le montant est requis </mat-error>
+              } @if(clientForm.get('montant_solde')?.hasError('min')) {
+              <mat-error> Le montant doit être positif </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine envoi demande solde</mat-label>
-              <input matInput type="number" formControlName="semain_evoi_demande_solde" min="0" required>
-              @if(clientForm.get('semain_evoi_demande_solde')?.hasError('required')) {
-                <mat-error>
-                  La semaine est requise
-                </mat-error>
+              <input
+                matInput
+                type="number"
+                formControlName="semain_evoi_demande_solde"
+                min="0"
+                required
+              />
+              @if(clientForm.get('semain_evoi_demande_solde')?.hasError('required'))
+              {
+              <mat-error> La semaine est requise </mat-error>
               }
             </mat-form-field>
           </div>
@@ -291,7 +350,11 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Note solde</mat-label>
-              <textarea matInput formControlName="note_solde" rows="3"></textarea>
+              <textarea
+                matInput
+                formControlName="note_solde"
+                rows="3"
+              ></textarea>
             </mat-form-field>
           </div>
         </div>
@@ -306,21 +369,27 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Semaine livraison souhaitée</mat-label>
-              <input matInput type="number" formControlName="semain_livraison_souhaite" min="0">
+              <input
+                matInput
+                type="number"
+                formControlName="semain_livraison_souhaite"
+                min="0"
+              />
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Livraison limite</mat-label>
-              <input matInput type="number" formControlName="livraison_limite" min="0" required>
+              <input
+                matInput
+                type="number"
+                formControlName="livraison_limite"
+                min="0"
+                required
+              />
               @if(clientForm.get('livraison_limite')?.hasError('required')) {
-                <mat-error>
-                  La limite est requise
-                </mat-error>
-              }
-              @if(clientForm.get('livraison_limite')?.hasError('min')) {
-                <mat-error>
-                  La valeur doit être positive
-                </mat-error>
+              <mat-error> La limite est requise </mat-error>
+              } @if(clientForm.get('livraison_limite')?.hasError('min')) {
+              <mat-error> La valeur doit être positive </mat-error>
               }
             </mat-form-field>
           </div>
@@ -328,12 +397,23 @@
 
         <!-- Boutons d'action -->
         <div class="form-actions">
-          <button mat-button type="button" (click)="onReset()" class="reset-btn">
+          <button
+            mat-button
+            type="button"
+            (click)="onReset()"
+            class="reset-btn"
+          >
             <mat-icon>refresh</mat-icon>
             Réinitialiser
           </button>
 
-          <button mat-raised-button color="primary" type="submit" [disabled]="clientForm.invalid" class="submit-btn">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="clientForm.invalid"
+            class="submit-btn"
+          >
             <mat-icon>save</mat-icon>
             Enregistrer le client
           </button>

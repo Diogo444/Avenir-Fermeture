@@ -33,7 +33,15 @@ export class Client {
   phone!: string | null;
 
   @Column()
-  city: string;
+  rue: string;
+
+  @Column()
+  code_postal: number;
+
+  @Column()
+  ville: string;
+
+
 
   @ManyToMany(() => Produit, (produit) => produit.clients, {
     cascade: ['insert', 'update'],

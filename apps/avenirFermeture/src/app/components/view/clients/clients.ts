@@ -71,11 +71,15 @@ export class Clients implements OnInit {
     this.router.navigate(['/cree-client']);
   }
 
-deleteClient(id: number){
-  console.log(id);
-  this.api.deleteClient(id).subscribe(() => {
-    this.client = this.client.filter(c => c.id !== id);
-  });
-}
+  onClientClick(client: Client){
+    console.log(`${client.firstName} ${client.lastName}, le code client est ${client.code_client}`);
+  }
+
+  deleteClient(id: number){
+    console.log(id);
+    this.api.deleteClient(id).subscribe(() => {
+      this.client = this.client.filter(c => c.id !== id);
+    });
+  }
 
 }
