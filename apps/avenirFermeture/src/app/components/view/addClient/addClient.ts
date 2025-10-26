@@ -14,6 +14,7 @@ import { CreateClientDto } from '../../../models/create-client.dto';
 import { Produit } from '../../../models/clients.model';
 import { NgxIntlTelInputModule, CountryISO, ChangeData } from 'ngx-intl-tel-input';
 import { Commercial } from '../ajoutProduit/dto/commercial.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-client',
@@ -38,11 +39,21 @@ export class AddClient implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(Api);
   private router = inject(Router);
+  private _snackBar = inject(MatSnackBar);
+
 
   produits: Produit[] = [];
   commercials: Commercial[] = [];
   // Expose enums to the template
   readonly CountryISO = CountryISO;
+
+  durationInSeconds = 5;
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: this.durationInSeconds * 1000,
+    });
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -116,18 +127,20 @@ export class AddClient implements OnInit {
         livraison_limite: rawValue.livraison_limite,
       };
 
-      console.log('Donnees du formulaire:', payload);
       this.api.createClient(payload).subscribe({
         next: () => {
-          console.log('Client cree avec succes');
+          this.openSnackBar('Le client ' + rawValue.firstName + ' ' + rawValue.lastName + ' a bien été ajouté !');
           this.router.navigate(['/clients']);
         },
         error: (err) => {
-          console.log(payload);
+          this.openSnackBar("Erreur lors de l'ajout du client " + rawValue.firstName + ' ' + rawValue.lastName + '.');
+          console.error('Erreur lors de la creation du client', err);
+
           console.error('Erreur lors de la creation du client', err);
         }
       });
     } else {
+      this.openSnackBar('Veuillez remplir correctement le formulaire.');
       console.log('Formulaire invalide');
       this.markFormGroupTouched();
     }
