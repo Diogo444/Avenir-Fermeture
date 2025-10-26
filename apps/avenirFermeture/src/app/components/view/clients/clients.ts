@@ -59,7 +59,7 @@ export class Clients implements OnInit {
     // Example: parse and format using google-libphonenumber
       const phoneUtil = PhoneNumberUtil.getInstance();
       try {
-        const parsed = phoneUtil.parse(phoneNumber, 'FR');
+        const parsed = phoneUtil.parse(phoneNumber);
         return phoneUtil.format(parsed, PhoneNumberFormat.INTERNATIONAL);
       } catch (e) {
         console.error('Invalid phone number', e);
