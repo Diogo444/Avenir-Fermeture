@@ -56,3 +56,10 @@
   transition: 30ms;
   cursor: pointer;
 }
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Ajustez la hauteur selon vos besoins */
+}

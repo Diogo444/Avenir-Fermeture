@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import { Api } from '../../../services/api/api';
 import { CommonModule } from '@angular/common';
@@ -31,6 +31,8 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
     MatTableModule,
     ReactiveFormsModule,
     NgxIntlTelInputModule,
+    MatProgressSpinnerModule
+
   ],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
@@ -39,11 +41,14 @@ export class Clients implements OnInit {
   client: Client[] = [];
   displayedColumns: string[] = ['lastName', 'firstName', 'email', 'phone', 'city', 'commercial', 'action'];
 
+  isLoading = true;
+
   private readonly api = inject(Api)
   private readonly router = inject(Router)
 
   ngOnInit(): void {
       this.api.getClients().subscribe((data) => {
+        this.isLoading = false;
         this.client = data;
       });
 
