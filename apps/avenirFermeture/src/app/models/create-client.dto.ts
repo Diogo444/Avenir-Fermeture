@@ -4,6 +4,9 @@ export interface CreateClientDto {
   firstName: string;
   email: string;
   phone?: string | null;
+  phone_1?: string | null;
+  phone_2?: string | null;
+  phone_3?: string | null;
   rue: string;
   code_postal: number;
   ville: string;

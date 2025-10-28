@@ -15,6 +15,7 @@ import { CreateClientDto } from '../../../models/create-client.dto';
 import { NgxIntlTelInputModule, CountryISO, ChangeData } from 'ngx-intl-tel-input';
 import { Commercial } from '../ajoutProduit/dto/commercial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-add-client',
@@ -30,9 +31,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule,
     ReactiveFormsModule,
     NgxIntlTelInputModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './addClient.html',
-  styleUrl: './addClient.css',
+  styleUrls: ['./addClient.css'],
 })
 export class AddClient implements OnInit {
   clientForm!: FormGroup;
@@ -55,7 +57,9 @@ export class AddClient implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('AddClient component initialized');
     this.initializeForm();
+    console.log('Client form created:', this.clientForm);
   }
 
   initializeForm(): void {
@@ -63,7 +67,9 @@ export class AddClient implements OnInit {
       lastName: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      phone1: [''],
+      phone2: [''],
+      phone3: [''],
       codeClient: ['', [Validators.required]],
       rue: ['', [Validators.required]],
       code_postal: [null, [Validators.required, Validators.min(0)]],
@@ -75,14 +81,16 @@ export class AddClient implements OnInit {
   onSubmit(): void {
     if (this.clientForm.valid) {
       const rawValue = this.clientForm.getRawValue();
-      const phoneValue = rawValue.phone as string | ChangeData | null;
-      let phone: string | null | undefined = undefined;
-      if (phoneValue && typeof phoneValue === 'object') {
-        const cd = phoneValue as ChangeData;
-        phone = cd.e164Number ?? cd.internationalNumber ?? cd.number ?? null;
-      } else if (typeof phoneValue === 'string') {
-        phone = phoneValue || null;
-      }
+      const parsePhone = (val: string | ChangeData | null | undefined): string | null => {
+        if (!val) return null;
+        if (typeof val === 'string') return val || null;
+        const cd = val as ChangeData;
+        return cd.e164Number ?? cd.internationalNumber ?? cd.number ?? null;
+      };
+
+      const phone_1 = parsePhone(rawValue.phone1);
+      const phone_2 = parsePhone(rawValue.phone2);
+      const phone_3 = parsePhone(rawValue.phone3);
 
       const commercialId = rawValue.commercial;
 
@@ -91,7 +99,10 @@ export class AddClient implements OnInit {
         lastName: rawValue.lastName,
         firstName: rawValue.firstName,
         email: rawValue.email,
-        phone: phone ?? null,
+        phone: phone_1 ?? null,
+        phone_1: phone_1 ?? null,
+        phone_2: phone_2 ?? null,
+        phone_3: phone_3 ?? null,
         rue: rawValue.rue,
         code_postal: rawValue.code_postal,
         ville: rawValue.city,

@@ -12,12 +12,8 @@
 
     <mat-card-content>
       @if (clientForm) {
-      <form
-        [formGroup]="clientForm"
-        (ngSubmit)="onSubmit()"
-        class="client-form"
-      >
-        <!-- Section Informations personnelles -->
+      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" class="client-form">
+        <!-- Informations personnelles -->
         <div class="form-section">
           <h3 class="section-title">
             <mat-icon>person</mat-icon>
@@ -26,63 +22,95 @@
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Nom</mat-label>
-              <input matInput formControlName="lastName" required />
-              @if(clientForm.get('lastName')?.hasError('required')) {
-              <mat-error> Le nom est requis </mat-error>
+              <mat-label>Prénom</mat-label>
+              <input matInput formControlName="firstName" required />
+              @if(clientForm.get('firstName')?.hasError('required')) {
+                <mat-error> Le Prénom est requis </mat-error>
               }
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Prénom</mat-label>
-              <input matInput formControlName="firstName" required />
-              @if(clientForm.get('firstName')?.hasError('required')) {
-              <mat-error> Le prénom est requis </mat-error>
+              <mat-label>Nom</mat-label>
+              <input matInput formControlName="lastName" required />
+              @if(clientForm.get('lastName')?.hasError('required')) {
+                <mat-error> Le nom est requis </mat-error>
               }
             </mat-form-field>
           </div>
 
           <div class="form-row">
-            <mat-form-field appearance="outline" class="form-field">
+            <mat-form-field appearance="outline" class="form-field-full">
               <mat-label>Email</mat-label>
               <input matInput type="email" formControlName="email" required />
               <mat-icon matSuffix>email</mat-icon>
               @if(clientForm.get('email')?.hasError('required')) {
-              <mat-error> L'email est requis </mat-error>
+                <mat-error> L'email est requis </mat-error>
               } @if(clientForm.get('email')?.hasError('email')) {
-              <mat-error> Format d'email invalide </mat-error>
+                <mat-error> Format d'email invalide </mat-error>
               }
             </mat-form-field>
+          </div>
 
-            <div class="form-field">
-              <label class="mat-label" for="phoneInput">Téléphone</label>
-              <div
-                class="mat-like-field"
-                [class.ng-invalid]="clientForm.get('phone')?.invalid"
-                [class.ng-touched]="clientForm.get('phone')?.touched"
-              >
-                <ngx-intl-tel-input
-                  [cssClass]="'custom-intl-input'"
-                  [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                  [enablePlaceholder]="true"
-                  [searchCountryFlag]="true"
-                  [selectFirstCountry]="false"
-                  [separateDialCode]="true"
-                  [phoneValidation]="true"
-                  [selectedCountryISO]="CountryISO.France"
-                  [maxLength]="15"
-                  name="phone"
-                  [inputId]="'phoneInput'"
-                  formControlName="phone"
-                >
-                </ngx-intl-tel-input>
+          <!-- Section Téléphones -->
+          <div class="form-row">
+            <div class="form-field phone-field">
+              <label>Téléphone 1</label>
+              <ngx-intl-tel-input
+                [cssClass]="'custom-intl-input'"
+                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                [enablePlaceholder]="true"
+                [searchCountryFlag]="true"
+                [selectFirstCountry]="false"
+                [separateDialCode]="true"
+                [phoneValidation]="true"
+                [selectedCountryISO]="CountryISO.France"
+                [maxLength]="15"
+                name="phone1"
+                formControlName="phone1">
+              </ngx-intl-tel-input>
+              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone1')?.invalid && clientForm.get('phone1')?.touched">
+                Le numéro de Téléphone n'est pas valide
               </div>
-              @if(clientForm.get('phone')?.invalid &&
-              clientForm.get('phone')?.touched) {
-              <span class="phone-error">
-                Le numéro de téléphone n'est pas valide
-              </span>
-              }
+            </div>
+
+            <div class="form-field phone-field">
+              <label>Téléphone 2</label>
+              <ngx-intl-tel-input
+                [cssClass]="'custom-intl-input'"
+                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                [enablePlaceholder]="true"
+                [searchCountryFlag]="true"
+                [selectFirstCountry]="false"
+                [separateDialCode]="true"
+                [phoneValidation]="true"
+                [selectedCountryISO]="CountryISO.France"
+                [maxLength]="15"
+                name="phone2"
+                formControlName="phone2">
+              </ngx-intl-tel-input>
+              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone2')?.invalid && clientForm.get('phone2')?.touched">
+                Le numéro de Téléphone n'est pas valide
+              </div>
+            </div>
+
+            <div class="form-field phone-field">
+              <label>Téléphone 3</label>
+              <ngx-intl-tel-input
+                [cssClass]="'custom-intl-input'"
+                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                [enablePlaceholder]="true"
+                [searchCountryFlag]="true"
+                [selectFirstCountry]="false"
+                [separateDialCode]="true"
+                [phoneValidation]="true"
+                [selectedCountryISO]="CountryISO.France"
+                [maxLength]="15"
+                name="phone3"
+                formControlName="phone3">
+              </ngx-intl-tel-input>
+              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone3')?.invalid && clientForm.get('phone3')?.touched">
+                Le numéro de Téléphone n'est pas valide
+              </div>
             </div>
           </div>
 
@@ -91,13 +119,13 @@
               <mat-label>Code Client</mat-label>
               <input matInput formControlName="codeClient" required />
               @if(clientForm.get('codeClient')?.hasError('required')) {
-              <mat-error> Le code client est requis </mat-error>
+                <mat-error> Le code client est requis </mat-error>
               }
             </mat-form-field>
           </div>
         </div>
 
-        <!-- Section Adresse -->
+        <!-- Adresse -->
         <div class="form-section">
           <h3 class="section-title">
             <mat-icon>location_on</mat-icon>
@@ -110,7 +138,7 @@
               <input matInput formControlName="rue" required />
               <mat-icon matSuffix>home</mat-icon>
               @if(clientForm.get('rue')?.hasError('required')) {
-              <mat-error> La rue est requise </mat-error>
+                <mat-error> La rue est requise </mat-error>
               }
             </mat-form-field>
           </div>
@@ -121,7 +149,7 @@
               <input matInput type="number" formControlName="code_postal" required />
               <mat-icon matSuffix>markunread_mailbox</mat-icon>
               @if(clientForm.get('code_postal')?.hasError('required')) {
-              <mat-error> Le code postal est requis </mat-error>
+                <mat-error> Le code postal est requis </mat-error>
               }
             </mat-form-field>
 
@@ -130,34 +158,30 @@
               <input matInput formControlName="city" required />
               <mat-icon matSuffix>location_city</mat-icon>
               @if(clientForm.get('city')?.hasError('required')) {
-              <mat-error> La ville est requise </mat-error>
+                <mat-error> La ville est requise </mat-error>
               }
             </mat-form-field>
           </div>
-        </div>        <!-- Boutons d'action -->
+        </div>
+
+        <!-- Actions -->
         <div class="form-actions">
-          <button
-            mat-button
-            type="button"
-            (click)="onReset()"
-            class="reset-btn"
-          >
+          <button mat-button type="button" (click)="onReset()" class="reset-btn">
             <mat-icon>refresh</mat-icon>
             Réinitialiser
           </button>
 
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="clientForm.invalid"
-            class="submit-btn"
-          >
+          <button mat-raised-button color="primary" type="submit" [disabled]="clientForm.invalid" class="submit-btn">
             <mat-icon>save</mat-icon>
             Enregistrer le client
           </button>
         </div>
       </form>
+      } @else {
+      <div class="loading-state">
+        <mat-progress-spinner mode="indeterminate" diameter="42"></mat-progress-spinner>
+        <span>Chargement du formulaire...</span>
+      </div>
       }
     </mat-card-content>
   </mat-card>
