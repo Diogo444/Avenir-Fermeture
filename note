@@ -1,0 +1,22 @@
+retirer info client livraison produit etc...
+mise en palce de détection de semaine par date
+
+création commande
+le numéro du devis (commande)
+date signature
+référence de l'affaire : string
+motant HT
+montant TTC
+les accomptes (avec la date prévisionel d'encaisement (ce que j'ai mis dans création clients)
+)dire type de produit (liste de produit avec quantité)
+
+fournisseur 1
+nom du fournisseur (plusieur)
+motant à acheté
+
+emplacement du dossier (modifiable depuis la partie produit mais quand tu vois que la ligne )
+liste des emplacement à crée par admin
+
+
+
+informations général, commande, facture

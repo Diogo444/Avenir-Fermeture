@@ -7,6 +7,7 @@ import { ClientModule } from './Clients/client.module';
 import { ProduitsModule } from './produits/produits.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CommercialModule } from './commercial/commercial.module';
+import { AffaireModule } from './affaire/affaire.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CommercialModule } from './commercial/commercial.module';
     ProduitsModule,
     DashboardModule,
     CommercialModule,
+    AffaireModule,
   ],
   controllers: [AppController],
   providers: [AppService],

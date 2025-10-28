@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Client } from "../../Clients/client.entity";
+import { Affaire } from '../../affaire/entities/affaire.entity';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Client } from '../../Clients/client.entity';
 
 @Entity({ name: 'commercials' })
 export class Commercial {
@@ -15,4 +16,6 @@ export class Commercial {
   @ManyToMany(() => Client, (client) => client.commerciaux)
   clients: Client[];
 
+  @OneToMany(() => Affaire, (affaire) => affaire.metreur)
+  affaires_metreur: Affaire[];
 }

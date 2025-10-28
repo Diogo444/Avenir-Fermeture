@@ -5,11 +5,13 @@ import {
   Index,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Produit } from '../produits/produits.entity';
 import { Commercial } from '../commercial/entities/commercial.entity';
+import { Affaire } from '../affaire/entities/affaire.entity';
 
 @Entity({ name: 'clients' })
 export class Client {
@@ -41,7 +43,8 @@ export class Client {
   @Column()
   ville: string;
 
-
+  @OneToMany(() => Affaire, (affaire) => affaire.client)
+  affaires: Affaire[];
 
   @ManyToMany(() => Produit, (produit) => produit.clients, {
     cascade: ['insert', 'update'],
