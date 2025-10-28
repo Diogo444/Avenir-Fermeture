@@ -210,8 +210,4 @@ export class AddClient implements OnInit {
   protected isPhoneFocused(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
     return this.phoneFocusState[controlName];
   }
-
-  protected shouldPhoneLabelFloat(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
-    return this.isPhoneFocused(controlName) || this.hasPhoneValue(controlName);
-  }
 }

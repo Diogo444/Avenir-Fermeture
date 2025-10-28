@@ -54,160 +54,97 @@
           <!-- Section Téléphones -->
           <div class="phone-section">
             <div class="phone-section__intro">
-              <mat-icon class="phone-section__icon">dialpad</mat-icon>
+              <mat-icon>dialpad</mat-icon>
               <div>
                 <p class="phone-section__title">Numéros de téléphone</p>
                 <p class="phone-section__subtitle">
-                  Saisissez jusqu'à trois numéros en conservant la mise en forme internationale.
+                  Ajoutez jusqu'à trois numéros en conservant le format international.
                 </p>
               </div>
             </div>
 
             <div class="phone-grid">
               <div
-                class="phone-mat-field"
+                class="form-field phone-field"
                 (focusin)="onPhoneFocus('phone1')"
                 (focusout)="onPhoneBlur('phone1')"
-                [class.phone-mat-field--focused]="isPhoneFocused('phone1')"
-                [class.phone-mat-field--filled]="hasPhoneValue('phone1')"
-                [class.phone-mat-field--invalid]="isPhoneInvalid('phone1')">
-                <div
-                  class="phone-mat-field__wrapper mat-mdc-text-field-wrapper mdc-text-field mdc-text-field--outlined"
-                  [class.mdc-text-field--focused]="isPhoneFocused('phone1')"
-                  [class.mdc-text-field--invalid]="isPhoneInvalid('phone1')">
-                  <div class="mat-mdc-form-field-flex">
-                    <div class="mat-mdc-form-field-infix">
-                      <ngx-intl-tel-input
-                        [cssClass]="'phone-mat-intl-input'"
-                        [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                        [enablePlaceholder]="true"
-                        [searchCountryFlag]="true"
-                        [selectFirstCountry]="false"
-                        [separateDialCode]="true"
-                        [phoneValidation]="true"
-                        [selectedCountryISO]="CountryISO.France"
-                        [maxLength]="15"
-                        name="phone1"
-                        formControlName="phone1">
-                      </ngx-intl-tel-input>
-                    </div>
-                  </div>
-                  <div
-                    class="mdc-notched-outline"
-                    [class.mdc-notched-outline--notched]="shouldPhoneLabelFloat('phone1')">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <span
-                        class="mdc-floating-label"
-                        [class.mdc-floating-label--float-above]="shouldPhoneLabelFloat('phone1')">
-                        Téléphone 1
-                      </span>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
+                [class.phone-field--focused]="isPhoneFocused('phone1')"
+                [class.phone-field--filled]="hasPhoneValue('phone1')"
+                [class.phone-field--invalid]="isPhoneInvalid('phone1')">
+                <label class="phone-field__label">Téléphone 1</label>
+                <div class="phone-field__control">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input phone-field__intl'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone1"
+                    formControlName="phone1">
+                  </ngx-intl-tel-input>
                 </div>
-                <div class="mat-mdc-form-field-subscript-wrapper" *ngIf="isPhoneInvalid('phone1')">
-                  <div class="mat-mdc-form-field-error">
-                    Le numéro de téléphone n'est pas valide
-                  </div>
+                <div class="mat-mdc-form-field-error" *ngIf="isPhoneInvalid('phone1')">
+                  Le numéro de téléphone n'est pas valide
                 </div>
               </div>
 
               <div
-                class="phone-mat-field"
+                class="form-field phone-field"
                 (focusin)="onPhoneFocus('phone2')"
                 (focusout)="onPhoneBlur('phone2')"
-                [class.phone-mat-field--focused]="isPhoneFocused('phone2')"
-                [class.phone-mat-field--filled]="hasPhoneValue('phone2')"
-                [class.phone-mat-field--invalid]="isPhoneInvalid('phone2')">
-                <div
-                  class="phone-mat-field__wrapper mat-mdc-text-field-wrapper mdc-text-field mdc-text-field--outlined"
-                  [class.mdc-text-field--focused]="isPhoneFocused('phone2')"
-                  [class.mdc-text-field--invalid]="isPhoneInvalid('phone2')">
-                  <div class="mat-mdc-form-field-flex">
-                    <div class="mat-mdc-form-field-infix">
-                      <ngx-intl-tel-input
-                        [cssClass]="'phone-mat-intl-input'"
-                        [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                        [enablePlaceholder]="true"
-                        [searchCountryFlag]="true"
-                        [selectFirstCountry]="false"
-                        [separateDialCode]="true"
-                        [phoneValidation]="true"
-                        [selectedCountryISO]="CountryISO.France"
-                        [maxLength]="15"
-                        name="phone2"
-                        formControlName="phone2">
-                      </ngx-intl-tel-input>
-                    </div>
-                  </div>
-                  <div
-                    class="mdc-notched-outline"
-                    [class.mdc-notched-outline--notched]="shouldPhoneLabelFloat('phone2')">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <span
-                        class="mdc-floating-label"
-                        [class.mdc-floating-label--float-above]="shouldPhoneLabelFloat('phone2')">
-                        Téléphone 2
-                      </span>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
+                [class.phone-field--focused]="isPhoneFocused('phone2')"
+                [class.phone-field--filled]="hasPhoneValue('phone2')"
+                [class.phone-field--invalid]="isPhoneInvalid('phone2')">
+                <label class="phone-field__label">Téléphone 2</label>
+                <div class="phone-field__control">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input phone-field__intl'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone2"
+                    formControlName="phone2">
+                  </ngx-intl-tel-input>
                 </div>
-                <div class="mat-mdc-form-field-subscript-wrapper" *ngIf="isPhoneInvalid('phone2')">
-                  <div class="mat-mdc-form-field-error">
-                    Le numéro de téléphone n'est pas valide
-                  </div>
+                <div class="mat-mdc-form-field-error" *ngIf="isPhoneInvalid('phone2')">
+                  Le numéro de téléphone n'est pas valide
                 </div>
               </div>
 
               <div
-                class="phone-mat-field"
+                class="form-field phone-field"
                 (focusin)="onPhoneFocus('phone3')"
                 (focusout)="onPhoneBlur('phone3')"
-                [class.phone-mat-field--focused]="isPhoneFocused('phone3')"
-                [class.phone-mat-field--filled]="hasPhoneValue('phone3')"
-                [class.phone-mat-field--invalid]="isPhoneInvalid('phone3')">
-                <div
-                  class="phone-mat-field__wrapper mat-mdc-text-field-wrapper mdc-text-field mdc-text-field--outlined"
-                  [class.mdc-text-field--focused]="isPhoneFocused('phone3')"
-                  [class.mdc-text-field--invalid]="isPhoneInvalid('phone3')">
-                  <div class="mat-mdc-form-field-flex">
-                    <div class="mat-mdc-form-field-infix">
-                      <ngx-intl-tel-input
-                        [cssClass]="'phone-mat-intl-input'"
-                        [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                        [enablePlaceholder]="true"
-                        [searchCountryFlag]="true"
-                        [selectFirstCountry]="false"
-                        [separateDialCode]="true"
-                        [phoneValidation]="true"
-                        [selectedCountryISO]="CountryISO.France"
-                        [maxLength]="15"
-                        name="phone3"
-                        formControlName="phone3">
-                      </ngx-intl-tel-input>
-                    </div>
-                  </div>
-                  <div
-                    class="mdc-notched-outline"
-                    [class.mdc-notched-outline--notched]="shouldPhoneLabelFloat('phone3')">
-                    <div class="mdc-notched-outline__leading"></div>
-                    <div class="mdc-notched-outline__notch">
-                      <span
-                        class="mdc-floating-label"
-                        [class.mdc-floating-label--float-above]="shouldPhoneLabelFloat('phone3')">
-                        Téléphone 3
-                      </span>
-                    </div>
-                    <div class="mdc-notched-outline__trailing"></div>
-                  </div>
+                [class.phone-field--focused]="isPhoneFocused('phone3')"
+                [class.phone-field--filled]="hasPhoneValue('phone3')"
+                [class.phone-field--invalid]="isPhoneInvalid('phone3')">
+                <label class="phone-field__label">Téléphone 3</label>
+                <div class="phone-field__control">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input phone-field__intl'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone3"
+                    formControlName="phone3">
+                  </ngx-intl-tel-input>
                 </div>
-                <div class="mat-mdc-form-field-subscript-wrapper" *ngIf="isPhoneInvalid('phone3')">
-                  <div class="mat-mdc-form-field-error">
-                    Le numéro de téléphone n'est pas valide
-                  </div>
+                <div class="mat-mdc-form-field-error" *ngIf="isPhoneInvalid('phone3')">
+                  Le numéro de téléphone n'est pas valide
                 </div>
               </div>
             </div>
