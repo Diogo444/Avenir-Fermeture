@@ -53,63 +53,84 @@
 
           <!-- Section Téléphones -->
           <div class="form-row">
-            <div class="form-field phone-field">
-              <label>Téléphone 1</label>
-              <ngx-intl-tel-input
-                [cssClass]="'custom-intl-input'"
-                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                [enablePlaceholder]="true"
-                [searchCountryFlag]="true"
-                [selectFirstCountry]="false"
-                [separateDialCode]="true"
-                [phoneValidation]="true"
-                [selectedCountryISO]="CountryISO.France"
-                [maxLength]="15"
-                name="phone1"
-                formControlName="phone1">
-              </ngx-intl-tel-input>
-              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone1')?.invalid && clientForm.get('phone1')?.touched">
-                Le numéro de Téléphone n'est pas valide
+            <div
+              class="form-field phone-field"
+              [class.filled]="hasPhoneValue('phone1')"
+              [class.invalid]="isPhoneInvalid('phone1')">
+              <div class="phone-field__outline">
+                <span class="phone-field__label">Téléphone 1</span>
+                <div class="phone-field__input">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone1"
+                    formControlName="phone1">
+                  </ngx-intl-tel-input>
+                </div>
+              </div>
+              <div class="phone-field__error" *ngIf="isPhoneInvalid('phone1')">
+                Le numéro de téléphone n'est pas valide
               </div>
             </div>
 
-            <div class="form-field phone-field">
-              <label>Téléphone 2</label>
-              <ngx-intl-tel-input
-                [cssClass]="'custom-intl-input'"
-                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                [enablePlaceholder]="true"
-                [searchCountryFlag]="true"
-                [selectFirstCountry]="false"
-                [separateDialCode]="true"
-                [phoneValidation]="true"
-                [selectedCountryISO]="CountryISO.France"
-                [maxLength]="15"
-                name="phone2"
-                formControlName="phone2">
-              </ngx-intl-tel-input>
-              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone2')?.invalid && clientForm.get('phone2')?.touched">
-                Le numéro de Téléphone n'est pas valide
+            <div
+              class="form-field phone-field"
+              [class.filled]="hasPhoneValue('phone2')"
+              [class.invalid]="isPhoneInvalid('phone2')">
+              <div class="phone-field__outline">
+                <span class="phone-field__label">Téléphone 2</span>
+                <div class="phone-field__input">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone2"
+                    formControlName="phone2">
+                  </ngx-intl-tel-input>
+                </div>
+              </div>
+              <div class="phone-field__error" *ngIf="isPhoneInvalid('phone2')">
+                Le numéro de téléphone n'est pas valide
               </div>
             </div>
 
-            <div class="form-field phone-field">
-              <label>Téléphone 3</label>
-              <ngx-intl-tel-input
-                [cssClass]="'custom-intl-input'"
-                [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
-                [enablePlaceholder]="true"
-                [searchCountryFlag]="true"
-                [selectFirstCountry]="false"
-                [separateDialCode]="true"
-                [phoneValidation]="true"
-                [selectedCountryISO]="CountryISO.France"
-                [maxLength]="15"
-                name="phone3"
-                formControlName="phone3">
-              </ngx-intl-tel-input>
-              <div class="mat-mdc-form-field-error" *ngIf="clientForm.get('phone3')?.invalid && clientForm.get('phone3')?.touched">
-                Le numéro de Téléphone n'est pas valide
+            <div
+              class="form-field phone-field"
+              [class.filled]="hasPhoneValue('phone3')"
+              [class.invalid]="isPhoneInvalid('phone3')">
+              <div class="phone-field__outline">
+                <span class="phone-field__label">Téléphone 3</span>
+                <div class="phone-field__input">
+                  <ngx-intl-tel-input
+                    [cssClass]="'custom-intl-input'"
+                    [preferredCountries]="[CountryISO.France, CountryISO.Belgium, CountryISO.Switzerland]"
+                    [enablePlaceholder]="true"
+                    [searchCountryFlag]="true"
+                    [selectFirstCountry]="false"
+                    [separateDialCode]="true"
+                    [phoneValidation]="true"
+                    [selectedCountryISO]="CountryISO.France"
+                    [maxLength]="15"
+                    name="phone3"
+                    formControlName="phone3">
+                  </ngx-intl-tel-input>
+                </div>
+              </div>
+              <div class="phone-field__error" *ngIf="isPhoneInvalid('phone3')">
+                Le numéro de téléphone n'est pas valide
               </div>
             </div>
           </div>

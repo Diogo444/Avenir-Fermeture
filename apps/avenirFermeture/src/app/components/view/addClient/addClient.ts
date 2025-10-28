@@ -161,4 +161,34 @@ export class AddClient implements OnInit {
   onClose(): void {
     this.router.navigate(['/clients']);
   }
+
+  protected isPhoneInvalid(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    const control = this.clientForm?.get(controlName);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  protected hasPhoneValue(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    const control = this.clientForm?.get(controlName);
+    if (!control) {
+      return false;
+    }
+
+    const value = control.value as string | ChangeData | null | undefined;
+
+    if (!value) {
+      return false;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
+
+    const changeData = value as ChangeData;
+    return !!(
+      changeData?.e164Number ||
+      changeData?.internationalNumber ||
+      changeData?.number ||
+      changeData?.dialCode
+    );
+  }
 }
