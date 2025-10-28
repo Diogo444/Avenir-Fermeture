@@ -47,6 +47,11 @@ export class AddClient implements OnInit {
   commercials: Commercial[] = [];
   // Expose enums to the template
   readonly CountryISO = CountryISO;
+  protected phoneFocusState: Record<'phone1' | 'phone2' | 'phone3', boolean> = {
+    phone1: false,
+    phone2: false,
+    phone3: false,
+  };
 
   durationInSeconds = 5;
 
@@ -160,5 +165,53 @@ export class AddClient implements OnInit {
 
   onClose(): void {
     this.router.navigate(['/clients']);
+  }
+
+  protected isPhoneInvalid(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    const control = this.clientForm?.get(controlName);
+    return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  protected hasPhoneValue(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    const control = this.clientForm?.get(controlName);
+    if (!control) {
+      return false;
+    }
+
+    const value = control.value as string | ChangeData | null | undefined;
+
+    if (!value) {
+      return false;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length > 0;
+    }
+
+    const changeData = value as ChangeData;
+    return !!(
+      changeData?.e164Number ||
+      changeData?.internationalNumber ||
+      changeData?.number ||
+      changeData?.dialCode
+    );
+  }
+
+  protected onPhoneFocus(controlName: 'phone1' | 'phone2' | 'phone3'): void {
+    this.phoneFocusState[controlName] = true;
+  }
+
+  protected onPhoneBlur(controlName: 'phone1' | 'phone2' | 'phone3'): void {
+    this.phoneFocusState[controlName] = false;
+    const control = this.clientForm?.get(controlName);
+    control?.markAsTouched();
+  }
+
+  protected isPhoneFocused(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    return this.phoneFocusState[controlName];
+  }
+
+  protected shouldPhoneLabelFloat(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+    return this.isPhoneFocused(controlName) || this.hasPhoneValue(controlName);
   }
 }

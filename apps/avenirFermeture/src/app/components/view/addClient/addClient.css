@@ -170,39 +170,189 @@ mat-card-title {
   font-size: 12px;
   color: #ff8880;
 }
-/* === TÃ©lÃ©phone fields === */
-:host ::ng-deep .custom-intl-input .iti {
+/* === Téléphone fields === */
+.phone-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(16px, 2vw, 22px);
+  border-radius: 18px;
+  background: rgba(12, 21, 40, 0.82);
+  border: 1px solid rgba(77, 163, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.phone-section__intro {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.phone-section__icon {
+  font-size: 28px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(98, 178, 255, 0.32), rgba(25, 118, 210, 0.32));
+  color: #9dd2ff;
+}
+
+.phone-section__title {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(223, 236, 255, 0.92);
+}
+
+.phone-section__subtitle {
+  margin: 2px 0 0;
+  color: rgba(200, 215, 242, 0.68);
+  font-size: 14px;
+}
+
+.phone-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.phone-mat-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.phone-mat-field__wrapper {
+  width: 100%;
+  min-height: 72px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  padding-inline: 4px;
+}
+
+.phone-mat-field--focused .phone-mat-field__wrapper {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px rgba(77, 163, 255, 0.45);
+}
+
+.phone-mat-field--invalid .phone-mat-field__wrapper {
+  background: rgba(225, 82, 70, 0.08);
+  box-shadow: 0 0 0 1px rgba(225, 82, 70, 0.35);
+}
+
+.phone-mat-field .mat-mdc-form-field-flex {
+  height: 100%;
+  align-items: center;
+}
+
+.phone-mat-field .mat-mdc-form-field-infix {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px 0 10px;
+  min-height: unset;
+}
+
+.phone-mat-field .mdc-notched-outline__leading,
+.phone-mat-field .mdc-notched-outline__notch,
+.phone-mat-field .mdc-notched-outline__trailing {
+  border-width: 1px;
+  border-radius: 12px;
+}
+
+.phone-mat-field .mdc-floating-label {
+  color: rgba(216, 229, 255, 0.72);
+  font-weight: 500;
+  letter-spacing: 0.025em;
+}
+
+.phone-mat-field--focused .mdc-floating-label,
+.phone-mat-field--filled .mdc-floating-label {
+  color: #8bc5ff;
+}
+
+.phone-mat-field--invalid .mdc-floating-label {
+  color: #ff8880;
+}
+
+.phone-mat-field .mat-mdc-form-field-error {
+  font-size: 12px;
+  color: #ff9a93;
+}
+
+.phone-mat-field--invalid .mdc-notched-outline__leading,
+.phone-mat-field--invalid .mdc-notched-outline__notch,
+.phone-mat-field--invalid .mdc-notched-outline__trailing {
+  border-color: rgba(225, 82, 70, 0.9) !important;
+}
+
+.phone-mat-field:not(.phone-mat-field--invalid) .mdc-notched-outline__leading,
+.phone-mat-field:not(.phone-mat-field--invalid) .mdc-notched-outline__notch,
+.phone-mat-field:not(.phone-mat-field--invalid) .mdc-notched-outline__trailing {
+  border-color: rgba(120, 165, 237, 0.28);
+}
+
+.phone-mat-field--focused:not(.phone-mat-field--invalid) .mdc-notched-outline__leading,
+.phone-mat-field--focused:not(.phone-mat-field--invalid) .mdc-notched-outline__notch,
+.phone-mat-field--focused:not(.phone-mat-field--invalid) .mdc-notched-outline__trailing {
+  border-color: rgba(61, 151, 255, 0.85) !important;
+}
+
+.phone-mat-field--filled:not(.phone-mat-field--invalid) .mdc-notched-outline__leading,
+.phone-mat-field--filled:not(.phone-mat-field--invalid) .mdc-notched-outline__notch,
+.phone-mat-field--filled:not(.phone-mat-field--invalid) .mdc-notched-outline__trailing {
+  border-color: rgba(98, 178, 255, 0.55);
+}
+
+.phone-mat-field .mdc-notched-outline__notch {
+  padding: 0 6px;
+}
+
+.phone-mat-field .mdc-floating-label--float-above {
+  transform: translateY(-24px) scale(0.75);
+}
+
+:host ::ng-deep .phone-mat-intl-input .iti {
   width: 100%;
   display: flex;
   align-items: center;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  height: 48px;
-  padding: 0 8px;
+  gap: 12px;
+  background: transparent;
 }
 
-:host ::ng-deep .custom-intl-input input[type='tel'] {
+:host ::ng-deep .phone-mat-intl-input input[type='tel'] {
   border: none !important;
   background: transparent !important;
   outline: none !important;
   width: 100% !important;
   font-size: 16px;
-  color: #f4f7ff;
-  padding: 0 8px !important;
+  color: #f4f7ff !important;
+  padding: 0 !important;
 }
 
-/* Drapeau + code pays */
-:host ::ng-deep .iti__flag-container {
-  margin-right: 6px;
+:host ::ng-deep .phone-mat-intl-input input[type='tel']::placeholder {
+  color: rgba(216, 229, 255, 0.42);
 }
 
-:host ::ng-deep .iti__country-list {
+:host ::ng-deep .phone-mat-intl-input .iti__selected-country {
+  padding: 0 12px 0 8px;
+}
+
+:host ::ng-deep .phone-mat-intl-input .iti__flag-container {
+  margin-right: 10px;
+}
+
+:host ::ng-deep .phone-mat-intl-input .iti__country-list {
   z-index: 1000;
-  background-color: var(--mat-sys-surface-bright, #1f2940);
+  background-color: rgba(15, 24, 46, 0.96);
   color: #f4f7ff;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 32px rgba(3, 10, 32, 0.45);
+  box-shadow: 0 18px 32px rgba(3, 10, 32, 0.55);
+  backdrop-filter: blur(12px);
 }
 
 .loading-state {
@@ -269,9 +419,12 @@ mat-card-title {
   }
 
   mat-card-content {
-  padding: clamp(24px, 3vw, 36px);
-  color: inherit;
-}
+    padding: clamp(20px, 5vw, 28px);
+  }
+
+  .phone-section {
+    padding: 16px;
+  }
 
   .form-actions {
     flex-direction: column;
