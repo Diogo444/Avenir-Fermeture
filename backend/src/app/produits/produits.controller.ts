@@ -1,10 +1,24 @@
-import { Body, Controller, Get, Post, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProduitsService } from './produits.service';
-import { CreateProduitDto } from './DTO/create-produit.dto';
+import { CreateProduitDto } from './dto/create-produit.dto';
+import { UpdateProduitDto } from './dto/update-produit.dto';
 
 @Controller('produits')
 export class ProduitsController {
-  constructor(private readonly produitsService: ProduitsService){}
+  constructor(private readonly produitsService: ProduitsService) {}
+
+  @Post()
+  create(@Body() createProduitDto: CreateProduitDto) {
+    return this.produitsService.create(createProduitDto);
+  }
 
   @Get()
   findAll() {
@@ -12,13 +26,17 @@ export class ProduitsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.produitsService.findOne(id);
+  findOne(@Param('id') id: string) {
+    return this.produitsService.findOne(+id);
   }
 
-@Post()
-create(@Body() produitDto: CreateProduitDto) {
-  return this.produitsService.create(produitDto);
-}
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateProduitDto: UpdateProduitDto) {
+    return this.produitsService.update(+id, updateProduitDto);
+  }
 
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.produitsService.remove(+id);
+  }
 }

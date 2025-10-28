@@ -5,6 +5,7 @@ import { UpdateAffaireDto } from './dto/update-affaire.dto';
 @Injectable()
 export class AffaireService {
   create(createAffaireDto: CreateAffaireDto) {
+    console.log(createAffaireDto);
     return 'This action adds a new affaire';
   }
 
@@ -17,6 +18,7 @@ export class AffaireService {
   }
 
   update(id: number, updateAffaireDto: UpdateAffaireDto) {
+    console.log(updateAffaireDto);
     return `This action updates a #${id} affaire`;
   }
 

@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 // import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ClientModule } from './Clients/client.module';
 import { ProduitsModule } from './produits/produits.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CommercialModule } from './commercial/commercial.module';
 import { AffaireModule } from './affaire/affaire.module';
+import { ClientsModule } from './clients/clients.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -22,11 +22,11 @@ import { AffaireModule } from './affaire/affaire.module';
       synchronize: process.env.DB_SYNC ? process.env.DB_SYNC === 'true' : true,
       logging: process.env.TYPEORM_LOGGING === 'true',
     }),
-    ClientModule,
     ProduitsModule,
     DashboardModule,
     CommercialModule,
     AffaireModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

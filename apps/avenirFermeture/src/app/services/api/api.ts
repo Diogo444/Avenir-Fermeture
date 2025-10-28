@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Client, Produit } from '../../models/clients.model';
+import { Client } from '../../models/clients.model';
 import { CreateClientDto } from '../../models/create-client.dto';
 import { NumberClients } from '../../models/number_clients.model';
 import { environment } from '../../../environments/environment';
 import { Commercial } from '../../components/view/ajoutProduit/dto/commercial.model';
+import { Produit } from '../../components/view/ajoutProduit/dto/produit.model';
 
 @Injectable({
   providedIn: 'root'

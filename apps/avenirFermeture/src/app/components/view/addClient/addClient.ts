@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Api } from '../../../services/api/api';
 import { Router } from '@angular/router';
 import { CreateClientDto } from '../../../models/create-client.dto';
-import { Produit } from '../../../models/clients.model';
+
 import { NgxIntlTelInputModule, CountryISO, ChangeData } from 'ngx-intl-tel-input';
 import { Commercial } from '../ajoutProduit/dto/commercial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -42,7 +42,6 @@ export class AddClient implements OnInit {
   private _snackBar = inject(MatSnackBar);
 
 
-  produits: Produit[] = [];
   commercials: Commercial[] = [];
   // Expose enums to the template
   readonly CountryISO = CountryISO;
@@ -57,8 +56,6 @@ export class AddClient implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadProduits();
-    this.loadCommercials();
   }
 
   initializeForm(): void {
@@ -71,22 +68,7 @@ export class AddClient implements OnInit {
       rue: ['', [Validators.required]],
       code_postal: [null, [Validators.required, Validators.min(0)]],
       city: ['', [Validators.required]],
-      commercial: ['', [Validators.required]],
-      produitIds: [[]],
-      montant_acompte_metre: [0, [Validators.required, Validators.min(0)]],
-      semaine_evoi_demande_acompte_metre: [0, [Validators.required, Validators.min(0)]],
-      etat_paiement_acompte_metre: [false],
-      note_acompte_metre: [''],
-      montant_acompte_livraison: [0, [Validators.required, Validators.min(0)]],
-      semaine_evoi_demande_acompte_livraison: [0, [Validators.required, Validators.min(0)]],
-      etat_paiement_acompte_livraison: [false],
-      note_acompte_livraison: [''],
-      montant_solde: [0, [Validators.required, Validators.min(0)]],
-      semain_evoi_demande_solde: [0, [Validators.required, Validators.min(0)]],
-      etat_paiement_solde: [false],
-      note_solde: [''],
-      semain_livraison_souhaite: [null],
-      livraison_limite: [0, [Validators.required, Validators.min(0)]]
+
     });
   }
 
@@ -164,27 +146,6 @@ export class AddClient implements OnInit {
     this.initializeForm();
   }
 
-  private loadProduits(): void {
-    this.api.getProduits().subscribe({
-      next: (produits) => {
-        this.produits = produits;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des produits', err);
-      }
-    });
-  }
-
-  private loadCommercials(): void {
-    this.api.getCommercials().subscribe({
-      next: (commercials) => {
-        this.commercials = commercials;
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des commerciaux', err);
-      }
-    });
-  }
 
   onClose(): void {
     this.router.navigate(['/clients']);

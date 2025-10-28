@@ -1,26 +1,15 @@
-export interface CreateClientDto {
+export class CreateClientDto {
+  id: number;
   code_client: string;
-  lastName: string;
+  title: string;
   firstName: string;
+  lastName: string;
   email: string;
-  phone?: string | null;
-  rue: string;
-  code_postal: number;
-  ville: string;
-  produitIds?: number[];
-  commercialIds?: number[];
-  montant_acompte_metre: number;
-  semaine_evoi_demande_acompte_metre: number;
-  etat_paiement_acompte_metre?: boolean;
-  note_acompte_metre?: string | null;
-  montant_acompte_livraison: number;
-  semaine_evoi_demande_acompte_livraison: number;
-  etat_paiement_acompte_livraison?: boolean;
-  note_acompte_livraison?: string | null;
-  montant_solde: number;
-  semain_evoi_demande_solde: number;
-  etat_paiement_solde?: boolean;
-  note_solde?: string | null;
-  semain_livraison_souhaite?: number | null;
-  livraison_limite: number;
+  phone_1: string;
+  phone_2: string;
+  phone_3: string;
+  address: string;
+  postal_code: string;
+  city: string;
+
 }

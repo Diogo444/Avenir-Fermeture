@@ -42,14 +42,22 @@ export class Clients implements OnInit {
   displayedColumns: string[] = ['lastName', 'firstName', 'email', 'phone', 'city', 'commercial', 'action'];
 
   isLoading = true;
+  message: string | null = null;
 
   private readonly api = inject(Api)
   private readonly router = inject(Router)
 
   ngOnInit(): void {
-      this.api.getClients().subscribe((data) => {
-        this.isLoading = false;
-        this.client = data;
+      this.api.getClients().subscribe({
+        next: (data) => {
+          this.isLoading = false;
+          this.client = data;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.message = "Une erreur est survenue lors de la récupération des clients.";
+          console.error(error);
+        }
       });
 
 
@@ -77,8 +85,14 @@ export class Clients implements OnInit {
 
   deleteClient(id: number){
     console.log(id);
-    this.api.deleteClient(id).subscribe(() => {
-      this.client = this.client.filter(c => c.id !== id);
+    this.api.deleteClient(id).subscribe({
+      next: () => {
+        this.client = this.client.filter(c => c.id !== id);
+      },
+      error: (error) => {
+        this.message = "Une erreur est survenue lors de la suppression du client.";
+        console.error(error);
+      }
     });
   }
 

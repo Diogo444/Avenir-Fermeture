@@ -2,13 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Client } from '../../Clients/client.entity';
-import { Commercial } from '../../commercial/entities/commercial.entity';
 
 @Entity({ name: 'affaires' })
 export class Affaire {
@@ -54,16 +50,6 @@ export class Affaire {
   @Column()
   emplacement_dossier: string;
 
-  @ManyToOne(() => Client, (client) => client.affaires, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'client_id' })
-  client: Client;
-
-  @ManyToOne(() => Commercial, (commercial) => commercial.affaires_metreur, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
-  @JoinColumn({ name: 'metreur_id' })
-  metreur: Commercial;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

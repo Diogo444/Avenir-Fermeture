@@ -11,6 +11,12 @@
     </button>
   </header>
 
+  @if (message) {
+    <div class="error-message">
+      {{ message }}
+    </div>
+  }
+
   @if (isLoading) {
     <div class="loading-spinner">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

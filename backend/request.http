@@ -1,6 +1,6 @@
 ### REST test file (VS Code REST Client / httpYac)
 
-@baseUrl = http://localhost:3000/api
+@baseUrl = http://localhost:3001/api
 @contentType = application/json
 
 ###
@@ -8,61 +8,140 @@
 GET {{baseUrl}}
 
 ###
-# Get all clients
+# Dashboard: number of clients
+GET {{baseUrl}}/dashboard/number_clients
+
+###
+# Clients - list
 GET {{baseUrl}}/clients
 
 ###
-# Create a client
-POST {{baseUrl}}/clients/create
+# Clients - create
+POST {{baseUrl}}/clients
 Content-Type: {{contentType}}
 
 {
   "code_client": "CLT-0001",
-  "lastName": "Doe",
+  "title": "M.",
   "firstName": "John",
+  "lastName": "Doe",
   "email": "john.doe@example.com",
-  "phone": "+33 6 12 34 56 78",
-  "city": "Paris",
-  "commercialIds": [1],
-  "produitIds": [5],
-  "montant_acompte_metre": 150.5,
-  "semaine_evoi_demande_acompte_metre": 38,
-  "etat_paiement_acompte_metre": false,
-  "note_acompte_metre": "Premier acompte a facturer",
-  "montant_acompte_livraison": 300,
-  "semaine_evoi_demande_acompte_livraison": 40,
-  "etat_paiement_acompte_livraison": false,
-  "note_acompte_livraison": null,
-  "montant_solde": 1200,
-  "semain_evoi_demande_solde": 44,
-  "etat_paiement_solde": false,
-  "note_solde": "Solde a reception",
-  "semain_livraison_souhaite": 45,
-  "livraison_limite": 48
+  "phone_1": "+33 6 12 34 56 78",
+  "phone_2": "+33 6 87 65 43 21",
+  "phone_3": "",
+  "address": "10 Rue de Paris",
+  "postal_code": "75001",
+  "city": "Paris"
 }
 
-### Delete a client by id
-DELETE {{baseUrl}}/clients/9
-
+###
+# Clients - get by id
+GET {{baseUrl}}/clients/1
 
 ###
-# Get a client by code
-GET {{baseUrl}}/clients/one-client/CLT-0001
+# Clients - update by id
+PATCH {{baseUrl}}/clients/1
+Content-Type: {{contentType}}
 
+{
+  "email": "johnny.doe@example.com",
+  "phone_1": "+33 6 00 00 00 00",
+  "city": "Lyon"
+}
 
 ###
-# Get all products
+# Clients - delete by id
+DELETE {{baseUrl}}/clients/1
+
+###
+# Produits - list
 GET {{baseUrl}}/produits
 
 ###
-# Get a product by id
+# Produits - get by id
 GET {{baseUrl}}/produits/2
 
 ###
-# Create a product
+# Produits - create
 POST {{baseUrl}}/produits
 Content-Type: {{contentType}}
 
 {
   "nom": "Fenetre PVC 120x120"
 }
+
+###
+# Produits - update by id
+PATCH {{baseUrl}}/produits/2
+Content-Type: {{contentType}}
+
+{
+  "nom": "Fenetre PVC 120x135"
+}
+
+###
+# Produits - delete by id
+DELETE {{baseUrl}}/produits/2
+
+###
+# Commercial - list
+GET {{baseUrl}}/commercial
+
+###
+# Commercial - create
+POST {{baseUrl}}/commercial
+Content-Type: {{contentType}}
+
+{
+  "firstName": "Alice",
+  "lastName": "Martin"
+}
+
+###
+# Commercial - get by id
+GET {{baseUrl}}/commercial/1
+
+###
+# Commercial - update by id
+PATCH {{baseUrl}}/commercial/1
+Content-Type: {{contentType}}
+
+{
+  "lastName": "Durand"
+}
+
+###
+# Commercial - delete by id
+DELETE {{baseUrl}}/commercial/1
+
+###
+# Affaire - list
+GET {{baseUrl}}/affaire
+
+###
+# Affaire - create
+POST {{baseUrl}}/affaire
+Content-Type: {{contentType}}
+
+{
+  "name": "Projet Baies vitrées",
+  "client_id": 1
+}
+
+###
+# Affaire - get by id
+GET {{baseUrl}}/affaire/1
+
+###
+# Affaire - update by id
+PATCH {{baseUrl}}/affaire/1
+Content-Type: {{contentType}}
+
+{
+  "name": "Projet Baies vitrées - phase 2"
+}
+
+###
+# Affaire - delete by id
+DELETE {{baseUrl}}/affaire/1
+
