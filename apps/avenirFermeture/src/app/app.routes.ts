@@ -30,5 +30,9 @@ export const appRoutes: Route[] = [
     path: 'one-client/:code-client',
     loadComponent: () => import('./components/view/one-client/one-client').then(m => m.OneClientComponent),
 
+  },
+  {
+    path: 'test',
+    loadComponent: () => import('./components/view/test/test').then(m => m.Test),
   }
 ];

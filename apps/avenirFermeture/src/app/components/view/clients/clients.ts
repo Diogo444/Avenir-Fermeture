@@ -39,7 +39,7 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 })
 export class Clients implements OnInit {
   client: Client[] = [];
-  displayedColumns: string[] = ['lastName', 'firstName', 'email', 'phone', 'city', 'commercial', 'action'];
+  displayedColumns: string[] = ['title', 'lastName', 'firstName', 'email', 'phone', 'city', 'action'];
 
   isLoading = true;
   message: string | null = null;

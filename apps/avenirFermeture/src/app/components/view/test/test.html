@@ -1,0 +1,60 @@
+<form [formGroup]="form" class="phones-form" (ngSubmit)="submit()">
+  <h3>Téléphones</h3>
+
+  <div class="phones-list">
+    @for (ctrl of phonesFA.controls; track $index; let i = $index) {
+      <div class="phone-item" [formGroup]="ctrl">
+        <mat-form-field appearance="outline" class="full-width">
+
+          <!-- LABEL DIRECTEMENT EDITABLE -->
+          @if (editingLabelIndex() !== i) {
+            <mat-label (click)="startEditLabel(i)" class="editable-label" title="Cliquer pour modifier">
+              {{ ctrl.controls.label.value }}
+            </mat-label>
+          } @else {
+            <mat-label>
+              <input
+                matInput
+                [formControl]="ctrl.controls.label"
+                (blur)="endEditLabel()"
+                (keydown.enter)="endEditLabel()"
+                class="label-editor"
+                placeholder="Nom du champ (ex. Téléphone bureau)"
+
+              />
+            </mat-label>
+          }
+
+          <input
+            matInput
+            formControlName="value"
+            placeholder="+33 6 12 34 56 78"
+            type="tel"
+          />
+
+        </mat-form-field>
+
+        <button
+          mat-icon-button
+          color="warn"
+          type="button"
+          aria-label="Supprimer"
+          (click)="removePhone(i)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+
+    <div class="add-btn">
+      <button mat-raised-button color="primary" type="button" (click)="addPhone()">
+        <mat-icon>add</mat-icon>
+        Ajouter un téléphone
+      </button>
+    </div>
+  </div>
+
+  <div class="submit-zone">
+    <button mat-flat-button color="accent" type="submit">Enregistrer (console)</button>
+  </div>
+</form>

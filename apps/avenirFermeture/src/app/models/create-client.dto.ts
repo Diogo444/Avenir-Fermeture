@@ -1,28 +1,35 @@
 export interface CreateClientDto {
+  title: string;
   code_client: string;
   lastName: string;
   firstName: string;
   email: string;
-  phone?: string | null;
-  phone_1?: string | null;
-  phone_2?: string | null;
+  phone_1_label: string;
+  phone_1: string | null;
+  phone_2_label?: string;
+  phone_2: string | null;
+  phone_3_label?: string;
+  phone_3?: string | null;
   rue: string;
   code_postal: number;
   ville: string;
-  produitIds?: number[];
-  commercialIds?: number[];
-  montant_acompte_metre: number;
-  semaine_evoi_demande_acompte_metre: number;
-  etat_paiement_acompte_metre?: boolean;
-  note_acompte_metre?: string | null;
-  montant_acompte_livraison: number;
-  semaine_evoi_demande_acompte_livraison: number;
-  etat_paiement_acompte_livraison?: boolean;
-  note_acompte_livraison?: string | null;
-  montant_solde: number;
-  semain_evoi_demande_solde: number;
-  etat_paiement_solde?: boolean;
-  note_solde?: string | null;
-  semain_livraison_souhaite?: number | null;
-  livraison_limite: number;
 }
+
+
+
+  // produitIds?: number[];
+  // commercialIds?: number[];
+  // montant_acompte_metre: number;
+  // semaine_evoi_demande_acompte_metre: number;
+  // etat_paiement_acompte_metre?: boolean;
+  // note_acompte_metre?: string | null;
+  // montant_acompte_livraison: number;
+  // semaine_evoi_demande_acompte_livraison: number;
+  // etat_paiement_acompte_livraison?: boolean;
+  // note_acompte_livraison?: string | null;
+  // montant_solde: number;
+  // semain_evoi_demande_solde: number;
+  // etat_paiement_solde?: boolean;
+  // note_solde?: string | null;
+  // semain_livraison_souhaite?: number | null;
+  // livraison_limite: number;

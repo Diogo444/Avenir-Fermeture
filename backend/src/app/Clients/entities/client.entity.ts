@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('clients')
 export class Client {
@@ -30,18 +30,18 @@ export class Client {
   phone_3: string;
 
   @Column()
-  address: string;
+  rue: string;
 
   @Column()
-  postal_code: number;
+  code_postal: number;
 
   @Column()
-  city: string;
+  ville: string;
 
-  @Column({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime', name: 'createdAt' })
   createdAt: Date;
 
-  @Column({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'datetime', name: 'updatedAt' })
   updatedAt: Date;
 
 }

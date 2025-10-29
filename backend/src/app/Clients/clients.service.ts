@@ -15,8 +15,8 @@ export class ClientsService {
   create(createClientDto: CreateClientDto) {
     const clientData = {
       ...createClientDto,
-      ...(createClientDto.postal_code && { postal_code: +createClientDto.postal_code }),
-    };
+      ...(createClientDto.code_postal && { code_postal: +createClientDto.code_postal }),
+    } as Partial<Client>;
     const client = this.clientRepository.create(clientData);
     return this.clientRepository.save(client);
   }
@@ -32,8 +32,8 @@ export class ClientsService {
   async update(id: number, updateClientDto: UpdateClientDto) {
     const clientToUpdate = {
       ...updateClientDto,
-      ...(updateClientDto.postal_code && { postal_code: +updateClientDto.postal_code }),
-    };
+      ...(updateClientDto.code_postal && { code_postal: +updateClientDto.code_postal }),
+    } as Partial<Client>;
     await this.clientRepository.update(id, clientToUpdate);
     return this.findOne(id);
   }

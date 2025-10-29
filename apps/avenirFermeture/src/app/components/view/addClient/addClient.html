@@ -25,6 +25,22 @@
           </h3>
 
           <div class="form-row">
+            <div class="radio-field-container">
+              <mat-label class="radio-field-label">Titre</mat-label>
+              <mat-radio-group
+                formControlName="title"
+                class="example-radio-group"
+              >
+                @for (option of title_choice; track option) {
+                <mat-radio-button class="example-radio-button" [value]="option">
+                  {{ option }}
+                </mat-radio-button>
+                }
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Nom</mat-label>
               <input matInput formControlName="lastName" required />
@@ -53,12 +69,34 @@
               <mat-error> Format d'email invalide </mat-error>
               }
             </mat-form-field>
-
           </div>
 
           <div class="form-row">
-            <div class="form-field" style="flex:1; min-width:200px; margin-right: 8px;">
-              <label class="mat-label" for="phone1Input">Téléphone 1</label>
+            <div
+              class="form-field"
+              style="flex: 1; min-width: 200px; margin-right: 8px"
+            >
+              @if (editingPhoneLabelIndex !== 0) {
+                <label
+                  class="mat-label editable-label"
+                  for="phone1Input"
+                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(0)"
+                  title="Double-cliquer pour modifier"
+                >
+                  {{ phoneLabels()[0] }}
+                </label>
+              } @else {
+                <input
+                  class="label-editor"
+                  [value]="labelEditValue"
+                  (input)="onLabelInput($event)"
+                  (blur)="endEditPhoneLabel()"
+                  (keydown.enter)="endEditPhoneLabel()"
+                  [style.margin-bottom.px]="4"
+                  placeholder="Nom du champ (ex. Téléphone bureau)"
+                  autofocus
+                />
+              }
               <div
                 class="mat-like-field"
                 [class.ng-invalid]="clientForm.get('phone1')?.invalid"
@@ -77,17 +115,42 @@
                   name="phone1"
                   [inputId]="'phone1Input'"
                   formControlName="phone1"
+                  required
                 >
                 </ngx-intl-tel-input>
               </div>
-              @if(clientForm.get('phone1')?.invalid && clientForm.get('phone1')?.touched) {
+              @if(clientForm.get('phone1')?.invalid &&
+              clientForm.get('phone1')?.touched) {
               <span class="phone-error">
                 Le numéro de téléphone 1 n'est pas valide
               </span>
               }
             </div>
-            <div class="form-field" style="flex:1; min-width:200px; margin-left: 8px;">
-              <label class="mat-label" for="phone2Input">Téléphone 2</label>
+            <div
+              class="form-field"
+              style="flex: 1; min-width: 200px; margin-left: 8px"
+            >
+              @if (editingPhoneLabelIndex !== 1) {
+                <label
+                  class="mat-label editable-label"
+                  for="phone2Input"
+                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(1)"
+                  title="Double-cliquer pour modifier"
+                >
+                  {{ phoneLabels()[1] }}
+                </label>
+              } @else {
+                <input
+                  class="label-editor"
+                  [value]="labelEditValue"
+                  (input)="onLabelInput($event)"
+                  (blur)="endEditPhoneLabel()"
+                  (keydown.enter)="endEditPhoneLabel()"
+                  [style.margin-bottom.px]="4"
+                  placeholder="Nom du champ (ex. Téléphone bureau)"
+                  autofocus
+                />
+              }
               <div
                 class="mat-like-field"
                 [class.ng-invalid]="clientForm.get('phone2')?.invalid"
@@ -109,14 +172,38 @@
                 >
                 </ngx-intl-tel-input>
               </div>
-              @if(clientForm.get('phone2')?.invalid && clientForm.get('phone2')?.touched) {
+              @if(clientForm.get('phone2')?.invalid &&
+              clientForm.get('phone2')?.touched) {
               <span class="phone-error">
                 Le numéro de téléphone 2 n'est pas valide
               </span>
               }
             </div>
-            <div class="form-field" style="flex:1; min-width:200px; margin-left: 8px;">
-              <label class="mat-label" for="phone3Input">Téléphone 3</label>
+            <div
+              class="form-field"
+              style="flex: 1; min-width: 200px; margin-left: 8px"
+            >
+              @if (editingPhoneLabelIndex !== 2) {
+                <label
+                  class="mat-label editable-label"
+                  for="phone3Input"
+                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(2)"
+                  title="Double-cliquer pour modifier"
+                >
+                  {{ phoneLabels()[2] }}
+                </label>
+              } @else {
+                <input
+                  class="label-editor"
+                  [value]="labelEditValue"
+                  (input)="onLabelInput($event)"
+                  (blur)="endEditPhoneLabel()"
+                  (keydown.enter)="endEditPhoneLabel()"
+                  [style.margin-bottom.px]="4"
+                  placeholder="Nom du champ (ex. Téléphone bureau)"
+                  autofocus
+                />
+              }
               <div
                 class="mat-like-field"
                 [class.ng-invalid]="clientForm.get('phone3')?.invalid"
@@ -132,15 +219,16 @@
                   [phoneValidation]="true"
                   [selectedCountryISO]="CountryISO.France"
                   [maxLength]="15"
-                  name="phone2"
-                  [inputId]="'phone2Input'"
-                  formControlName="phone2"
+                  name="phone3"
+                  [inputId]="'phone3Input'"
+                  formControlName="phone3"
                 >
                 </ngx-intl-tel-input>
               </div>
-              @if(clientForm.get('phone2')?.invalid && clientForm.get('phone2')?.touched) {
+              @if(clientForm.get('phone3')?.invalid &&
+              clientForm.get('phone3')?.touched) {
               <span class="phone-error">
-                Le numéro de téléphone 2 n'est pas valide
+                Le numéro de téléphone 3 n'est pas valide
               </span>
               }
             </div>
@@ -166,7 +254,7 @@
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field-full">
-              <mat-label>Rue</mat-label>
+              <mat-label>Adresse</mat-label>
               <input matInput formControlName="rue" required />
               <mat-icon matSuffix>home</mat-icon>
               @if(clientForm.get('rue')?.hasError('required')) {
@@ -178,7 +266,12 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Code Postal</mat-label>
-              <input matInput type="number" formControlName="code_postal" required />
+              <input
+                matInput
+                type="number"
+                formControlName="code_postal"
+                required
+              />
               <mat-icon matSuffix>markunread_mailbox</mat-icon>
               @if(clientForm.get('code_postal')?.hasError('required')) {
               <mat-error> Le code postal est requis </mat-error>
@@ -195,7 +288,6 @@
             </mat-form-field>
           </div>
         </div>
-
 
         <!-- Boutons d'action -->
         <div class="form-actions">

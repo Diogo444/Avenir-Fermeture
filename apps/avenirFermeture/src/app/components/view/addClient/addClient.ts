@@ -1,5 +1,5 @@
-﻿import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+﻿import { Component, OnInit, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
+import {MatRadioModule} from '@angular/material/radio';
+
 import { CommonModule } from '@angular/common';
 import { Api } from '../../../services/api/api';
 import { Router } from '@angular/router';
@@ -32,16 +34,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     NgxIntlTelInputModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
+    FormsModule
   ],
   templateUrl: './addClient.html',
   styleUrls: ['./addClient.css'],
 })
 export class AddClient implements OnInit {
+
+  title = '';
+  title_choice: string[] = ['Mr.', 'Mme.'];
+
+
   clientForm!: FormGroup;
   private fb = inject(FormBuilder);
   private api = inject(Api);
   private router = inject(Router);
   private _snackBar = inject(MatSnackBar);
+
+  // Labels éditables pour les 3 champs téléphones (signal)
+  phoneLabels = signal<string[]>(['Téléphone 1', 'Téléphone 2', 'Téléphone 3']);
+  editingPhoneLabelIndex = -1; // -1 = aucun en édition
+  public labelEditValue = '';
 
 
   commercials: Commercial[] = [];
@@ -64,11 +78,13 @@ export class AddClient implements OnInit {
 
   initializeForm(): void {
     this.clientForm = this.fb.group({
+      title: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      phone1: [''],
+      phone1: ['', [Validators.required]],
       phone2: [''],
+      phone3: [''],
       codeClient: ['', [Validators.required]],
       rue: ['', [Validators.required]],
       code_postal: [null, [Validators.required, Validators.min(0)]],
@@ -89,37 +105,26 @@ export class AddClient implements OnInit {
 
       const phone_1 = parsePhone(rawValue.phone1);
       const phone_2 = parsePhone(rawValue.phone2);
-
-      const commercialId = rawValue.commercial;
+      const phone_3 = parsePhone(rawValue.phone3);
 
       const payload: CreateClientDto = {
+        title: rawValue.title,
         code_client: rawValue.codeClient,
         lastName: rawValue.lastName,
         firstName: rawValue.firstName,
         email: rawValue.email,
-        phone: phone_1 ?? null,
+        phone_1_label: this.phoneLabels()[0],
         phone_1: phone_1 ?? null,
+        phone_2_label: this.phoneLabels()[1],
         phone_2: phone_2 ?? null,
+        phone_3_label: this.phoneLabels()[2],
+        phone_3: phone_3 ?? null,
         rue: rawValue.rue,
         code_postal: rawValue.code_postal,
         ville: rawValue.city,
-        produitIds: rawValue.produitIds && rawValue.produitIds.length > 0 ? rawValue.produitIds : undefined,
-        commercialIds: commercialId !== null && commercialId !== undefined && commercialId !== '' ? [Number(commercialId)] : undefined,
-        montant_acompte_metre: rawValue.montant_acompte_metre,
-        semaine_evoi_demande_acompte_metre: rawValue.semaine_evoi_demande_acompte_metre,
-        etat_paiement_acompte_metre: rawValue.etat_paiement_acompte_metre,
-        note_acompte_metre: rawValue.note_acompte_metre || undefined,
-        montant_acompte_livraison: rawValue.montant_acompte_livraison,
-        semaine_evoi_demande_acompte_livraison: rawValue.semaine_evoi_demande_acompte_livraison,
-        etat_paiement_acompte_livraison: rawValue.etat_paiement_acompte_livraison,
-        note_acompte_livraison: rawValue.note_acompte_livraison || undefined,
-        montant_solde: rawValue.montant_solde,
-        semain_evoi_demande_solde: rawValue.semain_evoi_demande_solde,
-        etat_paiement_solde: rawValue.etat_paiement_solde,
-        note_solde: rawValue.note_solde || undefined,
-        semain_livraison_souhaite: rawValue.semain_livraison_souhaite ?? undefined,
-        livraison_limite: rawValue.livraison_limite,
       };
+
+      console.log('Submitting client payload:', payload);
 
       this.api.createClient(payload).subscribe({
         next: () => {
@@ -157,6 +162,30 @@ export class AddClient implements OnInit {
 
   onClose(): void {
     this.router.navigate(['/clients']);
+  }
+
+  // Inline editing des labels téléphone
+  startEditPhoneLabel(index: number): void {
+    this.editingPhoneLabelIndex = index;
+    this.labelEditValue = this.phoneLabels()[index] ?? '';
+  }
+
+  endEditPhoneLabel(): void {
+    const idx = this.editingPhoneLabelIndex;
+    if (idx >= 0) {
+      const value = (this.labelEditValue ?? '').trim() || `Téléphone ${idx + 1}`;
+      this.phoneLabels.update(arr => {
+        const copy = arr.slice();
+        copy[idx] = value;
+        return copy;
+      });
+    }
+    this.editingPhoneLabelIndex = -1;
+  }
+
+  onLabelInput(evt: Event): void {
+    const target = evt.target as HTMLInputElement | null;
+    this.labelEditValue = target?.value ?? '';
   }
 
   protected isPhoneInvalid(controlName: 'phone1' | 'phone2'): boolean {

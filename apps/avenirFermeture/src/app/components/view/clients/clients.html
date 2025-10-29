@@ -24,6 +24,13 @@
   } @else {
     <table mat-table [dataSource]="client" class="mat-elevation-z8">
 
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Titre </th>
+        <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+      </ng-container>
+
+
       <!-- Nom Column -->
       <ng-container matColumnDef="lastName">
         <th mat-header-cell *matHeaderCellDef> Nom</th>
@@ -45,7 +52,7 @@
       <!-- Téléphone Column -->
       <ng-container matColumnDef="phone">
         <th mat-header-cell *matHeaderCellDef> Téléphone </th>
-        <td mat-cell *matCellDef="let element"> {{ parseNumber(element.phone)}} </td>
+        <td mat-cell *matCellDef="let element"> {{ parseNumber(element.phone_1)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="city">
@@ -53,10 +60,6 @@
         <td mat-cell *matCellDef="let element"> {{element.rue}} {{element.code_postal}} {{element.ville}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="commercial">
-        <th mat-header-cell *matHeaderCellDef> Commercial </th>
-        <td mat-cell *matCellDef="let element"> {{element.commerciaux[0]?.firstName}} {{element.commerciaux[0]?.lastName}} </td>
-      </ng-container>
 
       <!-- ajouter action et un bouton supprimer qui prend en entré l'id et appelle la fonction delete -->
       <ng-container matColumnDef="action">
