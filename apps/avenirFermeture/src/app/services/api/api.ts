@@ -47,7 +47,7 @@ export class Api {
   }
 
   getClientByCode(codeClient: string) {
-    return this.http.get<Client>(`${this.apiurl}/clients/one-client/${codeClient}`);
+    return this.http.get<Client>(`${this.apiurl}/clients/${codeClient}`);
   }
 
 

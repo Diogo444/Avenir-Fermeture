@@ -25,8 +25,8 @@ export class ClientsService {
     return this.clientRepository.find();
   }
 
-  findOne(id: number) {
-    return this.clientRepository.findOneBy({ id });
+  findOne(code_client: string) {
+    return this.clientRepository.findOneBy({ code_client });
   }
 
   async update(id: number, updateClientDto: UpdateClientDto) {
@@ -35,7 +35,7 @@ export class ClientsService {
       ...(updateClientDto.code_postal && { code_postal: +updateClientDto.code_postal }),
     } as Partial<Client>;
     await this.clientRepository.update(id, clientToUpdate);
-    return this.findOne(id);
+    return this.clientRepository.findOneBy({ id });
   }
 
   remove(id: number) {
