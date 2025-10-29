@@ -1,38 +1,47 @@
-<nav class="sidebar" aria-label="Navigation principale">
-  <ul class="nav-list">
-    <a routerLink="/">
+<!-- Mobile header (visible on small screens) -->
+<header class="mobile-header">
+  <button class="menu-btn" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isOpen" aria-label="Ouvrir le menu">
+    <mat-icon aria-hidden="true" fontIcon="menu"></mat-icon>
+  </button>
+  <span class="app-title">Avenir Fermeture</span>
+  <span></span>
+</header>
 
+<!-- Backdrop for off-canvas menu -->
+<div class="backdrop" *ngIf="isOpen" (click)="closeMenu()" aria-hidden="true"></div>
+
+<!-- Sidebar navigation -->
+<nav class="sidebar" [ngClass]="{ open: isOpen }" aria-label="Navigation principale">
+  <ul class="nav-list">
+    <a routerLink="/" (click)="onNavigate()">
       <li class="nav-item" tabindex="0">
         <mat-icon aria-hidden="true" fontIcon="dashboard"></mat-icon>
         <span class="label">Tableau de bord / Dashboard</span>
       </li>
     </a>
-    <a routerLink="/clients">
-
+    <a routerLink="/clients" (click)="onNavigate()">
       <li class="nav-item" tabindex="0">
         <mat-icon aria-hidden="true" fontIcon="person"></mat-icon>
         <span class="label">Page Clients</span>
       </li>
     </a>
-    <a routerLink="/commercial">
-
+    <a routerLink="/commercial" (click)="onNavigate()">
       <li class="nav-item" tabindex="0">
         <mat-icon aria-hidden="true" fontIcon="handshake"></mat-icon>
         <span class="label">Page Commercial</span>
       </li>
     </a>
-    <a routerLink="/comptabilite">
+    <a routerLink="/comptabilite" (click)="onNavigate()">
       <li class="nav-item" tabindex="0">
         <mat-icon aria-hidden="true" fontIcon="attach_money"></mat-icon>
         <span class="label">Page Comptabilité</span>
       </li>
     </a>
-    <a routerLink="/dev-ajout-produit">
+    <a routerLink="/dev-ajout-produit" (click)="onNavigate()">
       <li class="nav-item" tabindex="0">
         <mat-icon aria-hidden="true" fontIcon="code"></mat-icon>
         <span class="label">Ajout produit (dev)</span>
       </li>
     </a>
-
   </ul>
 </nav>

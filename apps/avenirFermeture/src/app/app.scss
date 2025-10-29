@@ -9,3 +9,14 @@
   height: 100%;
   box-sizing: border-box;
 }
+
+@media (max-width: 768px) {
+  :host {
+    flex-direction: column;
+  }
+
+  .main-content {
+    height: auto;
+    min-height: 0;
+  }
+}
