@@ -21,10 +21,19 @@ export class Client {
   email: string;
 
   @Column()
+  phone_1_label: string;
+
+  @Column()
   phone_1: string;
+
+  @Column()
+  phone_2_label: string;
 
   @Column({ nullable: true })
   phone_2: string;
+
+  @Column()
+  phone_3_label: string;
 
   @Column({ nullable: true })
   phone_3: string;

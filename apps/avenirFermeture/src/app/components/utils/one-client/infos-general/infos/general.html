@@ -10,68 +10,57 @@
           <mat-icon>badge</mat-icon>
           <div>
             <span class="info-label">Code client</span>
-            <span class="info-value">CLI-12345</span>
+            <span class="info-value">{{ client.code_client }}</span>
           </div>
         </div>
         <div class="info-item">
           <mat-icon>person</mat-icon>
           <div>
             <span class="info-label">Nom complet</span>
-            <span class="info-value">Jean Dupont</span>
+            <span class="info-value">{{ client.firstName }} {{ client.lastName }}</span>
           </div>
         </div>
         <div class="info-item">
           <mat-icon>email</mat-icon>
           <div>
             <span class="info-label">Email</span>
-            <span class="info-value">jean.dupont@email.com</span>
+            <span class="info-value">{{ client.email }}</span>
           </div>
         </div>
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
-            <span class="info-label">Téléphone</span>
-            <span class="info-value">06 12 34 56 78</span>
+            <span class="info-label">{{ client.phone_1_label }}</span>
+            <span class="info-value">{{ parseNumber(client.phone_1) }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div>
+            <span class="info-label">{{ client.phone_2_label }}</span>
+            <span class="info-value">{{ parseNumber(client.phone_2) }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon>phone</mat-icon>
+          <div>
+            <span class="info-label">{{ client.phone_3_label }}</span>
+            <span class="info-value">{{ parseNumber(client.phone_3) }}</span>
           </div>
         </div>
         <div class="info-item">
           <mat-icon>location_city</mat-icon>
           <div>
             <span class="info-label">Ville</span>
-            <span class="info-value">Paris</span>
+            <span class="info-value">{{client.rue}}, {{client.code_postal}} {{ client.ville }}</span>
           </div>
         </div>
         <div class="info-item">
           <mat-icon>calendar_today</mat-icon>
           <div>
             <span class="info-label">Date de création</span>
-            <span class="info-value">28/10/2025</span>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Livraison -->
-  <mat-card class="info-card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>local_shipping</mat-icon>
-      <mat-card-title>Informations de livraison</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="info-grid">
-        <div class="info-item">
-          <mat-icon>event</mat-icon>
-          <div>
-            <span class="info-label">Semaine de livraison souhaitée</span>
-            <span class="info-value">Semaine 45 - 2025</span>
-          </div>
-        </div>
-        <div class="info-item">
-          <mat-icon>event_busy</mat-icon>
-          <div>
-            <span class="info-label">Livraison limite</span>
-            <span class="info-value">Semaine 48 - 2025</span>
+            <span class="info-value">{{ client.createdAt | date }}
+</span>
           </div>
         </div>
       </div>

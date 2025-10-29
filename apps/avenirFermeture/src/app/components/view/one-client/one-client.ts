@@ -37,42 +37,24 @@ export class OneClientComponent implements OnInit {
   isLoading = true;
 
   ngOnInit(): void {
+    localStorage.setItem('code_client', this.codeClient || '');
+    this.getClient();
+  }
+
+  getClient(): void {
     if (this.codeClient) {
       this.api.getClientByCode(this.codeClient).subscribe(client => {
+        // mettre l'id dans le localstorage
+        localStorage.setItem('id_client', client.id.toString());
         this.client = client;
         this.isLoading = false;
       });
     }
   }
 
+
   goBack(): void {
     this.router.navigate(['/clients']);
   }
 
-  formatDate(date: string): string {
-    return new Date(date).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
-
-  formatWeek(week: number): string {
-    return week ? `Semaine ${week}` : 'Non défini';
-  }
-
-  formatAmount(amount: number): string {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(amount || 0);
-  }
-
-  getPaymentStatus(status: boolean): string {
-    return status ? 'Payé' : 'En attente';
-  }
-
-  getPaymentStatusClass(status: boolean): string {
-    return status ? 'status-paid' : 'status-pending';
-  }
 }
