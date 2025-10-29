@@ -69,7 +69,6 @@ export class AddClient implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone1: [''],
       phone2: [''],
-      phone3: [''],
       codeClient: ['', [Validators.required]],
       rue: ['', [Validators.required]],
       code_postal: [null, [Validators.required, Validators.min(0)]],
@@ -90,7 +89,6 @@ export class AddClient implements OnInit {
 
       const phone_1 = parsePhone(rawValue.phone1);
       const phone_2 = parsePhone(rawValue.phone2);
-      const phone_3 = parsePhone(rawValue.phone3);
 
       const commercialId = rawValue.commercial;
 
@@ -102,7 +100,6 @@ export class AddClient implements OnInit {
         phone: phone_1 ?? null,
         phone_1: phone_1 ?? null,
         phone_2: phone_2 ?? null,
-        phone_3: phone_3 ?? null,
         rue: rawValue.rue,
         code_postal: rawValue.code_postal,
         ville: rawValue.city,
@@ -162,12 +159,12 @@ export class AddClient implements OnInit {
     this.router.navigate(['/clients']);
   }
 
-  protected isPhoneInvalid(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+  protected isPhoneInvalid(controlName: 'phone1' | 'phone2'): boolean {
     const control = this.clientForm?.get(controlName);
     return !!control && control.invalid && (control.touched || control.dirty);
   }
 
-  protected hasPhoneValue(controlName: 'phone1' | 'phone2' | 'phone3'): boolean {
+  protected hasPhoneValue(controlName: 'phone1' | 'phone2'): boolean {
     const control = this.clientForm?.get(controlName);
     if (!control) {
       return false;
