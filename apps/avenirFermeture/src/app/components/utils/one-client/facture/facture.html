@@ -1,1 +1,91 @@
-<p>facture works!</p>
+
+
+
+        <div class="tab-content">
+
+          <!-- Acompte Métré -->
+          <mat-card class="payment-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="payment-icon">payments</mat-icon>
+              <mat-card-title>Acompte Métré</mat-card-title>
+              <mat-chip class="payment-status-paid">
+                Payé
+              </mat-chip>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="payment-details">
+                <div class="payment-item">
+                  <span class="payment-label">Montant</span>
+                  <span class="payment-value amount">1 500,00 €</span>
+                </div>
+                <div class="payment-item">
+                  <span class="payment-label">Semaine d'envoi de la demande</span>
+                  <span class="payment-value">Semaine 40 - 2025</span>
+                </div>
+                <div class="payment-item note">
+                  <mat-icon>note</mat-icon>
+                  <div>
+                    <span class="payment-label">Note</span>
+                    <span class="payment-value">RAS</span>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Acompte Livraison -->
+          <mat-card class="payment-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="payment-icon">local_shipping</mat-icon>
+              <mat-card-title>Acompte Livraison</mat-card-title>
+              <mat-chip class="payment-status-pending">
+                En attente
+              </mat-chip>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="payment-details">
+                <div class="payment-item">
+                  <span class="payment-label">Montant</span>
+                  <span class="payment-value amount">2 000,00 €</span>
+                </div>
+                <div class="payment-item">
+                  <span class="payment-label">Semaine d'envoi de la demande</span>
+                  <span class="payment-value">Semaine 42 - 2025</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Solde -->
+          <mat-card class="payment-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="payment-icon">account_balance</mat-icon>
+              <mat-card-title>Solde</mat-card-title>
+              <mat-chip class="payment-status-unpaid">
+                Non payé
+              </mat-chip>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="payment-details">
+                <div class="payment-item">
+                  <span class="payment-label">Montant</span>
+                  <span class="payment-value amount">3 500,00 €</span>
+                </div>
+                <div class="payment-item">
+                  <span class="payment-label">Semaine d'envoi de la demande</span>
+                  <span class="payment-value">Semaine 44 - 2025</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Total des paiements -->
+          <mat-card class="total-card">
+            <mat-card-content>
+              <div class="total-payment">
+                <span class="total-label">Total des paiements</span>
+                <span class="total-value">7 000,00 €</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>

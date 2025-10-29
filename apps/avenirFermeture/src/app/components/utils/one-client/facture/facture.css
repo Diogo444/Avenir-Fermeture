@@ -1,0 +1,184 @@
+/* Contenu de l'onglet Facture */
+.tab-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Cartes Paiement + Total */
+.payment-card,
+.total-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.payment-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* En-têtes de cartes */
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-header mat-icon[mat-card-avatar] {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  color: #1976d2;
+  background: #e3f2fd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-icon {
+  background: #fff3e0 !important;
+  color: #f57c00 !important;
+}
+
+/* Détails de paiement */
+.payment-card mat-card-header {
+  position: relative;
+}
+
+.payment-card mat-chip {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+}
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.payment-item.note {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fff3e0;
+}
+
+.payment-item.note > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.payment-item mat-icon {
+  color: #f57c00;
+  margin-right: 8px;
+}
+
+.payment-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.payment-value {
+  font-size: 16px;
+  color: #333;
+}
+
+.payment-value.amount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+/* Chips de statut de paiement */
+mat-chip {
+  font-weight: 500;
+  border-radius: 16px;
+}
+
+.payment-status-paid {
+  background-color: #c8e6c9 !important;
+  color: #2e7d32 !important;
+}
+
+.payment-status-pending {
+  background-color: #ffecb3 !important;
+  color: #f57c00 !important;
+}
+
+/* Carte Total */
+.total-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.total-payment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.total-label {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.total-value {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-content {
+    padding: 16px;
+  }
+
+  .payment-card mat-chip {
+    position: static;
+    margin-top: 12px;
+  }
+
+  .payment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .total-payment {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-card {
+  animation: fadeIn 0.3s ease-out;
+}

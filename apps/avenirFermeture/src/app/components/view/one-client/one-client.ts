@@ -4,14 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Client } from '../../../models/clients.model';
 import { Api } from '../../../services/api/api';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatListModule } from '@angular/material/list';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { Facture } from '../../utils/one-client/facture/facture';
+import { Commandes } from '../../utils/one-client/commandes/commandes';
+import { General } from '../../utils/one-client/infos-general/infos/general';
 
 @Component({
   selector: 'app-one-client',
@@ -19,14 +17,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule,
-    MatDividerModule,
     MatTabsModule,
-    MatListModule,
-    MatTooltipModule
+    Facture,
+    Commandes,
+    General
   ],
   templateUrl: './one-client.html',
   styleUrls: ['./one-client.css']

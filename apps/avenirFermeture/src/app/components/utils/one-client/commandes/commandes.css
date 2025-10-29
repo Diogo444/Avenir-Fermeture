@@ -1,0 +1,73 @@
+/* Contenu de l'onglet Commandes */
+.tab-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Carte Produits */
+.products-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+
+.products-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* En-tête de carte */
+mat-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+mat-card-header mat-icon[mat-card-avatar] {
+  font-size: 32px;
+  width: 40px;
+  height: 40px;
+  color: #1976d2;
+  background: #e3f2fd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Listes */
+mat-list {
+  padding-top: 0;
+}
+
+mat-list-item {
+  min-height: 72px;
+}
+
+mat-list-item mat-icon[matListItemIcon] {
+  color: #1976d2;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-content {
+    padding: 16px;
+  }
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.products-card {
+  animation: fadeIn 0.3s ease-out;
+}
