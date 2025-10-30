@@ -15,9 +15,10 @@ import { Router } from '@angular/router';
 import { CreateClientDto } from '../../../models/create-client.dto';
 
 import { NgxIntlTelInputModule, CountryISO, ChangeData } from 'ngx-intl-tel-input';
-import { Commercial } from '../ajoutProduit/dto/commercial.model';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { getTitre } from '../../../models/titres.model';
 
 @Component({
   selector: 'app-add-client',
@@ -42,8 +43,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class AddClient implements OnInit {
 
-  title = '';
-  title_choice: string[] = ['Mr.', 'Mme.'];
+  title: getTitre[] = [];
 
 
   clientForm!: FormGroup;
@@ -58,7 +58,6 @@ export class AddClient implements OnInit {
   public labelEditValue = '';
 
 
-  commercials: Commercial[] = [];
   // Expose enums to the template
   readonly CountryISO = CountryISO;
 
@@ -70,10 +69,17 @@ export class AddClient implements OnInit {
     });
   }
 
+  getTitre() {
+    this.api.getTitres().subscribe((titles) => {
+
+      this.title = titles;
+    });
+  }
+
+
   ngOnInit(): void {
-    console.log('AddClient component initialized');
+    this.getTitre();
     this.initializeForm();
-    console.log('Client form created:', this.clientForm);
   }
 
   initializeForm(): void {

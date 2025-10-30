@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Titre } from "../../titres/entities/titre.entity";
 
 @Entity('clients')
 export class Client {
@@ -8,8 +9,10 @@ export class Client {
   @Column()
   code_client: string;
 
-  @Column()
-  title: string;
+  @ManyToOne(() => Titre, (titre) => titre.clients)
+  @JoinColumn({ name: 'title_id' })
+  title: Titre;
+
 
   @Column()
   firstName: string;

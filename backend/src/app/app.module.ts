@@ -8,6 +8,7 @@ import { CommercialModule } from './commercial/commercial.module';
 import { AffaireModule } from './affaire/affaire.module';
 import { ClientsModule } from './clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TitresModule } from './titres/titres.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     CommercialModule,
     AffaireModule,
     ClientsModule,
+    TitresModule,
   ],
   controllers: [AppController],
   providers: [AppService],

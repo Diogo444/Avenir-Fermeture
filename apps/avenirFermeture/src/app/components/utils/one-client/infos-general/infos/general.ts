@@ -3,14 +3,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Client } from '../../../../../models/clients.model';
 import { Api } from '../../../../../services/api/api';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 
 @Component({
   selector: 'app-general',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, DatePipe],
+  imports: [MatIconModule, MatCardModule, DatePipe, CommonModule],
   templateUrl: './general.html',
   styleUrls: ['./general.css'],
 })

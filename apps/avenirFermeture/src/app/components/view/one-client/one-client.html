@@ -11,8 +11,18 @@
         <mat-icon>arrow_back</mat-icon>
       </button>
       <div class="header-info">
-        <h1>{{ client.firstName }} {{ client.lastName }}</h1>
         <span class="client-code">{{client.title}}  {{ client.code_client }}</span>
+        <h1>{{ client.firstName }} {{ client.lastName }}</h1>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="editClient()">
+          <mat-icon>edit</mat-icon>
+          Éditer
+        </button>
+        <button mat-raised-button color="warn" (click)="deleteClient()">
+          <mat-icon>delete</mat-icon>
+          Supprimer
+        </button>
       </div>
     </div>
 

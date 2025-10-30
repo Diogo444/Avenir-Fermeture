@@ -31,21 +31,33 @@
           <mat-icon>phone</mat-icon>
           <div>
             <span class="info-label">{{ client.phone_1_label }}</span>
-            <span class="info-value">{{ parseNumber(client.phone_1) }}</span>
+            @if(client.phone_1 !== null){
+              <span class="info-value">{{ parseNumber(client.phone_1) }}</span>
+            } @else {
+              <span class="info-value">Non renseigné</span>
+            }
           </div>
         </div>
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
             <span class="info-label">{{ client.phone_2_label }}</span>
-            <span class="info-value">{{ parseNumber(client.phone_2) }}</span>
+            @if(client.phone_2 !== null){
+              <span class="info-value">{{ parseNumber(client.phone_2) }}</span>
+            } @else {
+              <span class="info-value">Non renseigné</span>
+            }
           </div>
         </div>
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
             <span class="info-label">{{ client.phone_3_label }}</span>
-            <span class="info-value">{{ parseNumber(client.phone_3) }}</span>
+            @if(client.phone_3 !== null){
+              <span class="info-value">{{ parseNumber(client.phone_3) }}</span>
+            } @else {
+              <span class="info-value">Non renseigné</span>
+            }
           </div>
         </div>
         <div class="info-item">

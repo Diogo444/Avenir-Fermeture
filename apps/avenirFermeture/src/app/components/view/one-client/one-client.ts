@@ -57,4 +57,22 @@ export class OneClientComponent implements OnInit {
     this.router.navigate(['/clients']);
   }
 
+  editClient(): void {
+    if (this.codeClient) {
+      this.router.navigate(['/clients', this.codeClient, 'edit']);
+    }
+  }
+
+  deleteClient(): void {
+    if (this.client) {
+      const confirmDelete = confirm(`Êtes-vous sûr de vouloir supprimer le client ${this.client.firstName} ${this.client.lastName} ?`);
+      if (confirmDelete) {
+        this.api.deleteClient(this.client.id).subscribe(() => {
+          alert('Client supprimé avec succès.');
+          this.router.navigate(['/clients']);
+        });
+      }
+    }
+  }
+
 }

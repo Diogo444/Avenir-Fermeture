@@ -9,6 +9,7 @@ import { Produit } from './dto/produit.model';
 import { CommonModule } from '@angular/common';
 import { Commercial } from './dto/commercial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { getTitre } from '../../../models/titres.model';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -27,6 +28,8 @@ export class AjoutProduit implements OnInit {
   produitName = '';
   produits: Produit[] = [];
   commercial: Commercial[] = [];
+  titres: getTitre[] = [];
+  titreName = '';
 
   commercialLastName = '';
   commercialFirstName = '';
@@ -103,8 +106,30 @@ export class AjoutProduit implements OnInit {
     });
   }
 
+  getTitres() {
+    this.api.getTitres().subscribe((titres) => {
+      this.titres = titres;
+    });
+  }
+
+  onSubmitTitre() {
+    const titreName = this.titreName;
+    this.api.ajoutTitre({ name: titreName } as getTitre).subscribe({
+      next: () => {
+        this.openSnackBar('Le titre ' + titreName + ' a bien été ajouté !');
+        this.getTitres();
+        this.titreName = '';
+      },
+      error: (error: Error) => {
+        this.openSnackBar("Erreur lors de l'ajout du titre " + titreName + '.');
+        console.error('Error adding titre:', error);
+      },
+    });
+  }
+
   ngOnInit(): void {
     this.getProduit();
     this.getCommercial();
+    this.getTitres();
   }
 }

@@ -6,6 +6,8 @@ import { NumberClients } from '../../models/number_clients.model';
 import { environment } from '../../../environments/environment';
 import { Commercial } from '../../components/view/ajoutProduit/dto/commercial.model';
 import { Produit } from '../../components/view/ajoutProduit/dto/produit.model';
+import { getTitre, postTitre } from '../../models/titres.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +50,14 @@ export class Api {
 
   getClientByCode(codeClient: string) {
     return this.http.get<Client>(`${this.apiurl}/clients/${codeClient}`);
+  }
+
+  getTitres() {
+    return this.http.get<getTitre[]>(`${this.apiurl}/titres`);
+  }
+
+  ajoutTitre(titre: postTitre) {
+    return this.http.post<postTitre>(`${this.apiurl}/titres`, titre);
   }
 
 

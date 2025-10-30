@@ -24,23 +24,23 @@
             Informations personnelles
           </h3>
 
-          <div class="form-row">
-            <div class="radio-field-container">
-              <mat-label class="radio-field-label">Titre</mat-label>
-              <mat-radio-group
-                formControlName="title"
-                class="example-radio-group"
-              >
-                @for (option of title_choice; track option) {
-                <mat-radio-button class="example-radio-button" [value]="option">
-                  {{ option }}
-                </mat-radio-button>
-                }
-              </mat-radio-group>
-            </div>
-          </div>
+
 
           <div class="form-row">
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Titre</mat-label>
+              <mat-select formControlName="title" required>
+                @for (option of title; track option) {
+                <mat-option [value]="option.name">
+                  {{ option.name }}
+                </mat-option>
+                }
+              </mat-select>
+              @if(clientForm.get('title')?.hasError('required')) {
+              <mat-error> Le titre est requis </mat-error>
+              }
+            </mat-form-field>
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Nom</mat-label>
               <input matInput formControlName="lastName" required />
@@ -77,25 +77,25 @@
               style="flex: 1; min-width: 200px; margin-right: 8px"
             >
               @if (editingPhoneLabelIndex !== 0) {
-                <label
-                  class="mat-label editable-label"
-                  for="phone1Input"
-                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(0)"
-                  title="Double-cliquer pour modifier"
-                >
-                  {{ phoneLabels()[0] }}
-                </label>
+              <label
+                class="mat-label editable-label"
+                for="phone1Input"
+                (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(0)"
+                title="Double-cliquer pour modifier"
+              >
+                {{ phoneLabels()[0] }}
+              </label>
               } @else {
-                <input
-                  class="label-editor"
-                  [value]="labelEditValue"
-                  (input)="onLabelInput($event)"
-                  (blur)="endEditPhoneLabel()"
-                  (keydown.enter)="endEditPhoneLabel()"
-                  [style.margin-bottom.px]="4"
-                  placeholder="Nom du champ (ex. Téléphone bureau)"
-                  autofocus
-                />
+              <input
+                class="label-editor"
+                [value]="labelEditValue"
+                (input)="onLabelInput($event)"
+                (blur)="endEditPhoneLabel()"
+                (keydown.enter)="endEditPhoneLabel()"
+                [style.margin-bottom.px]="4"
+                placeholder="Nom du champ (ex. Téléphone bureau)"
+
+              />
               }
               <div
                 class="mat-like-field"
@@ -131,25 +131,25 @@
               style="flex: 1; min-width: 200px; margin-left: 8px"
             >
               @if (editingPhoneLabelIndex !== 1) {
-                <label
-                  class="mat-label editable-label"
-                  for="phone2Input"
-                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(1)"
-                  title="Double-cliquer pour modifier"
-                >
-                  {{ phoneLabels()[1] }}
-                </label>
+              <label
+                class="mat-label editable-label"
+                for="phone2Input"
+                (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(1)"
+                title="Double-cliquer pour modifier"
+              >
+                {{ phoneLabels()[1] }}
+              </label>
               } @else {
-                <input
-                  class="label-editor"
-                  [value]="labelEditValue"
-                  (input)="onLabelInput($event)"
-                  (blur)="endEditPhoneLabel()"
-                  (keydown.enter)="endEditPhoneLabel()"
-                  [style.margin-bottom.px]="4"
-                  placeholder="Nom du champ (ex. Téléphone bureau)"
-                  autofocus
-                />
+              <input
+                class="label-editor"
+                [value]="labelEditValue"
+                (input)="onLabelInput($event)"
+                (blur)="endEditPhoneLabel()"
+                (keydown.enter)="endEditPhoneLabel()"
+                [style.margin-bottom.px]="4"
+                placeholder="Nom du champ (ex. Téléphone bureau)"
+
+              />
               }
               <div
                 class="mat-like-field"
@@ -184,25 +184,25 @@
               style="flex: 1; min-width: 200px; margin-left: 8px"
             >
               @if (editingPhoneLabelIndex !== 2) {
-                <label
-                  class="mat-label editable-label"
-                  for="phone3Input"
-                  (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(2)"
-                  title="Double-cliquer pour modifier"
-                >
-                  {{ phoneLabels()[2] }}
-                </label>
+              <label
+                class="mat-label editable-label"
+                for="phone3Input"
+                (dblclick)="$event.preventDefault(); $event.stopPropagation(); startEditPhoneLabel(2)"
+                title="Double-cliquer pour modifier"
+              >
+                {{ phoneLabels()[2] }}
+              </label>
               } @else {
-                <input
-                  class="label-editor"
-                  [value]="labelEditValue"
-                  (input)="onLabelInput($event)"
-                  (blur)="endEditPhoneLabel()"
-                  (keydown.enter)="endEditPhoneLabel()"
-                  [style.margin-bottom.px]="4"
-                  placeholder="Nom du champ (ex. Téléphone bureau)"
-                  autofocus
-                />
+              <input
+                class="label-editor"
+                [value]="labelEditValue"
+                (input)="onLabelInput($event)"
+                (blur)="endEditPhoneLabel()"
+                (keydown.enter)="endEditPhoneLabel()"
+                [style.margin-bottom.px]="4"
+                placeholder="Nom du champ (ex. Téléphone bureau)"
+
+              />
               }
               <div
                 class="mat-like-field"
