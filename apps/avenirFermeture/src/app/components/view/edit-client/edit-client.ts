@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,11 +21,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { getTitre } from '../../../models/titres.model';
 
+
+
 @Component({
-  selector: 'app-add-client',
+  selector: 'app-edit-client',
   standalone: true,
-  imports: [
-    MatFormFieldModule,
+  imports: [    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
@@ -39,11 +40,10 @@ import { getTitre } from '../../../models/titres.model';
     MatRadioModule,
     FormsModule
   ],
-  templateUrl: './addClient.html',
-  styleUrls: ['./addClient.css'],
+  templateUrl: './edit-client.html',
+  styleUrl: './edit-client.css',
 })
-export class AddClient implements OnInit {
-
+export class EditClient implements OnInit {
   title: getTitre[] = [];
 
 
@@ -224,4 +224,5 @@ export class AddClient implements OnInit {
       changeData?.dialCode
     );
   }
+
 }

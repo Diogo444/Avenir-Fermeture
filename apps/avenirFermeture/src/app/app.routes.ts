@@ -32,6 +32,10 @@ export const appRoutes: Route[] = [
 
   },
   {
+    path: 'edit-client/:code-client',
+    loadComponent: () => import('./components/view/edit-client/edit-client').then(m => m.EditClient),
+  },
+  {
     path: 'test',
     loadComponent: () => import('./components/view/test/test').then(m => m.Test),
   }

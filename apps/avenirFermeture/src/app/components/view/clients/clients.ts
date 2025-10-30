@@ -11,7 +11,7 @@ import { Api } from '../../../services/api/api';
 import { CommonModule } from '@angular/common';
 import { Client } from '../../../models/clients.model';
 import { Router } from '@angular/router';
-import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { NgxIntlTelInputWrapperModule } from '../../../shared/ngx-intl-tel-input-wrapper.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 
@@ -30,7 +30,7 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
     CommonModule,
     MatTableModule,
     ReactiveFormsModule,
-    NgxIntlTelInputModule,
+    NgxIntlTelInputWrapperModule,
     MatProgressSpinnerModule
 
   ],

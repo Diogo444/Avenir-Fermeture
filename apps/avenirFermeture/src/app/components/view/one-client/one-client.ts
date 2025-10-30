@@ -59,7 +59,7 @@ export class OneClientComponent implements OnInit {
 
   editClient(): void {
     if (this.codeClient) {
-      this.router.navigate(['/clients', this.codeClient, 'edit']);
+      this.router.navigate([`/edit-client/${this.codeClient}`]);
     }
   }
 
