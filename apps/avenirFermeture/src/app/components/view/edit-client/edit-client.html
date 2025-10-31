@@ -1,4 +1,10 @@
 <div class="add-client-container">
+  @if(isLoading) {
+    <div class="loading-container">
+      <mat-progress-spinner mode="indeterminate" diameter="60"></mat-progress-spinner>
+      <p>Chargement des informations du client...</p>
+    </div>
+  } @else {
   <mat-card class="client-form-card">
     <mat-card-header>
       <mat-card-title>
@@ -325,4 +331,5 @@
       }
     </mat-card-content>
   </mat-card>
+  }
 </div>

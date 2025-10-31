@@ -30,9 +30,9 @@ export class ClientsController {
     return this.clientsService.findOne(codeClient);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientsService.update(+id, updateClientDto);
+  @Patch(':code_client')
+  update(@Param('code_client') codeClient: string, @Body() updateClientDto: UpdateClientDto) {
+    return this.clientsService.update(codeClient, updateClientDto);
   }
 
   @Delete(':id')

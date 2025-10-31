@@ -47,6 +47,7 @@ import { Client } from '../../../models/clients.model';
 export class EditClient implements OnInit {
   title: getTitre[] = [];
   clientData: Client | null = null;
+  isLoading = true;
 
 
   clientForm!: FormGroup;
@@ -79,8 +80,20 @@ export class EditClient implements OnInit {
     });
   }
   getClientsByCodeClient(code_client: string) {
-    this.api.getClientByCode(code_client).subscribe((client) => {
-      this.clientData = client;
+    this.isLoading = true;
+    this.api.getClientByCode(code_client).subscribe({
+      next: (client) => {
+        this.clientData = client;
+        // Initialiser le formulaire après avoir récupéré les données
+        this.initializeForm();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du client', err);
+        this.isLoading = false;
+        this.openSnackBar('Erreur lors de la récupération des données du client.');
+        this.router.navigate(['/clients']);
+      }
     });
   }
 
@@ -91,35 +104,42 @@ export class EditClient implements OnInit {
     // le code client ce trouve dans le localStorage avec le nom code_client
     const code_client = localStorage.getItem('code_client');
     if (code_client) {
+      this.getTitre();
       this.getClientsByCodeClient(code_client);
     } else {
       console.error('Aucun code client trouvé dans le localStorage.');
       this.router.navigate(['/clients']);
     }
-    this.getClientsByCodeClient(code_client ?? '');
-    this.getTitre();
-    this.initializeForm();
   }
 
   initializeForm(): void {
+    // Mettre à jour les labels des téléphones avec les valeurs du client
+    if (this.clientData) {
+      this.phoneLabels.set([
+        this.clientData.phone_1_label || 'Téléphone 1',
+        this.clientData.phone_2_label || 'Téléphone 2',
+        this.clientData.phone_3_label || 'Téléphone 3'
+      ]);
+    }
+
     this.clientForm = this.fb.group({
-      title: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      firstName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      phone1: ['', [Validators.required]],
-      phone2: [''],
-      phone3: [''],
-      codeClient: ['', [Validators.required]],
-      rue: ['', [Validators.required]],
-      code_postal: [null, [Validators.required, Validators.min(0)]],
-      city: ['', [Validators.required]],
+      title: [this.clientData?.title ?? '', [Validators.required]],
+      lastName: [this.clientData?.lastName ?? '', [Validators.required]],
+      firstName: [this.clientData?.firstName ?? '', [Validators.required]],
+      email: [this.clientData?.email ?? '', [Validators.required, Validators.email]],
+      phone1: [this.clientData?.phone_1 ?? '', [Validators.required]],
+      phone2: [this.clientData?.phone_2 ?? ''],
+      phone3: [this.clientData?.phone_3 ?? ''],
+      codeClient: [this.clientData?.code_client ?? '', [Validators.required]],
+      rue: [this.clientData?.rue ?? '', [Validators.required]],
+      code_postal: [this.clientData?.code_postal ?? null, [Validators.required, Validators.min(0)]],
+      city: [this.clientData?.ville ?? '', [Validators.required]],
 
     });
   }
 
   onSubmit(): void {
-    if (this.clientForm.valid) {
+    if (this.clientForm.valid && this.clientData) {
       const rawValue = this.clientForm.getRawValue();
       const parsePhone = (val: string | ChangeData | null | undefined): string | null => {
         if (!val) return null;
@@ -149,23 +169,21 @@ export class EditClient implements OnInit {
         ville: rawValue.city,
       };
 
-      console.log('Submitting client payload:', payload);
 
-      this.api.createClient(payload).subscribe({
+
+      this.api.updateClient(this.clientData.code_client, payload).subscribe({
         next: () => {
-          this.openSnackBar('Le client ' + rawValue.firstName + ' ' + rawValue.lastName + ' a bien été ajouté !');
-          this.router.navigate(['/clients']);
+          this.openSnackBar('Le client ' + rawValue.firstName + ' ' + rawValue.lastName + ' a bien été mis à jour !');
+          this.router.navigate([`/one-client/${rawValue.codeClient}`]);
         },
         error: (err) => {
-          this.openSnackBar("Erreur lors de l'ajout du client " + rawValue.firstName + ' ' + rawValue.lastName + '.');
-          console.error('Erreur lors de la creation du client', err);
-
-          console.error('Erreur lors de la creation du client', err);
+          this.openSnackBar("Erreur lors de la mise à jour du client " + rawValue.firstName + ' ' + rawValue.lastName + '.');
+          console.error('Erreur lors de la mise à jour du client', err);
         }
       });
     } else {
       this.openSnackBar('Veuillez remplir correctement le formulaire.');
-      console.log('Formulaire invalide');
+
       this.markFormGroupTouched();
     }
   }
@@ -180,7 +198,7 @@ export class EditClient implements OnInit {
   }
 
   onReset(): void {
-    this.clientForm.reset();
+    // Réinitialiser avec les valeurs originales du client
     this.initializeForm();
   }
 

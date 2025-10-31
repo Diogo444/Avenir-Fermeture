@@ -37,6 +37,10 @@ export class Api {
     return this.http.post<Client>(`${this.apiurl}/clients`, client);
   }
 
+  updateClient(codeClient: string, client: CreateClientDto) {
+    return this.http.patch<Client>(`${this.apiurl}/clients/${codeClient}`, client);
+  }
+
   createCommercial(commercial: Commercial) {
     return this.http.post<Commercial>(`${this.apiurl}/commercial`, commercial);
   }

@@ -102,5 +102,5 @@ export class Test {
   }
 
   submit() {
-    console.log('Formulaire envoyé :', this.form.getRawValue());
+    console.log(this.form.value);
   }}

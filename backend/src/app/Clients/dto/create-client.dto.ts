@@ -8,6 +8,7 @@ export class CreateClientDto {
   phone_1: string | null;
   phone_2_label: string;
   phone_2: string | null;
+  phone_3_label: string;
   phone_3: string | null;
   rue: string;
   code_postal: number;

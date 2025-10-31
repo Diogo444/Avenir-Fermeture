@@ -57,7 +57,7 @@ export class ClientsService {
     return { ...c, title: title?.name ?? null };
   }
 
-  async update(id: number, updateClientDto: UpdateClientDto) {
+  async update(code_client: string, updateClientDto: UpdateClientDto) {
     const { title: titleName, ...rest } = updateClientDto as UpdateClientDto & { title?: string };
 
     let titre: Titre | undefined;
@@ -77,8 +77,8 @@ export class ClientsService {
       ...(typeof titleName !== 'undefined' && titre ? { title: titre } : {}),
     };
 
-    await this.clientRepository.update(id, clientToUpdate);
-    const updated = await this.clientRepository.findOne({ where: { id }, relations: ['title'] });
+    await this.clientRepository.update({ code_client }, clientToUpdate);
+    const updated = await this.clientRepository.findOne({ where: { code_client }, relations: ['title'] });
     if (!updated) return null;
     const { title, ...c } = updated as Client;
     return { ...c, title: title?.name ?? null };

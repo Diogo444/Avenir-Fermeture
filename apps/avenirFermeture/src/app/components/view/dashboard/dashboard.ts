@@ -70,7 +70,7 @@ export class Dashboard implements OnInit{
       this.api.getNumberClients().subscribe({
         next: (data) => {
           this.client_number = data;
-          console.log(data);
+
         },
         error: (error) => {
           console.error('Error fetching client number:', error);

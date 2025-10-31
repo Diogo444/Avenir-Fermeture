@@ -3,21 +3,21 @@ export type ClientList = Client[]
 export interface Client {
   id: number
   code_client: string
-  title: string
+  title: string | null
   firstName: string
   lastName: string
   email: string
-  phone_1_label: string
-  phone_1: string
-  phone_2_label: string
-  phone_2: string
-  phone_3_label: string
-  phone_3: string
-  rue: string
-  code_postal: number
-  ville: string
-  createdAt: string
-  updatedAt: string
+  phone_1_label: string | null
+  phone_1: string | null
+  phone_2_label: string | null
+  phone_2: string | null
+  phone_3_label: string | null
+  phone_3: string | null
+  rue: string | null
+  code_postal: number | null
+  ville: string | null
+  createdAt: string | null
+  updatedAt: string | null
 }
 
 

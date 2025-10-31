@@ -16,15 +16,31 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 })
 export class General implements OnInit {
   private api = inject(Api);
-  client: Client = {} as Client;
+  client: Client = {
+    id: 0,
+    code_client: '',
+    title: null,
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone_1_label: null,
+    phone_1: null,
+    phone_2_label: null,
+    phone_2: null,
+    phone_3_label: null,
+    phone_3: null,
+    rue: null,
+    code_postal: null,
+    ville: null,
+    createdAt: null,
+    updatedAt: null,
+  };
 
   ngOnInit(): void {
     const code_client = localStorage.getItem('code_client') || '';
     this.api.getClientByCode(code_client).subscribe((client: Client) => {
-      console.log(client);
       this.client = client;
     });
-
   }
 
   parseNumber(phoneNumber: string | null | undefined): string {
@@ -57,3 +73,4 @@ export class General implements OnInit {
     }
   }
 }
+

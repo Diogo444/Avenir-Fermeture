@@ -84,7 +84,7 @@ export class Clients implements OnInit {
   }
 
   deleteClient(id: number){
-    console.log(id);
+
     this.api.deleteClient(id).subscribe({
       next: () => {
         this.client = this.client.filter(c => c.id !== id);

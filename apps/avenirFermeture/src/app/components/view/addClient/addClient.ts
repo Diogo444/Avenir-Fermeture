@@ -131,7 +131,7 @@ export class AddClient implements OnInit {
         ville: rawValue.city,
       };
 
-      console.log('Submitting client payload:', payload);
+
 
       this.api.createClient(payload).subscribe({
         next: () => {
@@ -147,7 +147,7 @@ export class AddClient implements OnInit {
       });
     } else {
       this.openSnackBar('Veuillez remplir correctement le formulaire.');
-      console.log('Formulaire invalide');
+
       this.markFormGroupTouched();
     }
   }

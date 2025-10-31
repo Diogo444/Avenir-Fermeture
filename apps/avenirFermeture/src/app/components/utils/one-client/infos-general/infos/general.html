@@ -30,7 +30,7 @@
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
-            <span class="info-label">{{ client.phone_1_label }}</span>
+            <span class="info-label">{{ client.phone_1_label || 'Téléphone 1' }}</span>
             @if(client.phone_1?.trim()){
               <span class="info-value">{{ parseNumber(client.phone_1) }}</span>
             } @else {
@@ -41,7 +41,7 @@
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
-            <span class="info-label">{{ client.phone_2_label }}</span>
+            <span class="info-label">{{ client.phone_2_label || 'Téléphone 2' }}</span>
             @if(client.phone_2?.trim()){
               <span class="info-value">{{ parseNumber(client.phone_2) }}</span>
             } @else {
@@ -52,7 +52,7 @@
         <div class="info-item">
           <mat-icon>phone</mat-icon>
           <div>
-            <span class="info-label">{{ client.phone_3_label }}</span>
+            <span class="info-label">{{ client.phone_3_label || 'Téléphone 3' }}</span>
             @if(client.phone_3?.trim()){
               <span class="info-value">{{ parseNumber(client.phone_3) }}</span>
             } @else {
@@ -64,15 +64,22 @@
           <mat-icon>location_city</mat-icon>
           <div>
             <span class="info-label">Ville</span>
-            <span class="info-value">{{client.rue}}, {{client.code_postal}} {{ client.ville }}</span>
+            @if (client.rue?.trim() || client.ville?.trim() || client.code_postal) {
+              <span class="info-value">{{ client.rue }}<span *ngIf="client.rue?.trim() && (client.code_postal || client.ville?.trim())">, </span>{{ client.code_postal || '' }} {{ client.ville }}</span>
+            } @else {
+              <span class="info-value">Non renseigné</span>
+            }
           </div>
         </div>
         <div class="info-item">
           <mat-icon>calendar_today</mat-icon>
           <div>
             <span class="info-label">Date de création</span>
-            <span class="info-value">{{ client.createdAt | date :'longDate' }}
-</span>
+            @if (client.createdAt) {
+              <span class="info-value">{{ client.createdAt | date :'longDate' }}</span>
+            } @else {
+              <span class="info-value">Non renseigné</span>
+            }
           </div>
         </div>
       </div>
