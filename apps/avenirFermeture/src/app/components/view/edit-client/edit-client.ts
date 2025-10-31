@@ -20,6 +20,7 @@ import { NgxIntlTelInputWrapperModule } from '../../../shared/ngx-intl-tel-input
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { getTitre } from '../../../models/titres.model';
+import { Client } from '../../../models/clients.model';
 
 
 
@@ -45,6 +46,7 @@ import { getTitre } from '../../../models/titres.model';
 })
 export class EditClient implements OnInit {
   title: getTitre[] = [];
+  clientData: Client | null = null;
 
 
   clientForm!: FormGroup;
@@ -76,9 +78,25 @@ export class EditClient implements OnInit {
       this.title = titles;
     });
   }
+  getClientsByCodeClient(code_client: string) {
+    this.api.getClientByCode(code_client).subscribe((client) => {
+      this.clientData = client;
+    });
+  }
+
+
 
 
   ngOnInit(): void {
+    // le code client ce trouve dans le localStorage avec le nom code_client
+    const code_client = localStorage.getItem('code_client');
+    if (code_client) {
+      this.getClientsByCodeClient(code_client);
+    } else {
+      console.error('Aucun code client trouvé dans le localStorage.');
+      this.router.navigate(['/clients']);
+    }
+    this.getClientsByCodeClient(code_client ?? '');
     this.getTitre();
     this.initializeForm();
   }
@@ -168,7 +186,8 @@ export class EditClient implements OnInit {
 
 
   onClose(): void {
-    this.router.navigate(['/clients']);
+    // naviguer à  la route précédente
+    this.router.navigate([`/one-client/${this.clientData?.code_client}`]);
   }
 
   // Inline editing des labels téléphone

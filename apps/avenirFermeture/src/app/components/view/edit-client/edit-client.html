@@ -2,8 +2,8 @@
   <mat-card class="client-form-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>person_add</mat-icon>
-        Ajouter un nouveau client
+        <mat-icon>person_edit</mat-icon>
+        Éditer le client {{ clientData?.firstName }} {{ clientData?.lastName }}
       </mat-card-title>
       <button mat-icon-button class="close-btn" (click)="onClose()">
         <mat-icon>close</mat-icon>
@@ -294,6 +294,15 @@
           <button
             mat-button
             type="button"
+            (click)="onClose()"
+            class="cancel-btn"
+          >
+            <mat-icon>close</mat-icon>
+            Annuler
+          </button>
+          <button
+            mat-button
+            type="button"
             (click)="onReset()"
             class="reset-btn"
           >
@@ -309,7 +318,7 @@
             class="submit-btn"
           >
             <mat-icon>save</mat-icon>
-            Enregistrer le client
+            Mettre à jour le client
           </button>
         </div>
       </form>

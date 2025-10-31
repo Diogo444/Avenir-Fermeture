@@ -564,6 +564,10 @@ textarea.mat-input-element {
   color: white;
 }
 
+.cancel-btn {
+  color: #666;
+}
+
 mat-card-header{
   position: relative;
 }

@@ -27,15 +27,33 @@ export class General implements OnInit {
 
   }
 
-  parseNumber(phoneNumber: string): string {
-      // Example: parse and format using google-libphonenumber
-        const phoneUtil = PhoneNumberUtil.getInstance();
-        try {
-          const parsed = phoneUtil.parse(phoneNumber);
-          return phoneUtil.format(parsed, PhoneNumberFormat.INTERNATIONAL);
-        } catch (e) {
-          console.error('Invalid phone number', e);
-          return phoneNumber;
-        }
+  parseNumber(phoneNumber: string | null | undefined): string {
+    const phoneUtil = PhoneNumberUtil.getInstance();
+
+    // Guard: handle empty, null, undefined, or whitespace-only values
+    if (phoneNumber == null) {
+      return 'Non renseigné';
     }
+
+    const input = String(phoneNumber).trim();
+    if (!input) {
+      return 'Non renseigné';
+    }
+
+    try {
+      // If no leading "+", assume French numbers by default
+      const parsed = input.startsWith('+')
+        ? phoneUtil.parse(input)
+        : phoneUtil.parse(input, 'FR');
+
+      if (!phoneUtil.isValidNumber(parsed)) {
+        return input; // return as-is if invalid rather than throwing/logging
+      }
+
+      return phoneUtil.format(parsed, PhoneNumberFormat.INTERNATIONAL);
+    } catch {
+      // Silently fall back to raw input to avoid noisy console errors
+      return input;
+    }
+  }
 }
