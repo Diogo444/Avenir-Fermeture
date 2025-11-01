@@ -1,22 +1,28 @@
-retirer info client livraison produit etc...
-mise en palce de détection de semaine par date
+Module : Commandes
+Champs principaux :
+•	Référence commande
+•	Numéro de devis associé
+•	Numéro de commande interne
+•	Date de signature
+•	Montant HT
+•	Montant TTC
+Informations complémentaires :
+•	Type d’acompte : choix entre Signature, Métré, Livraison, Pose
+•	Permis / Déclaration Préalable (DP) : case à cocher (Oui / Non — défaut : Non)
+•	Fournisseur : lien vers la table fournisseur
+•	Type de produit
+•	Quantité
+Suivi et statut :
+•	État du produit : sélection manuelle (avec choix de couleur selon l’état)
+•	Note par produit : champ texte libre
+•	Avenant : case à cocher pour indiquer qu’un produit a un avenant
+Tableau de bord des avenants :
+•	Affichage du nombre total d’avenants
+•	Lorsqu’on déroule une commande, afficher le nombre d’avenants liés à cette commande
+•	Panneau “Avenant” spécifique pour la gestion des avenants liés au permis / DP
+Dates importantes :
+•	Date de métré (définitive)
+•	Date d’avenant
+•	Date limite de pose
+•	Date de livraison souhaitée
 
-création commande
-le numéro du devis (commande)
-date signature
-référence de l'affaire : string
-motant HT
-montant TTC
-les accomptes (avec la date prévisionel d'encaisement (ce que j'ai mis dans création clients)
-)dire type de produit (liste de produit avec quantité)
-
-fournisseur 1
-nom du fournisseur (plusieur)
-motant à acheté
-
-emplacement du dossier (modifiable depuis la partie produit mais quand tu vois que la ligne )
-liste des emplacement à crée par admin
-
-
-
-informations général, commande, facture

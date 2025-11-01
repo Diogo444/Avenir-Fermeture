@@ -9,6 +9,7 @@ import { AffaireModule } from './affaire/affaire.module';
 import { ClientsModule } from './clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TitresModule } from './titres/titres.module';
+import { CommandesModule } from './commandes/commandes.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TitresModule } from './titres/titres.module';
     AffaireModule,
     ClientsModule,
     TitresModule,
+    CommandesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
