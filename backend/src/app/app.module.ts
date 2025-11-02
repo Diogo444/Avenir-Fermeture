@@ -5,11 +5,13 @@ import { AppService } from './app.service';
 import { ProduitsModule } from './produits/produits.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CommercialModule } from './commercial/commercial.module';
-import { AffaireModule } from './affaire/affaire.module';
+
 import { ClientsModule } from './clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TitresModule } from './titres/titres.module';
 import { CommandesModule } from './commandes/commandes.module';
+import { FournisseursModule } from './fournisseurs/fournisseurs.module';
+import { EtatProduitModule } from './etatProduit/etat-produit.module';
 
 @Module({
   imports: [
@@ -27,10 +29,11 @@ import { CommandesModule } from './commandes/commandes.module';
     ProduitsModule,
     DashboardModule,
     CommercialModule,
-    AffaireModule,
     ClientsModule,
     TitresModule,
     CommandesModule,
+    FournisseursModule,
+    EtatProduitModule,
   ],
   controllers: [AppController],
   providers: [AppService],

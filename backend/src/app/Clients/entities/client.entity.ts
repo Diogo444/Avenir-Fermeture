@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { Titre } from "../../titres/entities/titre.entity";
+import { Commande } from "../../commandes/entities/commande.entity";
 
 @Entity('clients')
 export class Client {
@@ -49,6 +50,11 @@ export class Client {
 
   @Column()
   ville: string;
+
+  @OneToMany(() => Commande, (commande) => commande.client, { cascade: true, nullable: true })
+  commandes: Commande[];
+
+
 
   @CreateDateColumn({ type: 'datetime', name: 'createdAt' })
   createdAt: Date;

@@ -1,9 +1,23 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Client } from '../../clients/entities/client.entity';
+import { CommandeProduit } from './commandeProduit.entity';
+import { Fournisseur } from '../../fournisseurs/entities/fournisseur.entity';
 
 @Entity('commandes')
 export class Commande {
   @PrimaryGeneratedColumn()
   id: number;
+  // faire la relation avec l'id client
+  @ManyToOne(() => Client, (client) => client.commandes, { eager: true })
+  client: Client;
 
   @Column({ unique: true })
   reference_commande: string;
@@ -29,17 +43,18 @@ export class Commande {
   @Column({ type: 'boolean', default: false })
   permis_dp: boolean;
 
-  @Column()
-  fournisseur: string; // relation future
+  @ManyToMany(() => Fournisseur, (Fournisseur) => Fournisseur.commandes, {
+    eager: true,
+  })
+  @JoinTable()
+  fournisseurs: Fournisseur[];
 
-  @Column()
-  type_produit: string; // relation future
-
-  @Column('int')
-  quantite: number;
-
-  @Column()
-  etat_produit: string; // relation future
+  @OneToMany(
+    () => CommandeProduit,
+    (commandeProduit) => commandeProduit.commande,
+    { cascade: true, eager: true }
+  )
+  commandesProduits: CommandeProduit[];
 
   @Column({ type: 'text', nullable: true })
   commentaires: string;
