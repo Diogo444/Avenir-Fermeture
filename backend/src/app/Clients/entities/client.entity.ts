@@ -7,7 +7,7 @@ export class Client {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   code_client: string;
 
   @ManyToOne(() => Titre, (titre) => titre.clients)
@@ -21,25 +21,25 @@ export class Client {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   phone_1_label: string;
 
-  @Column()
+  @Column({ unique: true })
   phone_1: string;
 
   @Column()
   phone_2_label: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   phone_2: string;
 
   @Column()
   phone_3_label: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   phone_3: string;
 
   @Column()
