@@ -1,25 +1,59 @@
-<div class="tab-content">
-  <mat-card class="products-card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>inventory_2</mat-icon>
-      <mat-card-title>Liste des produits</mat-card-title>
-      <mat-card-subtitle>2 produit(s)</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-list>
-        <mat-list-item>
-          <mat-icon matListItemIcon>check_circle</mat-icon>
-          <div matListItemTitle>Produit A</div>
-          <div matListItemLine>ID: 1</div>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>
-          <mat-icon matListItemIcon>check_circle</mat-icon>
-          <div matListItemTitle>Produit B</div>
-          <div matListItemLine>ID: 2</div>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-      </mat-list>
-    </mat-card-content>
-  </mat-card>
+<div class="commandes">
+  <div class="header">
+    <div class="title">
+      <mat-icon>inventory_2</mat-icon>
+      <h2>Commandes</h2>
+    </div>
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Créer une commande
+    </button>
+  </div>
+
+  <div class="actions">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Rechercher une commande (code, libellé, montant)" [(ngModel)]="searchTerm" />
+    </mat-form-field>
+
+    <div class="filters">
+      <span class="filters-label">Statut:</span>
+      <mat-chip-set class="status-chips">
+        <mat-chip [class.active]="selectedFilter === 'Tous'" (click)="onFilterSelect('Tous')">Tous</mat-chip>
+        <mat-chip [class.active]="selectedFilter === 'En cours'" (click)="onFilterSelect('En cours')">En cours</mat-chip>
+        <mat-chip [class.active]="selectedFilter === 'Terminées'" (click)="onFilterSelect('Terminées')">Terminées</mat-chip>
+        <mat-chip [class.active]="selectedFilter === 'Annulées'" (click)="onFilterSelect('Annulées')">Annulées</mat-chip>
+      </mat-chip-set>
+    </div>
+  </div>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="orders-tree">
+    <!-- Leaf node (commande) -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="order-node">
+      <button matIconButton disabled aria-hidden="true" class="node-icon">
+        <mat-icon>description</mat-icon>
+      </button>
+      <div class="order-content">
+        <div class="order-title">{{ node.item }}</div>
+        <div class="order-meta">Détails à venir</div>
+      </div>
+    </mat-tree-node>
+
+    <!-- Group node (statut) -->
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
+                   class="group-node" [cdkTreeNodeTypeaheadLabel]="node.item">
+      <button matIconButton [attr.aria-label]="'Basculer ' + node.item" matTreeNodeToggle class="node-icon">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      <div class="group-content">
+        <div class="group-title">{{ node.item }}</div>
+        <span class="group-count">{{ getGroupCount(node.item) }}</span>
+      </div>
+      @if (node.isLoading()) {
+        <mat-progress-bar mode="indeterminate" class="tree-progress"></mat-progress-bar>
+      }
+    </mat-tree-node>
+  </mat-tree>
 </div>
