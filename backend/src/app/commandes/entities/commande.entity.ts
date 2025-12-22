@@ -1,8 +1,7 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,6 +9,7 @@ import {
 import { Client } from '../../clients/entities/client.entity';
 import { CommandeProduit } from './commandeProduit.entity';
 import { Fournisseur } from '../../fournisseurs/entities/fournisseur.entity';
+import { StatutCommande, TypeAcompte } from '../commandes.types';
 
 @Entity('commandes')
 export class Commande {
@@ -17,15 +17,16 @@ export class Commande {
   id: number;
   // faire la relation avec l'id client
   @ManyToOne(() => Client, (client) => client.commandes, { eager: true })
+  @JoinColumn({ name: 'client_id' })
   client: Client;
 
   @Column({ unique: true })
   reference_commande: string;
 
-  @Column({ unique: true })
-  numero_commande: string;
+  @Column({ name: 'numero_commande', unique: true })
+  numero_commande_interne: string;
 
-  @Column()
+  @Column({ nullable: true })
   numero_devis: string;
 
   @Column({ type: 'date' })
@@ -37,30 +38,39 @@ export class Commande {
   @Column('decimal', { precision: 10, scale: 2 })
   montant_ttc: number;
 
-  @Column()
-  type_acompte: string;
+  @Column({
+    type: 'enum',
+    enum: TypeAcompte,
+    default: TypeAcompte.SIGNATURE,
+  })
+  type_acompte: TypeAcompte;
+
+  @Column({
+    type: 'enum',
+    enum: StatutCommande,
+    default: StatutCommande.EN_COURS,
+  })
+  statut_commande: StatutCommande;
 
   @Column({ type: 'boolean', default: false })
   permis_dp: boolean;
 
-  @ManyToMany(() => Fournisseur, (Fournisseur) => Fournisseur.commandes, {
+  @ManyToOne(() => Fournisseur, (fournisseur) => fournisseur.commandes, {
     eager: true,
+    nullable: true,
   })
-  @JoinTable()
-  fournisseurs: Fournisseur[];
+  @JoinColumn({ name: 'fournisseur_id' })
+  fournisseur: Fournisseur | null;
 
   @OneToMany(
     () => CommandeProduit,
     (commandeProduit) => commandeProduit.commande,
-    { cascade: true, eager: true }
+    { cascade: true, eager: true, orphanedRowAction: 'delete' }
   )
   commandesProduits: CommandeProduit[];
 
   @Column({ type: 'text', nullable: true })
   commentaires: string;
-
-  @Column({ type: 'boolean', default: false })
-  avenant: boolean;
 
   @Column({ type: 'date', nullable: true })
   date_metre: Date;

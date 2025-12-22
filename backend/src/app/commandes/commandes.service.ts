@@ -1,26 +1,262 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { Commande } from './entities/commande.entity';
+import { CommandeProduit } from './entities/commandeProduit.entity';
 import { CreateCommandeDto } from './dto/create-commande.dto';
 import { UpdateCommandeDto } from './dto/update-commande.dto';
+import { Client } from '../clients/entities/client.entity';
+import { Produit } from '../produits/entities/produit.entity';
+import { EtatProduit } from '../etatProduit/entities/etat-produit.entity';
+import { Fournisseur } from '../fournisseurs/entities/fournisseur.entity';
+import { CreateCommandeProduitDto } from './dto/create-commande-produit.dto';
+import { StatutCommande } from './commandes.types';
 
 @Injectable()
 export class CommandesService {
-  create(createCommandeDto: CreateCommandeDto) {
-    return 'This action adds a new commande';
+  constructor(
+    @InjectRepository(Commande)
+    private readonly commandeRepository: Repository<Commande>,
+    @InjectRepository(CommandeProduit)
+    private readonly commandeProduitRepository: Repository<CommandeProduit>,
+    @InjectRepository(Client)
+    private readonly clientRepository: Repository<Client>,
+    @InjectRepository(Produit)
+    private readonly produitRepository: Repository<Produit>,
+    @InjectRepository(EtatProduit)
+    private readonly etatProduitRepository: Repository<EtatProduit>,
+    @InjectRepository(Fournisseur)
+    private readonly fournisseurRepository: Repository<Fournisseur>,
+  ) {}
+
+  async create(createCommandeDto: CreateCommandeDto) {
+    const client = await this.clientRepository.findOne({
+      where: { id: createCommandeDto.clientId },
+    });
+    if (!client) {
+      throw new NotFoundException(`Client ${createCommandeDto.clientId} introuvable`);
+    }
+
+    const fournisseur = await this.resolveFournisseur(createCommandeDto.fournisseurId);
+    const commandesProduits = await this.buildCommandeProduits(createCommandeDto.produits);
+
+    const commande = this.commandeRepository.create({
+      client,
+      fournisseur,
+      reference_commande: createCommandeDto.reference_commande,
+      numero_commande_interne: createCommandeDto.numero_commande_interne,
+      numero_devis: createCommandeDto.numero_devis ?? null,
+      date_signature: this.toDate(createCommandeDto.date_signature),
+      montant_ht: this.toNumber(createCommandeDto.montant_ht),
+      montant_ttc: this.toNumber(createCommandeDto.montant_ttc),
+      type_acompte: createCommandeDto.type_acompte,
+      statut_commande: createCommandeDto.statut_commande ?? StatutCommande.EN_COURS,
+      permis_dp: createCommandeDto.permis_dp ?? false,
+      commentaires: createCommandeDto.commentaires ?? null,
+      date_metre: this.toDate(createCommandeDto.date_metre),
+      date_avenant: this.toDate(createCommandeDto.date_avenant),
+      date_limite_pose: this.toDate(createCommandeDto.date_limite_pose),
+      date_livraison_souhaitee: this.toDate(createCommandeDto.date_livraison_souhaitee),
+      commandesProduits,
+    });
+
+    return this.commandeRepository.save(commande);
   }
 
   findAll() {
-    return `This action returns all commandes`;
+    return this.commandeRepository.find({
+      relations: [
+        'client',
+        'fournisseur',
+        'commandesProduits',
+        'commandesProduits.produit',
+        'commandesProduits.etat_produit',
+      ],
+      order: { created_at: 'DESC' },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} commande`;
+  async findOne(id: number) {
+    const commande = await this.commandeRepository.findOne({
+      where: { id },
+      relations: [
+        'client',
+        'fournisseur',
+        'commandesProduits',
+        'commandesProduits.produit',
+        'commandesProduits.etat_produit',
+      ],
+    });
+    if (!commande) {
+      throw new NotFoundException(`Commande ${id} introuvable`);
+    }
+    return commande;
   }
 
-  update(id: number, updateCommandeDto: UpdateCommandeDto) {
-    return `This action updates a #${id} commande`;
+  async update(id: number, updateCommandeDto: UpdateCommandeDto) {
+    const commande = await this.commandeRepository.findOne({
+      where: { id },
+      relations: ['commandesProduits'],
+    });
+    if (!commande) {
+      throw new NotFoundException(`Commande ${id} introuvable`);
+    }
+
+    if (typeof updateCommandeDto.clientId !== 'undefined') {
+      const client = await this.clientRepository.findOne({
+        where: { id: updateCommandeDto.clientId },
+      });
+      if (!client) {
+        throw new NotFoundException(`Client ${updateCommandeDto.clientId} introuvable`);
+      }
+      commande.client = client;
+    }
+
+    if (typeof updateCommandeDto.fournisseurId !== 'undefined') {
+      commande.fournisseur = await this.resolveFournisseur(updateCommandeDto.fournisseurId);
+    }
+
+    if (typeof updateCommandeDto.reference_commande !== 'undefined') {
+      commande.reference_commande = updateCommandeDto.reference_commande;
+    }
+
+    if (typeof updateCommandeDto.numero_commande_interne !== 'undefined') {
+      commande.numero_commande_interne = updateCommandeDto.numero_commande_interne;
+    }
+
+    if (typeof updateCommandeDto.numero_devis !== 'undefined') {
+      commande.numero_devis = updateCommandeDto.numero_devis;
+    }
+
+    if (typeof updateCommandeDto.date_signature !== 'undefined') {
+      commande.date_signature = this.toDate(updateCommandeDto.date_signature);
+    }
+
+    if (typeof updateCommandeDto.montant_ht !== 'undefined') {
+      commande.montant_ht = this.toNumber(updateCommandeDto.montant_ht);
+    }
+
+    if (typeof updateCommandeDto.montant_ttc !== 'undefined') {
+      commande.montant_ttc = this.toNumber(updateCommandeDto.montant_ttc);
+    }
+
+    if (typeof updateCommandeDto.type_acompte !== 'undefined') {
+      commande.type_acompte = updateCommandeDto.type_acompte;
+    }
+
+    if (typeof updateCommandeDto.statut_commande !== 'undefined') {
+      commande.statut_commande = updateCommandeDto.statut_commande;
+    }
+
+    if (typeof updateCommandeDto.permis_dp !== 'undefined') {
+      commande.permis_dp = updateCommandeDto.permis_dp;
+    }
+
+    if (typeof updateCommandeDto.commentaires !== 'undefined') {
+      commande.commentaires = updateCommandeDto.commentaires;
+    }
+
+    if (typeof updateCommandeDto.date_metre !== 'undefined') {
+      commande.date_metre = this.toDate(updateCommandeDto.date_metre);
+    }
+
+    if (typeof updateCommandeDto.date_avenant !== 'undefined') {
+      commande.date_avenant = this.toDate(updateCommandeDto.date_avenant);
+    }
+
+    if (typeof updateCommandeDto.date_limite_pose !== 'undefined') {
+      commande.date_limite_pose = this.toDate(updateCommandeDto.date_limite_pose);
+    }
+
+    if (typeof updateCommandeDto.date_livraison_souhaitee !== 'undefined') {
+      commande.date_livraison_souhaitee = this.toDate(updateCommandeDto.date_livraison_souhaitee);
+    }
+
+    if (typeof updateCommandeDto.produits !== 'undefined') {
+      commande.commandesProduits = await this.buildCommandeProduits(updateCommandeDto.produits);
+    }
+
+    return this.commandeRepository.save(commande);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} commande`;
+  async remove(id: number) {
+    const commande = await this.commandeRepository.findOne({ where: { id } });
+    if (!commande) {
+      throw new NotFoundException(`Commande ${id} introuvable`);
+    }
+    await this.commandeRepository.remove(commande);
+    return { deleted: true };
+  }
+
+  private async resolveFournisseur(fournisseurId?: number | null) {
+    if (typeof fournisseurId === 'undefined') {
+      return undefined;
+    }
+    if (fournisseurId === null) {
+      return null;
+    }
+    const fournisseur = await this.fournisseurRepository.findOne({
+      where: { id: fournisseurId },
+    });
+    if (!fournisseur) {
+      throw new NotFoundException(`Fournisseur ${fournisseurId} introuvable`);
+    }
+    return fournisseur;
+  }
+
+  private async buildCommandeProduits(items?: CreateCommandeProduitDto[]) {
+    if (!items || items.length === 0) {
+      return [];
+    }
+
+    const produitIds = Array.from(new Set(items.map(item => item.produitId)));
+    const etatIds = Array.from(
+      new Set(items.map(item => item.etatProduitId).filter((id): id is number => typeof id === 'number')),
+    );
+
+    const produits = await this.produitRepository.findBy({ id: In(produitIds) });
+    const etats = etatIds.length
+      ? await this.etatProduitRepository.findBy({ id: In(etatIds) })
+      : [];
+
+    const produitMap = new Map(produits.map(produit => [produit.id, produit]));
+    const etatMap = new Map(etats.map(etat => [etat.id, etat]));
+
+    const missingProduits = produitIds.filter(id => !produitMap.has(id));
+    if (missingProduits.length > 0) {
+      throw new NotFoundException(`Produit(s) introuvable(s): ${missingProduits.join(', ')}`);
+    }
+
+    const missingEtats = etatIds.filter(id => !etatMap.has(id));
+    if (missingEtats.length > 0) {
+      throw new NotFoundException(`Etat produit introuvable: ${missingEtats.join(', ')}`);
+    }
+
+    return items.map(item =>
+      this.commandeProduitRepository.create({
+        produit: produitMap.get(item.produitId) ?? null,
+        quantite: Number(item.quantite ?? 0),
+        etat_produit: item.etatProduitId ? etatMap.get(item.etatProduitId) ?? null : null,
+        note: item.note ?? null,
+        avenant: item.avenant ?? false,
+      }),
+    );
+  }
+
+  private toDate(value?: string | Date | null): Date | null {
+    if (!value) {
+      return null;
+    }
+    if (value instanceof Date) {
+      return value;
+    }
+    return new Date(value);
+  }
+
+  private toNumber(value?: number | string | null): number | null {
+    if (value === null || typeof value === 'undefined') {
+      return null;
+    }
+    return typeof value === 'string' ? Number(value) : value;
   }
 }

@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Commande } from "../../commandes/entities/commande.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Commande } from '../../commandes/entities/commande.entity';
 
 @Entity('fournisseurs')
 export class Fournisseur {
@@ -9,7 +9,7 @@ export class Fournisseur {
   @Column()
   nom: string;
 
-  @ManyToMany(() => Commande, Commande => Commande.fournisseurs)
+  @OneToMany(() => Commande, (commande) => commande.fournisseur)
   commandes: Commande[];
 
 }
