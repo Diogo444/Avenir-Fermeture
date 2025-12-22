@@ -1,15 +1,60 @@
 <div class="clients-container">
   <header class="clients-header">
-    <h1>Liste des Clients</h1>
-    <mat-form-field class="search-bar" appearance="outline">
-      <mat-label>Rechercher un Client</mat-label>
-      <input matInput placeholder="Ex. Dupont" />
-    </mat-form-field>
-    <button mat-stroked-button aria-label="Ajouter un Client" (click)="addClient()">
-  <mat-icon>add</mat-icon>
-  Ajouter un Client
-</button>
+    <div class="title-row">
+      <h1>Liste des Clients</h1>
+      <button mat-raised-button color="primary" aria-label="Ajouter un client" (click)="addClient()">
+        <mat-icon>add</mat-icon>
+        Ajouter un Client
+      </button>
+    </div>
 
+    <div class="filters-row">
+      <div class="search-group">
+        <mat-form-field class="search-bar" appearance="outline">
+          <mat-label>Rechercher un client</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [formControl]="searchCtrl" />
+        </mat-form-field>
+
+        <div class="quick-filters" role="group" aria-label="Filtres rapides">
+          <button
+            mat-stroked-button
+            class="toggle"
+            [class.active]="hasEmail"
+            (click)="toggleEmailFilter()"
+            [attr.aria-pressed]="hasEmail"
+            aria-label="Filtrer les clients avec email"
+          >
+            <mat-icon>mail</mat-icon>
+            Email
+          </button>
+          <button
+            mat-stroked-button
+            class="toggle"
+            [class.active]="hasPhone"
+            (click)="togglePhoneFilter()"
+            [attr.aria-pressed]="hasPhone"
+            aria-label="Filtrer les clients avec téléphone"
+          >
+            <mat-icon>phone</mat-icon>
+            Téléphone
+          </button>
+        </div>
+      </div>
+
+      <mat-form-field class="title-filter" appearance="outline">
+        <mat-label>Titre</mat-label>
+        <mat-select [formControl]="titleCtrl">
+          <mat-option value="">Tous</mat-option>
+          <mat-option *ngFor="let t of titles" [value]="t.name">{{ t.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button class="reset-btn" (click)="clearFilters()" aria-label="Réinitialiser les filtres">
+        <mat-icon>close</mat-icon>
+        Réinitialiser
+      </button>
+    </div>
   </header>
 
   @if (message) {
@@ -30,7 +75,6 @@
         <th mat-header-cell *matHeaderCellDef> Titre </th>
         <td mat-cell *matCellDef="let element"> {{element.title}} </td>
       </ng-container>
-
 
       <!-- Nom Column -->
       <ng-container matColumnDef="lastName">
@@ -61,8 +105,7 @@
         <td mat-cell *matCellDef="let element"> {{element.rue}} {{element.code_postal}} {{element.ville}} </td>
       </ng-container>
 
-
-      <!-- ajouter action et un bouton supprimer qui prend en entré l'id et appelle la fonction delete -->
+      <!-- Actions -->
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let element">

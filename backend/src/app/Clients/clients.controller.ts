@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { FindClientsQuery } from './dto/find-clients.query';
 
 @Controller('clients')
 export class ClientsController {
@@ -21,8 +23,8 @@ export class ClientsController {
   }
 
   @Get()
-  findAll() {
-    return this.clientsService.findAll();
+  findAll(@Query() query: FindClientsQuery) {
+    return this.clientsService.findAll(query);
   }
 
   @Get(':code_client')

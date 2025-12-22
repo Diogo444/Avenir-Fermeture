@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { Titre } from '../titres/entities/titre.entity';
+import { FindClientsQuery } from './dto/find-clients.query';
 
 @Injectable()
 export class ClientsService {
@@ -45,8 +46,70 @@ export class ClientsService {
     return saved;
   }
 
-  async findAll() {
-    const clients = await this.clientRepository.find({ relations: ['title'] });
+  async findAll(query?: FindClientsQuery) {
+    const qb = this.clientRepository
+      .createQueryBuilder('client')
+      .leftJoinAndSelect('client.title', 'title');
+
+    if (query) {
+      const { q, title: titleName, hasEmail, hasPhone, city, code_postal, sort, order, page, pageSize } = query;
+
+      if (q && q.trim() !== '') {
+        const like = `%${q.trim().toLowerCase()}%`;
+        qb.andWhere(
+          `(
+            LOWER(client.code_client) LIKE :like OR
+            LOWER(client.firstName) LIKE :like OR
+            LOWER(client.lastName) LIKE :like OR
+            LOWER(client.email) LIKE :like OR
+            LOWER(client.rue) LIKE :like OR
+            LOWER(client.ville) LIKE :like OR
+            CAST(client.code_postal AS CHAR) LIKE :like
+          )`,
+          { like },
+        );
+      }
+
+      if (titleName) {
+        qb.andWhere('title.name = :titleName', { titleName });
+      }
+
+      if (city && city.trim() !== '') {
+        qb.andWhere('LOWER(client.ville) LIKE :cityLike', { cityLike: `%${city.trim().toLowerCase()}%` });
+      }
+
+      if (typeof code_postal !== 'undefined' && code_postal !== null && `${code_postal}`.trim() !== '') {
+        qb.andWhere('CAST(client.code_postal AS CHAR) LIKE :cpLike', { cpLike: `%${(`${code_postal}`).trim()}%` });
+      }
+
+      if (hasEmail === 'true' || hasEmail === true) {
+        qb.andWhere("client.email IS NOT NULL AND client.email <> ''");
+      }
+
+      if (hasPhone === 'true' || hasPhone === true) {
+        qb.andWhere(
+          `(
+            (client.phone_1 IS NOT NULL AND client.phone_1 <> '') OR
+            (client.phone_2 IS NOT NULL AND client.phone_2 <> '') OR
+            (client.phone_3 IS NOT NULL AND client.phone_3 <> '')
+          )`,
+        );
+      }
+
+      // Sorting
+      const sortField = ['createdAt', 'updatedAt', 'lastName', 'firstName'].includes(sort || '') ? (sort as string) : 'createdAt';
+      const sortOrder = (order || 'DESC').toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+      qb.orderBy(`client.${sortField}`, sortOrder as 'ASC' | 'DESC');
+
+      // Pagination (optional)
+      const size = Math.min(Math.max(Number(pageSize) || 50, 1), 200);
+      const pageNum = Math.max(Number(page) || 1, 1);
+      qb.skip((pageNum - 1) * size).take(size);
+    } else {
+      qb.orderBy('client.createdAt', 'DESC').take(50);
+    }
+
+    const clients = await qb.getMany();
     return clients.map((c: Client) => ({ ...c, title: c.title?.name ?? null }));
   }
 

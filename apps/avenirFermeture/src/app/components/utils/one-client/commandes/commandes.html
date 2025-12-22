@@ -11,49 +11,230 @@
   </div>
 
   <div class="actions">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput placeholder="Rechercher une commande (code, libellé, montant)" [(ngModel)]="searchTerm" />
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+      <mat-icon matIconPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Rechercher une commande (référence, devis, fournisseur...)"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
+      @if (searchTerm) {
+        <button matIconSuffix matIconButton (click)="onSearchChange('')" aria-label="Effacer la recherche">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
     </mat-form-field>
 
     <div class="filters">
-      <span class="filters-label">Statut:</span>
-      <mat-chip-set class="status-chips">
-        <mat-chip [class.active]="selectedFilter === 'Tous'" (click)="onFilterSelect('Tous')">Tous</mat-chip>
-        <mat-chip [class.active]="selectedFilter === 'En cours'" (click)="onFilterSelect('En cours')">En cours</mat-chip>
-        <mat-chip [class.active]="selectedFilter === 'Terminées'" (click)="onFilterSelect('Terminées')">Terminées</mat-chip>
-        <mat-chip [class.active]="selectedFilter === 'Annulées'" (click)="onFilterSelect('Annulées')">Annulées</mat-chip>
-      </mat-chip-set>
+      <mat-chip-listbox class="status-chips" [value]="selectedFilter" (change)="onFilterChange($event)">
+        <mat-chip-option value="Tous">
+          <span>Tous</span>
+          <mat-icon>list</mat-icon>
+        </mat-chip-option>
+        <mat-chip-option value="En cours">
+          <span>En cours</span>
+          <mat-icon>schedule</mat-icon>
+        </mat-chip-option>
+        <mat-chip-option value="Terminées">
+          <span>Terminées</span>
+          <mat-icon>check_circle</mat-icon>
+        </mat-chip-option>
+        <mat-chip-option value="Annulées">
+          <span>Annulées</span>
+          <mat-icon>cancel</mat-icon>
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <div class="stats-card">
+      <mat-icon>bookmarks</mat-icon>
+      <div class="stats-content">
+        <span class="stats-label">Avenants</span>
+        <span class="stats-value">{{ totalAvenants }}</span>
+      </div>
     </div>
   </div>
 
-  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="orders-tree">
-    <!-- Leaf node (commande) -->
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="order-node">
-      <button matIconButton disabled aria-hidden="true" class="node-icon">
-        <mat-icon>description</mat-icon>
+  <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor" class="orders-tree">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="detail-node">
+      <button matIconButton disabled aria-hidden="true" class="node-icon detail-icon">
+        <mat-icon>notes</mat-icon>
       </button>
-      <div class="order-content">
-        <div class="order-title">{{ node.item }}</div>
-        <div class="order-meta">Détails à venir</div>
+      <div class="details-content">
+        <div class="details-grid">
+          <div class="detail-card">
+            <div class="detail-title">
+              <mat-icon>receipt_long</mat-icon>
+              <span>Résumé</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Référence</span>
+              <span class="value">{{ node.reference }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">N° devis</span>
+              <span class="value">{{ node.details.devisNumero }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Commande interne</span>
+              <span class="value">{{ node.details.commandeInterne }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date de signature</span>
+              <span class="value">{{ node.details.dateSignature }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Montant HT</span>
+              <span class="value amount">{{ node.details.montantHt }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Montant TTC</span>
+              <span class="value amount">{{ node.details.montantTtc }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-title">
+              <mat-icon>category</mat-icon>
+              <span>Produit</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Type de produit</span>
+              <span class="value">{{ node.details.typeProduit }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Quantité</span>
+              <span class="value">{{ node.details.quantite }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">État</span>
+              <span class="value status-value">
+                <span
+                  class="status-dot"
+                  [class.dot-progress]="node.details.etatProduit === 'En cours'"
+                  [class.dot-done]="node.details.etatProduit === 'Terminé'"
+                ></span>
+                {{ node.details.etatProduit }}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Avenant</span>
+              <span class="value">{{ node.details.avenant ? 'Oui' : 'Non' }}</span>
+            </div>
+            @if (node.details.note) {
+              <div class="detail-row note-row">
+                <span class="label">Note</span>
+                <span class="value note">{{ node.details.note }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-title">
+              <mat-icon>assignment</mat-icon>
+              <span>Administratif</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Type d’acompte</span>
+              <span class="value">{{ node.details.typeAcompte }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Permis / DP</span>
+              <span class="value">
+                <span class="pill" [class.pill-yes]="node.details.permisDp" [class.pill-no]="!node.details.permisDp">
+                  {{ node.details.permisDp ? 'Oui' : 'Non' }}
+                </span>
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Fournisseur</span>
+              <span class="value">{{ node.details.fournisseur }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-title">
+              <mat-icon>event</mat-icon>
+              <span>Dates importantes</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date de métré</span>
+              <span class="value">{{ node.details.dateMetre }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date d’avenant</span>
+              <span class="value">{{ node.details.dateAvenant || '-' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date limite de pose</span>
+              <span class="value">{{ node.details.dateLimitePose }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Date de livraison souhaitée</span>
+              <span class="value">{{ node.details.dateLivraisonSouhaitee }}</span>
+            </div>
+          </div>
+
+          <div class="detail-card detail-card-avenants">
+            <div class="detail-title">
+              <mat-icon>bookmarks</mat-icon>
+              <span>Avenants</span>
+            </div>
+            <div class="avenants-summary">
+              <div class="avenants-count">
+                <span class="label">Total lié à la commande</span>
+                <span class="value">{{ node.details.avenantsCount }}</span>
+              </div>
+              <div class="dp-panel">
+                <span class="dp-label">Permis / DP</span>
+                <span class="pill" [class.pill-yes]="node.details.dpAvenant" [class.pill-no]="!node.details.dpAvenant">
+                  {{ node.details.dpAvenant ? 'Avenant lié' : 'Aucun avenant' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </mat-tree-node>
 
-    <!-- Group node (statut) -->
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
-                   class="group-node" [cdkTreeNodeTypeaheadLabel]="node.item">
-      <button matIconButton [attr.aria-label]="'Basculer ' + node.item" matTreeNodeToggle class="node-icon">
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle class="order-node">
+      <button matIconButton matTreeNodeToggle [attr.aria-label]="'Basculer ' + node.reference" class="node-icon">
         <mat-icon class="mat-icon-rtl-mirror">
-          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
         </mat-icon>
       </button>
-      <div class="group-content">
-        <div class="group-title">{{ node.item }}</div>
-        <span class="group-count">{{ getGroupCount(node.item) }}</span>
+      <div class="order-content">
+        <div class="order-header">
+          <div class="order-ref">{{ node.reference }}</div>
+          <div class="order-badges">
+            <span
+              class="status-pill"
+              [class.status-in-progress]="node.status === 'En cours'"
+              [class.status-done]="node.status === 'Terminée'"
+              [class.status-cancelled]="node.status === 'Annulée'"
+            >
+              {{ node.status }}
+            </span>
+            <span class="order-amount">{{ node.details.montantTtc }}</span>
+          </div>
+        </div>
+        <div class="order-submeta">
+          <span>Devis {{ node.details.devisNumero }}</span>
+          <span>Signature {{ node.details.dateSignature }}</span>
+          <span>Fournisseur {{ node.details.fournisseur }}</span>
+        </div>
       </div>
-      @if (node.isLoading()) {
-        <mat-progress-bar mode="indeterminate" class="tree-progress"></mat-progress-bar>
-      }
     </mat-tree-node>
   </mat-tree>
+
+  @if (dataSource.length === 0) {
+    <div class="empty-state">
+      <mat-icon>inventory_2</mat-icon>
+      <div>
+        <div class="empty-title">Aucune commande trouvée</div>
+        <div class="empty-subtitle">Ajustez la recherche ou les filtres.</div>
+      </div>
+    </div>
+  }
 </div>

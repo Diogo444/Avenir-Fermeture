@@ -10,10 +10,9 @@
 
 .clients-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  gap: 20px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .clients-header h1 {
@@ -22,15 +21,78 @@
   color: #1e293b; /* slate-800 */
 }
 
-.clients-header .search-bar {
-  /* Prend plus de place pour se centrer */
-  flex-grow: 1;
-  max-width: 400px;
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.filters-row {
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 260px) auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* allow input to shrink */
+}
+
+.clients-header .search-bar { flex: 1; }
 
 /* Cible le conteneur interne de mat-form-field pour arrondir les coins */
 .clients-header .search-bar .mdc-notched-outline > * {
   border-radius: 9999px !important;
+}
+
+.title-filter { min-width: 180px; }
+
+.quick-filters { display: flex; gap: 8px; align-items: center; }
+.quick-filters .toggle {
+  height: 40px;
+  border-radius: 9999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+}
+.quick-filters .toggle mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.quick-filters .toggle.active {
+  background: var(--mat-sys-primary-container, #e3f2fd);
+  color: var(--mat-sys-on-primary-container, #0b57d0);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.reset-btn {
+  white-space: nowrap;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.reset-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .client-list {
@@ -71,4 +133,10 @@
   border: 1px solid #f5c6cb;
   border-radius: 0.25rem;
   margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .filters-row { grid-template-columns: 1fr; }
+  .title-row { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .search-group { flex-wrap: wrap; }
 }
