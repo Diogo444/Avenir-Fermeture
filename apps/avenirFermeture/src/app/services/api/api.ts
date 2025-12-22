@@ -7,6 +7,10 @@ import { environment } from '../../../environments/environment';
 import { Commercial } from '../../components/view/ajoutProduit/dto/commercial.model';
 import { Produit } from '../../components/view/ajoutProduit/dto/produit.model';
 import { getTitre, postTitre } from '../../models/titres.model';
+import { Commande } from '../../models/commandes.model';
+import { CreateCommandeDto } from '../../models/create-commande.dto';
+import { Fournisseur } from '../../models/fournisseur.model';
+import { EtatProduit } from '../../models/etat-produit.model';
 
 
 @Injectable({
@@ -48,12 +52,32 @@ export class Api {
     return this.http.get<Produit[]>(`${this.apiurl}/produits`);
   }
 
+  getFournisseurs() {
+    return this.http.get<Fournisseur[]>(`${this.apiurl}/fournisseurs`);
+  }
+
+  getEtatProduits() {
+    return this.http.get<EtatProduit[]>(`${this.apiurl}/etat-produit`);
+  }
+
   ajoutProduit(produit: Produit) {
     return this.http.post<Produit>(`${this.apiurl}/produits`, produit);
   }
 
   createClient(client: CreateClientDto) {
     return this.http.post<Client>(`${this.apiurl}/clients`, client);
+  }
+
+  getCommandes() {
+    return this.http.get<Commande[]>(`${this.apiurl}/commandes`);
+  }
+
+  getCommandesByClientId(clientId: number) {
+    return this.http.get<Commande[]>(`${this.apiurl}/commandes/client/${clientId}`);
+  }
+
+  createCommande(commande: CreateCommandeDto) {
+    return this.http.post<Commande>(`${this.apiurl}/commandes`, commande);
   }
 
   updateClient(codeClient: string, client: CreateClientDto) {

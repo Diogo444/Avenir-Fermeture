@@ -76,6 +76,20 @@ export class CommandesService {
     });
   }
 
+  findByClientId(clientId: number) {
+    return this.commandeRepository.find({
+      where: { client: { id: clientId } },
+      relations: [
+        'client',
+        'fournisseur',
+        'commandesProduits',
+        'commandesProduits.produit',
+        'commandesProduits.etat_produit',
+      ],
+      order: { created_at: 'DESC' },
+    });
+  }
+
   async findOne(id: number) {
     const commande = await this.commandeRepository.findOne({
       where: { id },

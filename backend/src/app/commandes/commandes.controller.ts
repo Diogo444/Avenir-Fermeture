@@ -25,6 +25,11 @@ export class CommandesController {
     return this.commandesService.findAll();
   }
 
+  @Get('client/:clientId')
+  findByClient(@Param('clientId') clientId: string) {
+    return this.commandesService.findByClientId(+clientId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commandesService.findOne(+id);

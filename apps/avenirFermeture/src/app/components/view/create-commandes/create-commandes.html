@@ -1,0 +1,271 @@
+<div class="create-commande-container">
+  <mat-card class="commande-form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>post_add</mat-icon>
+        Créer une commande
+      </mat-card-title>
+      <button mat-icon-button class="close-btn" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (isLoading) {
+        <div class="loading-state">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Chargement des listes...</span>
+        </div>
+      }
+      @if (commandeForm) {
+        <form [formGroup]="commandeForm" (ngSubmit)="onSubmit()" class="commande-form">
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>assignment</mat-icon>
+              Champs principaux
+            </h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Référence commande</mat-label>
+                <input matInput formControlName="reference_commande" required />
+                @if (commandeForm.get('reference_commande')?.hasError('required')) {
+                  <mat-error>Référence requise</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Numéro de devis</mat-label>
+                <input matInput formControlName="numero_devis" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Commande interne</mat-label>
+                <input matInput formControlName="numero_commande_interne" required />
+                @if (commandeForm.get('numero_commande_interne')?.hasError('required')) {
+                  <mat-error>Numéro requis</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Date de signature</mat-label>
+                <input matInput type="date" formControlName="date_signature" required />
+                @if (commandeForm.get('date_signature')?.hasError('required')) {
+                  <mat-error>Date requise</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Montant HT</mat-label>
+                <input matInput type="number" formControlName="montant_ht" required />
+                @if (commandeForm.get('montant_ht')?.hasError('required')) {
+                  <mat-error>Montant HT requis</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Montant TTC</mat-label>
+                <input matInput type="number" formControlName="montant_ttc" required />
+                @if (commandeForm.get('montant_ttc')?.hasError('required')) {
+                  <mat-error>Montant TTC requis</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>info</mat-icon>
+              Informations complémentaires
+            </h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Type d’acompte</mat-label>
+                <mat-select formControlName="type_acompte" required>
+                  @for (option of acompteOptions; track option.value) {
+                    <mat-option [value]="option.value">
+                      <mat-icon class="option-icon">{{ option.icon }}</mat-icon>
+                      {{ option.label }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fournisseur</mat-label>
+                <mat-select formControlName="fournisseurId">
+                  <mat-option [value]="null">Aucun fournisseur</mat-option>
+                  @for (fournisseur of fournisseurs; track fournisseur.id) {
+                    <mat-option [value]="fournisseur.id">{{ fournisseur.nom }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <div class="checkbox-field">
+                <mat-checkbox formControlName="permis_dp">Permis / DP</mat-checkbox>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Commentaires</mat-label>
+                <textarea matInput rows="3" formControlName="commentaires"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="section-header">
+              <h3 class="section-title">
+                <mat-icon>category</mat-icon>
+                Produits
+              </h3>
+              <button mat-stroked-button type="button" (click)="addProduit()">
+                <mat-icon>add</mat-icon>
+                Ajouter un produit
+              </button>
+            </div>
+
+            <div formArrayName="produits" class="products-container">
+              @for (produit of produitsArray.controls; track $index; let idx = $index) {
+                <div class="product-card" [formGroupName]="idx">
+                  <div class="product-card-header">
+                    <span>Produit #{{ idx + 1 }}</span>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      class="remove-btn"
+                      [disabled]="produitsArray.length === 1"
+                      (click)="removeProduit(idx)"
+                      aria-label="Supprimer le produit"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Type de produit</mat-label>
+                      <mat-select formControlName="produitId" required>
+                        @for (prod of produits; track prod.id) {
+                          <mat-option [value]="prod.id">{{ prod.nom }}</mat-option>
+                        }
+                      </mat-select>
+                      @if (produit.get('produitId')?.hasError('required')) {
+                        <mat-error>Produit requis</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Quantité</mat-label>
+                      <input matInput type="number" formControlName="quantite" required />
+                      @if (produit.get('quantite')?.hasError('required')) {
+                        <mat-error>Quantité requise</mat-error>
+                      }
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>État du produit</mat-label>
+                      <mat-select formControlName="etatProduitId">
+                        <mat-option [value]="null">Non défini</mat-option>
+                        @for (etat of etatsProduits; track etat.id) {
+                          <mat-option [value]="etat.id">
+                            <span class="color-dot" [style.backgroundColor]="etat.couleur_hex"></span>
+                            {{ etat.nom }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="form-field-full">
+                      <mat-label>Note par produit</mat-label>
+                      <textarea matInput rows="2" formControlName="note"></textarea>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="checkbox-field">
+                      <mat-checkbox formControlName="avenant">Avenant</mat-checkbox>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>event</mat-icon>
+              Dates importantes
+            </h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Date de métré</mat-label>
+                <input matInput type="date" formControlName="date_metre" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Date d’avenant</mat-label>
+                <input matInput type="date" formControlName="date_avenant" />
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Date limite de pose</mat-label>
+                <input matInput type="date" formControlName="date_limite_pose" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Date de livraison souhaitée</mat-label>
+                <input matInput type="date" formControlName="date_livraison_souhaitee" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>bookmarks</mat-icon>
+              Tableau de bord des avenants
+            </h3>
+
+            <div class="avenants-summary">
+              <div class="summary-item">
+                <span>Total d’avenants</span>
+                <span class="summary-value">{{ totalAvenants }}</span>
+              </div>
+              <div class="summary-item">
+                <span>Permis / DP</span>
+                <span class="pill" [class.pill-yes]="commandeForm.get('permis_dp')?.value" [class.pill-no]="!commandeForm.get('permis_dp')?.value">
+                  {{ commandeForm.get('permis_dp')?.value ? 'Oui' : 'Non' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="onReset()" class="reset-btn">
+              <mat-icon>refresh</mat-icon>
+              Réinitialiser
+            </button>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="commandeForm.invalid || isSubmitting" class="submit-btn">
+              @if (isSubmitting) {
+                <mat-spinner diameter="18"></mat-spinner>
+              } @else {
+                <mat-icon>save</mat-icon>
+              }
+              Enregistrer la commande
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

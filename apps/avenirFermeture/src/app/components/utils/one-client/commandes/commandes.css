@@ -306,6 +306,10 @@ button[mat-raised-button] {
   border-color: #dbeafe;
 }
 
+.detail-card-products {
+  background: #f9fafb;
+}
+
 .detail-title {
   display: flex;
   align-items: center;
@@ -380,6 +384,56 @@ button[mat-raised-button] {
 
 .note-row {
   align-items: flex-start;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.product-qty {
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.empty-hint {
+  font-size: 12px;
+  color: #9ca3af;
+  padding: 4px 0;
 }
 
 .note {

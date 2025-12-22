@@ -1,1 +1,3 @@
-export class CreateFournisseurDto {}
+export class CreateFournisseurDto {
+  nom: string;
+}

@@ -4,7 +4,7 @@
       <mat-icon>inventory_2</mat-icon>
       <h2>Commandes</h2>
     </div>
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" [routerLink]="['/one-client/create-commande']">
       <mat-icon>add</mat-icon>
       Créer une commande
     </button>
@@ -94,39 +94,44 @@
             </div>
           </div>
 
-          <div class="detail-card">
+          <div class="detail-card detail-card-products">
             <div class="detail-title">
               <mat-icon>category</mat-icon>
-              <span>Produit</span>
+              <span>Produits</span>
             </div>
-            <div class="detail-row">
-              <span class="label">Type de produit</span>
-              <span class="value">{{ node.details.typeProduit }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Quantité</span>
-              <span class="value">{{ node.details.quantite }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">État</span>
-              <span class="value status-value">
-                <span
-                  class="status-dot"
-                  [class.dot-progress]="node.details.etatProduit === 'En cours'"
-                  [class.dot-done]="node.details.etatProduit === 'Terminé'"
-                ></span>
-                {{ node.details.etatProduit }}
-              </span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Avenant</span>
-              <span class="value">{{ node.details.avenant ? 'Oui' : 'Non' }}</span>
-            </div>
-            @if (node.details.note) {
-              <div class="detail-row note-row">
-                <span class="label">Note</span>
-                <span class="value note">{{ node.details.note }}</span>
+            @if (node.details.produits.length > 0) {
+              <div class="product-list">
+                @for (produit of node.details.produits; track $index) {
+                  <div class="product-item">
+                    <div class="product-header">
+                      <span class="product-name">{{ produit.typeProduit }}</span>
+                      <span class="product-qty">x{{ produit.quantite }}</span>
+                    </div>
+                    <div class="product-row">
+                      <span class="label">État</span>
+                      <span class="value status-value">
+                        <span
+                          class="status-dot"
+                          [style.backgroundColor]="produit.etatCouleur || '#9ca3af'"
+                        ></span>
+                        {{ produit.etatProduit }}
+                      </span>
+                    </div>
+                    <div class="product-row">
+                      <span class="label">Avenant</span>
+                      <span class="value">{{ produit.avenant ? 'Oui' : 'Non' }}</span>
+                    </div>
+                    @if (produit.note) {
+                      <div class="product-row note-row">
+                        <span class="label">Note</span>
+                        <span class="value note">{{ produit.note }}</span>
+                      </div>
+                    }
+                  </div>
+                }
               </div>
+            } @else {
+              <div class="empty-hint">Aucun produit associé.</div>
             }
           </div>
 
@@ -138,14 +143,6 @@
             <div class="detail-row">
               <span class="label">Type d’acompte</span>
               <span class="value">{{ node.details.typeAcompte }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="label">Permis / DP</span>
-              <span class="value">
-                <span class="pill" [class.pill-yes]="node.details.permisDp" [class.pill-no]="!node.details.permisDp">
-                  {{ node.details.permisDp ? 'Oui' : 'Non' }}
-                </span>
-              </span>
             </div>
             <div class="detail-row">
               <span class="label">Fournisseur</span>
@@ -188,8 +185,8 @@
               </div>
               <div class="dp-panel">
                 <span class="dp-label">Permis / DP</span>
-                <span class="pill" [class.pill-yes]="node.details.dpAvenant" [class.pill-no]="!node.details.dpAvenant">
-                  {{ node.details.dpAvenant ? 'Avenant lié' : 'Aucun avenant' }}
+                <span class="pill" [class.pill-yes]="node.details.permisDp" [class.pill-no]="!node.details.permisDp">
+                  {{ node.details.permisDp ? 'Oui' : 'Non' }}
                 </span>
               </div>
             </div>
@@ -223,12 +220,22 @@
           <span>Devis {{ node.details.devisNumero }}</span>
           <span>Signature {{ node.details.dateSignature }}</span>
           <span>Fournisseur {{ node.details.fournisseur }}</span>
+          <span>{{ node.details.produits.length }} produit(s)</span>
+          <span>{{ node.details.avenantsCount }} avenant(s)</span>
         </div>
       </div>
     </mat-tree-node>
   </mat-tree>
 
-  @if (dataSource.length === 0) {
+  @if (isLoading) {
+    <div class="empty-state">
+      <mat-icon>hourglass_top</mat-icon>
+      <div>
+        <div class="empty-title">Chargement des commandes...</div>
+        <div class="empty-subtitle">Merci de patienter.</div>
+      </div>
+    </div>
+  } @else if (dataSource.length === 0) {
     <div class="empty-state">
       <mat-icon>inventory_2</mat-icon>
       <div>

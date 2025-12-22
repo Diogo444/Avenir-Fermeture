@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -6,10 +7,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTreeModule } from '@angular/material/tree';
+import { RouterLink } from '@angular/router';
+import { catchError, finalize, of } from 'rxjs';
+import { Api } from '../../../../services/api/api';
+import { Commande, StatutCommande, TypeAcompte } from '../../../../models/commandes.model';
 
 type OrderStatus = 'En cours' | 'Terminée' | 'Annulée';
-type ProductState = 'En cours' | 'Terminé';
 type FilterStatus = 'Tous' | 'En cours' | 'Terminées' | 'Annulées';
+
+interface OrderProductDetail {
+  typeProduit: string;
+  quantite: number;
+  etatProduit: string;
+  etatCouleur: string | null;
+  note?: string | null;
+  avenant: boolean;
+}
 
 interface OrderDetails {
   devisNumero: string;
@@ -17,133 +30,54 @@ interface OrderDetails {
   dateSignature: string;
   montantHt: string;
   montantTtc: string;
-  typeAcompte: 'Signature' | 'Métré' | 'Livraison' | 'Pose';
+  typeAcompte: string;
   permisDp: boolean;
   fournisseur: string;
-  typeProduit: string;
-  quantite: number;
-  etatProduit: ProductState;
-  note?: string;
-  avenant: boolean;
+  produits: OrderProductDetail[];
   avenantsCount: number;
-  dpAvenant: boolean;
   dateMetre: string;
-  dateAvenant?: string;
+  dateAvenant: string;
   dateLimitePose: string;
   dateLivraisonSouhaitee: string;
 }
 
-interface OrderBase {
+interface OrderNode {
+  type: 'order';
+  reference: string;
+  status: OrderStatus;
+  details: OrderDetails;
+  children: OrderTreeNode[];
+}
+
+interface OrderDetailNode {
+  type: 'detail';
   reference: string;
   status: OrderStatus;
   details: OrderDetails;
 }
 
-interface OrderNode extends OrderBase {
-  type: 'order';
-  children: OrderTreeNode[];
-}
-
-interface OrderDetailNode extends OrderBase {
-  type: 'detail';
-}
-
 type OrderTreeNode = OrderNode | OrderDetailNode;
 
-const ORDER_DATA: OrderNode[] = [
-  createOrderNode({
-    reference: 'CMD-2025-001',
-    status: 'En cours',
-    details: {
-      devisNumero: 'DEV-2025-087',
-      commandeInterne: 'INT-34-2025',
-      dateSignature: '12/01/2025',
-      montantHt: '1 200,00 €',
-      montantTtc: '1 440,00 €',
-      typeAcompte: 'Signature',
-      permisDp: false,
-      fournisseur: 'ALM Menuiserie',
-      typeProduit: 'Fenêtres PVC',
-      quantite: 6,
-      etatProduit: 'En cours',
-      note: 'Dépose prévue semaine 06',
-      avenant: false,
-      avenantsCount: 0,
-      dpAvenant: false,
-      dateMetre: '05/01/2025',
-      dateLimitePose: '20/02/2025',
-      dateLivraisonSouhaitee: '18/02/2025',
-    },
-  }),
-  createOrderNode({
-    reference: 'CMD-2025-004',
-    status: 'Terminée',
-    details: {
-      devisNumero: 'DEV-2024-221',
-      commandeInterne: 'INT-12-2024',
-      dateSignature: '20/10/2024',
-      montantHt: '2 430,00 €',
-      montantTtc: '2 916,00 €',
-      typeAcompte: 'Livraison',
-      permisDp: true,
-      fournisseur: 'Atelier Nord',
-      typeProduit: 'Volets roulants',
-      quantite: 10,
-      etatProduit: 'Terminé',
-      note: 'Pose validée par le client',
-      avenant: true,
-      avenantsCount: 2,
-      dpAvenant: true,
-      dateMetre: '28/09/2024',
-      dateAvenant: '15/11/2024',
-      dateLimitePose: '05/12/2024',
-      dateLivraisonSouhaitee: '30/11/2024',
-    },
-  }),
-  createOrderNode({
-    reference: 'CMD-2025-007',
-    status: 'Annulée',
-    details: {
-      devisNumero: 'DEV-2025-102',
-      commandeInterne: 'INT-58-2025',
-      dateSignature: '08/02/2025',
-      montantHt: '850,00 €',
-      montantTtc: '1 020,00 €',
-      typeAcompte: 'Pose',
-      permisDp: false,
-      fournisseur: 'Concept Fermeture',
-      typeProduit: 'Porte d’entrée',
-      quantite: 1,
-      etatProduit: 'En cours',
-      note: 'Commande arrêtée à la demande du client',
-      avenant: false,
-      avenantsCount: 0,
-      dpAvenant: false,
-      dateMetre: '06/02/2025',
-      dateLimitePose: '28/02/2025',
-      dateLivraisonSouhaitee: '25/02/2025',
-    },
-  }),
-];
+const STATUS_LABELS: Record<StatutCommande, OrderStatus> = {
+  EN_COURS: 'En cours',
+  TERMINEE: 'Terminée',
+  ANNULEE: 'Annulée',
+};
 
-function createOrderNode(order: OrderBase): OrderNode {
-  return {
-    ...order,
-    type: 'order',
-    children: [
-      {
-        ...order,
-        type: 'detail',
-      },
-    ],
-  };
-}
+const ACOMPTE_LABELS: Record<TypeAcompte, string> = {
+  SIGNATURE: 'Signature',
+  METRE: 'Métré',
+  LIVRAISON: 'Livraison',
+  POSE: 'Pose',
+};
 
 @Component({
   selector: 'app-commandes',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
+    RouterLink,
     MatIconModule,
     MatChipsModule,
     MatButtonModule,
@@ -155,15 +89,27 @@ function createOrderNode(order: OrderBase): OrderNode {
   styleUrl: './commandes.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Commandes {
+export class Commandes implements OnInit {
+  private api = inject(Api);
+  private cdr = inject(ChangeDetectorRef);
+  private allOrders: OrderNode[] = [];
+  private readonly currencyFormatter = new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+  });
+  private readonly dateFormatter = new Intl.DateTimeFormat('fr-FR');
+
   searchTerm = '';
   selectedFilter: FilterStatus = 'Tous';
-
-  private readonly orders = ORDER_DATA;
-  dataSource: OrderNode[] = this.orders;
+  dataSource: OrderNode[] = [];
+  isLoading = true;
 
   childrenAccessor = (node: OrderTreeNode) => (node.type === 'order' ? node.children : []);
   hasChild = (_: number, node: OrderTreeNode) => node.type === 'order' && node.children.length > 0;
+
+  ngOnInit(): void {
+    this.loadCommandes();
+  }
 
   onFilterChange(event: { value: FilterStatus }) {
     this.selectedFilter = event.value;
@@ -176,7 +122,38 @@ export class Commandes {
   }
 
   get totalAvenants(): number {
-    return this.orders.reduce((total, order) => total + order.details.avenantsCount, 0);
+    return this.allOrders.reduce((total, order) => total + order.details.avenantsCount, 0);
+  }
+
+  private loadCommandes() {
+    const idClientValue = localStorage.getItem('id_client');
+    const idClient = idClientValue ? Number(idClientValue) : Number.NaN;
+
+    if (!idClientValue || Number.isNaN(idClient)) {
+      this.allOrders = [];
+      this.isLoading = false;
+      this.applyFilters();
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.isLoading = true;
+    this.api
+      .getCommandesByClientId(idClient)
+      .pipe(
+        catchError(() => {
+          this.allOrders = [];
+          return of<Commande[]>([]);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }),
+      )
+      .subscribe(commandes => {
+        this.allOrders = (commandes ?? []).map(commande => this.mapCommande(commande));
+        this.applyFilters();
+      });
   }
 
   private applyFilters() {
@@ -186,22 +163,28 @@ export class Commandes {
   private filterOrders(): OrderNode[] {
     const term = this.searchTerm.trim().toLowerCase();
 
-    return this.orders.filter(order => {
+    return this.allOrders.filter(order => {
       if (!this.matchesFilter(order)) {
         return false;
       }
       if (!term) {
         return true;
       }
+
+      const produitsText = order.details.produits
+        .map(produit => [produit.typeProduit, produit.note ?? '', produit.etatProduit].join(' '))
+        .join(' ');
+
       const haystack = [
         order.reference,
         order.details.devisNumero,
         order.details.commandeInterne,
         order.details.fournisseur,
-        order.details.typeProduit,
+        order.details.typeAcompte,
         order.details.montantHt,
         order.details.montantTtc,
         order.details.dateSignature,
+        produitsText,
       ]
         .join(' ')
         .toLowerCase();
@@ -221,5 +204,70 @@ export class Commandes {
       return order.status === 'Annulée';
     }
     return order.status === this.selectedFilter;
+  }
+
+  private mapCommande(commande: Commande): OrderNode {
+    const produits = (commande.commandesProduits ?? []).map(item => ({
+      typeProduit: item.produit?.nom ?? 'Produit',
+      quantite: item.quantite ?? 0,
+      etatProduit: item.etat_produit?.nom ?? 'Non défini',
+      etatCouleur: item.etat_produit?.couleur_hex ?? null,
+      note: item.note ?? null,
+      avenant: item.avenant ?? false,
+    }));
+
+    const details: OrderDetails = {
+      devisNumero: commande.numero_devis ?? '-',
+      commandeInterne: commande.numero_commande_interne ?? '-',
+      dateSignature: this.formatDate(commande.date_signature),
+      montantHt: this.formatCurrency(commande.montant_ht),
+      montantTtc: this.formatCurrency(commande.montant_ttc),
+      typeAcompte: ACOMPTE_LABELS[commande.type_acompte] ?? '-',
+      permisDp: commande.permis_dp ?? false,
+      fournisseur: commande.fournisseur?.nom ?? '-',
+      produits,
+      avenantsCount: produits.filter(produit => produit.avenant).length,
+      dateMetre: this.formatDate(commande.date_metre),
+      dateAvenant: this.formatDate(commande.date_avenant),
+      dateLimitePose: this.formatDate(commande.date_limite_pose),
+      dateLivraisonSouhaitee: this.formatDate(commande.date_livraison_souhaitee),
+    };
+
+    const orderNode: OrderNode = {
+      type: 'order',
+      reference: commande.reference_commande,
+      status: STATUS_LABELS[commande.statut_commande] ?? 'En cours',
+      details,
+      children: [],
+    };
+
+    orderNode.children = [
+      {
+        type: 'detail',
+        reference: orderNode.reference,
+        status: orderNode.status,
+        details,
+      },
+    ];
+
+    return orderNode;
+  }
+
+  private formatCurrency(value?: number | null): string {
+    if (value === null || typeof value === 'undefined') {
+      return '-';
+    }
+    return this.currencyFormatter.format(Number(value));
+  }
+
+  private formatDate(value?: string | Date | null): string {
+    if (!value) {
+      return '-';
+    }
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '-';
+    }
+    return this.dateFormatter.format(date);
   }
 }

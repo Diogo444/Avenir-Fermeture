@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateFournisseurDto } from './dto/create-fournisseur.dto';
 import { UpdateFournisseurDto } from './dto/update-fournisseur.dto';
+import { Fournisseur } from './entities/fournisseur.entity';
 
 @Injectable()
 export class FournisseursService {
+  constructor(
+    @InjectRepository(Fournisseur)
+    private readonly fournisseurRepository: Repository<Fournisseur>,
+  ) {}
+
   create(createFournisseurDto: CreateFournisseurDto) {
-    return 'This action adds a new fournisseur';
+    const fournisseur = this.fournisseurRepository.create(createFournisseurDto);
+    return this.fournisseurRepository.save(fournisseur);
   }
 
   findAll() {
-    return `This action returns all fournisseurs`;
+    return this.fournisseurRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} fournisseur`;
+    return this.fournisseurRepository.findOneBy({ id });
   }
 
   update(id: number, updateFournisseurDto: UpdateFournisseurDto) {
-    return `This action updates a #${id} fournisseur`;
+    return this.fournisseurRepository.update(id, updateFournisseurDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} fournisseur`;
+    return this.fournisseurRepository.delete(id);
   }
 }

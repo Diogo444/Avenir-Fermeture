@@ -27,13 +27,17 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./components/view/addClient/addClient').then(m => m.AddClient),
   },
   {
+    path: 'edit-client/:code-client',
+    loadComponent: () => import('./components/view/edit-client/edit-client').then(m => m.EditClient),
+  },
+  {
+    path: 'one-client/create-commande',
+    loadComponent: () => import('./components/view/create-commandes/create-commandes').then(m => m.CreateCommandes),
+  },
+  {
     path: 'one-client/:code-client',
     loadComponent: () => import('./components/view/one-client/one-client').then(m => m.OneClientComponent),
 
-  },
-  {
-    path: 'edit-client/:code-client',
-    loadComponent: () => import('./components/view/edit-client/edit-client').then(m => m.EditClient),
   },
   {
     path: 'test',
