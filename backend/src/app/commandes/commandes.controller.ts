@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CommandesService } from './commandes.service';
 import { CreateCommandeDto } from './dto/create-commande.dto';
 import { UpdateCommandeDto } from './dto/update-commande.dto';
+import { FindCommandesQuery } from './dto/find-commandes.query';
 
 @Controller('commandes')
 export class CommandesController {
@@ -21,8 +23,8 @@ export class CommandesController {
   }
 
   @Get()
-  findAll() {
-    return this.commandesService.findAll();
+  findAll(@Query() query: FindCommandesQuery) {
+    return this.commandesService.findAll(query);
   }
 
   @Get('client/:clientId')

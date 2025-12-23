@@ -32,7 +32,7 @@
               <mat-label>Titre</mat-label>
               <mat-select formControlName="title" required>
                 @for (option of title; track option) {
-                <mat-option [value]="option.name">
+                <mat-option [value]="option.id">
                   {{ option.name }}
                 </mat-option>
                 }

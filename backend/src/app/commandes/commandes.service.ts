@@ -11,6 +11,7 @@ import { EtatProduit } from '../etatProduit/entities/etat-produit.entity';
 import { Fournisseur } from '../fournisseurs/entities/fournisseur.entity';
 import { CreateCommandeProduitDto } from './dto/create-commande-produit.dto';
 import { StatutCommande } from './commandes.types';
+import { FindCommandesQuery } from './dto/find-commandes.query';
 
 @Injectable()
 export class CommandesService {
@@ -63,24 +64,33 @@ export class CommandesService {
     return this.commandeRepository.save(commande);
   }
 
-  findAll() {
-    return this.commandeRepository.find({
-      relations: [
-        'client',
-        'fournisseur',
-        'commandesProduits',
-        'commandesProduits.produit',
-        'commandesProduits.etat_produit',
-      ],
-      order: { created_at: 'DESC' },
-    });
+  async findAll(query?: FindCommandesQuery) {
+    const { page, pageSize } = this.normalizePagination(query?.page, query?.pageSize);
+    const includeDetails = query?.include === 'detail';
+
+    const qb = this.commandeRepository.createQueryBuilder('commande');
+
+    if (includeDetails) {
+      qb.leftJoinAndSelect('commande.client', 'client')
+        .leftJoinAndSelect('commande.fournisseur', 'fournisseur')
+        .leftJoinAndSelect('commande.commandesProduits', 'commandesProduits')
+        .leftJoinAndSelect('commandesProduits.produit', 'produit')
+        .leftJoinAndSelect('commandesProduits.etat_produit', 'etat_produit');
+    }
+
+    qb.orderBy('commande.created_at', 'DESC')
+      .skip((page - 1) * pageSize)
+      .take(pageSize);
+
+    const [items, total] = await qb.getManyAndCount();
+
+    return { items, total, page, pageSize };
   }
 
   findByClientId(clientId: number) {
     return this.commandeRepository.find({
       where: { client: { id: clientId } },
       relations: [
-        'client',
         'fournisseur',
         'commandesProduits',
         'commandesProduits.produit',
@@ -272,5 +282,11 @@ export class CommandesService {
       return null;
     }
     return typeof value === 'string' ? Number(value) : value;
+  }
+
+  private normalizePagination(page?: number | string, pageSize?: number | string) {
+    const size = Math.min(Math.max(Number(pageSize) || 50, 1), 200);
+    const pageNum = Math.max(Number(page) || 1, 1);
+    return { page: pageNum, pageSize: size };
   }
 }

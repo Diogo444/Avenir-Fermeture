@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
+import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { Api } from '../../../services/api/api';
 import { Produit } from '../../../models/produit.model';
 import { Fournisseur } from '../../../models/fournisseur.model';
@@ -41,8 +42,8 @@ interface AcompteOption {
     MatProgressSpinnerModule,
     MatSnackBarModule,
   ],
-  templateUrl: './create-commandes.html',
-  styleUrl: './create-commandes.css',
+  templateUrl: '../../../features/commandes/create/create-commandes.html',
+  styleUrl: '../../../features/commandes/create/create-commandes.css',
 })
 export class CreateCommandes implements OnInit {
   private fb = inject(FormBuilder);
@@ -202,37 +203,19 @@ export class CreateCommandes implements OnInit {
 
   private loadSelects(): void {
     this.isLoading = true;
-    let remaining = 3;
-    const done = () => {
-      remaining -= 1;
-      if (remaining <= 0) {
+    forkJoin({
+      produits: this.api.getProduits().pipe(catchError(() => of([] as Produit[]))),
+      fournisseurs: this.api.getFournisseurs().pipe(catchError(() => of([] as Fournisseur[]))),
+      etatsProduits: this.api.getEtatProduits().pipe(catchError(() => of([] as EtatProduit[]))),
+    })
+      .pipe(finalize(() => {
         this.isLoading = false;
-      }
-    };
-
-    this.api.getProduits().subscribe({
-      next: produits => {
+      }))
+      .subscribe(({ produits, fournisseurs, etatsProduits }) => {
         this.produits = produits;
-        done();
-      },
-      error: () => done(),
-    });
-
-    this.api.getFournisseurs().subscribe({
-      next: fournisseurs => {
         this.fournisseurs = fournisseurs;
-        done();
-      },
-      error: () => done(),
-    });
-
-    this.api.getEtatProduits().subscribe({
-      next: etats => {
-        this.etatsProduits = etats;
-        done();
-      },
-      error: () => done(),
-    });
+        this.etatsProduits = etatsProduits;
+      });
   }
 
   private resolveClientId(): void {

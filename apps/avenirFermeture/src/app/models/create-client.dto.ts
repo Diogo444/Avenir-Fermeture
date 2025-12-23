@@ -1,5 +1,6 @@
 export interface CreateClientDto {
-  title: string;
+  title?: string;
+  titleId?: number;
   code_client: string;
   lastName: string;
   firstName: string;

@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
-import { CommandesService } from '../../../../../../services/commandes.service';
-import { Client } from '../../../../../../models/clients.model';
-import { Commande, StatutCommande, TypeAcompte } from '../../../../../../models/commandes.model';
+import { CommandesService } from '../../../../../services/commandes.service';
+import { Client } from '../../../../../models/clients.model';
+import { Commande, StatutCommande, TypeAcompte } from '../../../../../models/commandes.model';
 
 type OrderStatus = 'En cours' | 'Terminée' | 'Annulée';
 type FilterStatus = 'Tous' | 'En cours' | 'Terminées' | 'Annulées';

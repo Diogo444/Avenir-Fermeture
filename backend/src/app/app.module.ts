@@ -23,7 +23,7 @@ import { EtatProduitModule } from './etatProduit/etat-produit.module';
       password: process.env.DB_PASS || '',
       database: process.env.DB_NAME || 'avenir_fermeture',
       autoLoadEntities: true,
-      synchronize: process.env.DB_SYNC ? process.env.DB_SYNC === 'true' : true,
+      synchronize: process.env.DB_SYNC === 'true',
       logging: process.env.TYPEORM_LOGGING === 'true',
     }),
     ProduitsModule,

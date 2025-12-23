@@ -16,7 +16,7 @@ export class Commande {
   @PrimaryGeneratedColumn()
   id: number;
   // faire la relation avec l'id client
-  @ManyToOne(() => Client, (client) => client.commandes, { eager: true })
+  @ManyToOne(() => Client, (client) => client.commandes)
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
@@ -56,7 +56,6 @@ export class Commande {
   permis_dp: boolean;
 
   @ManyToOne(() => Fournisseur, (fournisseur) => fournisseur.commandes, {
-    eager: true,
     nullable: true,
   })
   @JoinColumn({ name: 'fournisseur_id' })
@@ -65,7 +64,7 @@ export class Commande {
   @OneToMany(
     () => CommandeProduit,
     (commandeProduit) => commandeProduit.commande,
-    { cascade: true, eager: true, orphanedRowAction: 'delete' }
+    { cascade: true, orphanedRowAction: 'delete' }
   )
   commandesProduits: CommandeProduit[];
 

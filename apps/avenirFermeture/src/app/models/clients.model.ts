@@ -4,6 +4,7 @@ export interface Client {
   id: number
   code_client: string
   title: string | null
+  titleId?: number | null
   firstName: string
   lastName: string
   email: string

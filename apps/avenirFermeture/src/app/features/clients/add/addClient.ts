@@ -114,8 +114,9 @@ export class AddClient implements OnInit {
       const phone_2 = parsePhone(rawValue.phone2);
       const phone_3 = parsePhone(rawValue.phone3);
 
+      const titleValue = rawValue.title;
       const payload: CreateClientDto = {
-        title: rawValue.title,
+        ...(typeof titleValue === 'number' ? { titleId: titleValue } : { title: titleValue }),
         code_client: rawValue.codeClient,
         lastName: rawValue.lastName,
         firstName: rawValue.firstName,

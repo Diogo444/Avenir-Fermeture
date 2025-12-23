@@ -17,10 +17,24 @@ export class ClientsService {
     private readonly titreRepository: Repository<Titre>,
   ){}
   async create(createClientDto: CreateClientDto) {
-    const { title: titleName, ...rest } = createClientDto as CreateClientDto & { title?: string };
+    const { title: titleName, titleId, ...rest } = createClientDto as CreateClientDto & {
+      title?: string;
+      titleId?: number | string | null;
+    };
 
     let titre: Titre | null = null;
-    if (titleName) {
+    if (typeof titleId !== 'undefined') {
+      if (titleId !== null && titleId !== '') {
+        const normalizedId = this.normalizeId(titleId);
+        if (normalizedId === null) {
+          throw new NotFoundException(`Titre invalide`);
+        }
+        titre = await this.titreRepository.findOne({ where: { id: normalizedId } });
+        if (!titre) {
+          throw new NotFoundException(`Titre ${normalizedId} introuvable`);
+        }
+      }
+    } else if (titleName) {
       titre = await this.titreRepository.findOne({ where: { name: titleName } });
       if (!titre) {
         throw new NotFoundException(`Titre '${titleName}' introuvable`);
@@ -40,7 +54,7 @@ export class ClientsService {
       const withRelation = await this.clientRepository.findOne({ where: { id: saved.id }, relations: ['title'] });
       if (withRelation) {
         const { title, ...c } = withRelation as Client;
-        return { ...c, title: title?.name ?? null };
+        return { ...c, title: title?.name ?? null, titleId: title?.id ?? null };
       }
     }
     return saved;
@@ -55,16 +69,15 @@ export class ClientsService {
       const { q, title: titleName, hasEmail, hasPhone, city, code_postal, sort, order, page, pageSize } = query;
 
       if (q && q.trim() !== '') {
-        const like = `%${q.trim().toLowerCase()}%`;
+        const like = `%${q.trim()}%`;
         qb.andWhere(
           `(
-            LOWER(client.code_client) LIKE :like OR
-            LOWER(client.firstName) LIKE :like OR
-            LOWER(client.lastName) LIKE :like OR
-            LOWER(client.email) LIKE :like OR
-            LOWER(client.rue) LIKE :like OR
-            LOWER(client.ville) LIKE :like OR
-            CAST(client.code_postal AS CHAR) LIKE :like
+            client.code_client LIKE :like OR
+            client.firstName LIKE :like OR
+            client.lastName LIKE :like OR
+            client.email LIKE :like OR
+            client.rue LIKE :like OR
+            client.ville LIKE :like
           )`,
           { like },
         );
@@ -75,11 +88,17 @@ export class ClientsService {
       }
 
       if (city && city.trim() !== '') {
-        qb.andWhere('LOWER(client.ville) LIKE :cityLike', { cityLike: `%${city.trim().toLowerCase()}%` });
+        qb.andWhere('client.ville LIKE :cityLike', { cityLike: `%${city.trim()}%` });
       }
 
       if (typeof code_postal !== 'undefined' && code_postal !== null && `${code_postal}`.trim() !== '') {
-        qb.andWhere('CAST(client.code_postal AS CHAR) LIKE :cpLike', { cpLike: `%${(`${code_postal}`).trim()}%` });
+        const codePostalValue = `${code_postal}`.trim();
+        const codePostalNumber = Number(codePostalValue);
+        if (!Number.isNaN(codePostalNumber)) {
+          qb.andWhere('client.code_postal = :codePostal', { codePostal: codePostalNumber });
+        } else {
+          qb.andWhere('CAST(client.code_postal AS CHAR) LIKE :cpLike', { cpLike: `%${codePostalValue}%` });
+        }
       }
 
       if (hasEmail === 'true' || hasEmail === true) {
@@ -110,21 +129,36 @@ export class ClientsService {
     }
 
     const clients = await qb.getMany();
-    return clients.map((c: Client) => ({ ...c, title: c.title?.name ?? null }));
+    return clients.map((c: Client) => ({ ...c, title: c.title?.name ?? null, titleId: c.title?.id ?? null }));
   }
 
   async findOne(code_client: string) {
     const client = await this.clientRepository.findOne({ where: { code_client }, relations: ['title'] });
     if (!client) return null;
     const { title, ...c } = client as Client;
-    return { ...c, title: title?.name ?? null };
+    return { ...c, title: title?.name ?? null, titleId: title?.id ?? null };
   }
 
   async update(code_client: string, updateClientDto: UpdateClientDto) {
-    const { title: titleName, ...rest } = updateClientDto as UpdateClientDto & { title?: string };
+    const { title: titleName, titleId, ...rest } = updateClientDto as UpdateClientDto & {
+      title?: string | null;
+      titleId?: number | string | null;
+    };
 
     let titre: Titre | undefined;
-    if (typeof titleName !== 'undefined') {
+    if (typeof titleId !== 'undefined') {
+      if (titleId === null || titleId === '') {
+        titre = undefined; // do not change relation if empty
+      } else {
+        const normalizedId = this.normalizeId(titleId);
+        if (normalizedId === null) {
+          throw new NotFoundException(`Titre invalide`);
+        }
+        const found = await this.titreRepository.findOne({ where: { id: normalizedId } });
+        if (!found) throw new NotFoundException(`Titre ${normalizedId} introuvable`);
+        titre = found;
+      }
+    } else if (typeof titleName !== 'undefined') {
       if (titleName === null || titleName === '') {
         titre = undefined; // do not change relation if empty
       } else {
@@ -137,17 +171,25 @@ export class ClientsService {
     const clientToUpdate: Partial<Client> = {
       ...rest,
       ...(rest.code_postal && { code_postal: +rest.code_postal }),
-      ...(typeof titleName !== 'undefined' && titre ? { title: titre } : {}),
+      ...((typeof titleId !== 'undefined' || typeof titleName !== 'undefined') && titre ? { title: titre } : {}),
     };
 
     await this.clientRepository.update({ code_client }, clientToUpdate);
     const updated = await this.clientRepository.findOne({ where: { code_client }, relations: ['title'] });
     if (!updated) return null;
     const { title, ...c } = updated as Client;
-    return { ...c, title: title?.name ?? null };
+    return { ...c, title: title?.name ?? null, titleId: title?.id ?? null };
   }
 
   remove(id: number) {
     return this.clientRepository.delete(id);
+  }
+
+  private normalizeId(value: number | string | null | undefined): number | null {
+    if (value === null || typeof value === 'undefined' || value === '') {
+      return null;
+    }
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? null : parsed;
   }
 }

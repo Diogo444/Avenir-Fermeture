@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Navbar } from './components/utils/navbar/navbar';
+import { Navbar } from './shared/ui/navbar/navbar';
 
 
 @Component({

@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { clientResolver } from './features/clients/detail/client.resolver';
 
 export const appRoutes: Route[] = [
   {
@@ -37,6 +38,9 @@ export const appRoutes: Route[] = [
   {
     path: 'one-client/:code-client',
     loadComponent: () => import('./features/clients/detail/one-client').then(m => m.OneClientComponent),
+    resolve: {
+      client: clientResolver,
+    },
 
   },
   {

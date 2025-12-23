@@ -1,6 +1,7 @@
 export class CreateClientDto {
   code_client: string;
-  title: string;
+  title?: string;
+  titleId?: number | string | null;
   firstName: string;
   lastName: string;
   email: string;

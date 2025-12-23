@@ -5,9 +5,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { Api } from '../../../services/api/api';
-import { Produit } from './dto/produit.model';
+import { Produit } from '../../../models/produit.model';
 import { CommonModule } from '@angular/common';
-import { Commercial } from './dto/commercial.model';
+import { Commercial } from '../../../models/commercial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getTitre } from '../../../models/titres.model';
 

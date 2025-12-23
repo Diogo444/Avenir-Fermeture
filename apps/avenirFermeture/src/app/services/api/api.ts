@@ -1,5 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { Client } from '../../models/clients.model';
 import { CreateClientDto } from '../../models/create-client.dto';
 import { NumberClients } from '../../models/number_clients.model';
@@ -7,7 +9,7 @@ import { environment } from '../../../environments/environment';
 import { Commercial } from '../../models/commercial.model';
 import { Produit } from '../../models/produit.model';
 import { getTitre, postTitre } from '../../models/titres.model';
-import { Commande } from '../../models/commandes.model';
+import { Commande, CommandesListResponse } from '../../models/commandes.model';
 import { CreateCommandeDto } from '../../models/create-commande.dto';
 import { Fournisseur } from '../../models/fournisseur.model';
 import { EtatProduit } from '../../models/etat-produit.model';
@@ -20,6 +22,10 @@ export class Api {
   apiurl = environment.apiUrl;
 
   private readonly http = inject(HttpClient);
+  private produits$?: Observable<Produit[]>;
+  private fournisseurs$?: Observable<Fournisseur[]>;
+  private etatProduits$?: Observable<EtatProduit[]>;
+  private titres$?: Observable<getTitre[]>;
 
   getClients(params?: {
     q?: string;
@@ -49,19 +55,50 @@ export class Api {
   }
 
   getProduits() {
-    return this.http.get<Produit[]>(`${this.apiurl}/produits`);
+    if (!this.produits$) {
+      this.produits$ = this.http.get<Produit[]>(`${this.apiurl}/produits`).pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.produits$ = undefined;
+          return throwError(() => error);
+        }),
+      );
+    }
+    return this.produits$;
   }
 
   getFournisseurs() {
-    return this.http.get<Fournisseur[]>(`${this.apiurl}/fournisseurs`);
+    if (!this.fournisseurs$) {
+      this.fournisseurs$ = this.http.get<Fournisseur[]>(`${this.apiurl}/fournisseurs`).pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.fournisseurs$ = undefined;
+          return throwError(() => error);
+        }),
+      );
+    }
+    return this.fournisseurs$;
   }
 
   getEtatProduits() {
-    return this.http.get<EtatProduit[]>(`${this.apiurl}/etat-produit`);
+    if (!this.etatProduits$) {
+      this.etatProduits$ = this.http.get<EtatProduit[]>(`${this.apiurl}/etat-produit`).pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.etatProduits$ = undefined;
+          return throwError(() => error);
+        }),
+      );
+    }
+    return this.etatProduits$;
   }
 
   ajoutProduit(produit: Produit) {
-    return this.http.post<Produit>(`${this.apiurl}/produits`, produit);
+    return this.http.post<Produit>(`${this.apiurl}/produits`, produit).pipe(
+      tap(() => {
+        this.produits$ = undefined;
+      }),
+    );
   }
 
   createClient(client: CreateClientDto) {
@@ -69,7 +106,7 @@ export class Api {
   }
 
   getCommandes() {
-    return this.http.get<Commande[]>(`${this.apiurl}/commandes`);
+    return this.http.get<CommandesListResponse>(`${this.apiurl}/commandes`);
   }
 
   getCommandesByClientId(clientId: number) {
@@ -100,11 +137,24 @@ export class Api {
   }
 
   getTitres() {
-    return this.http.get<getTitre[]>(`${this.apiurl}/titres`);
+    if (!this.titres$) {
+      this.titres$ = this.http.get<getTitre[]>(`${this.apiurl}/titres`).pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.titres$ = undefined;
+          return throwError(() => error);
+        }),
+      );
+    }
+    return this.titres$;
   }
 
   ajoutTitre(titre: postTitre) {
-    return this.http.post<postTitre>(`${this.apiurl}/titres`, titre);
+    return this.http.post<postTitre>(`${this.apiurl}/titres`, titre).pipe(
+      tap(() => {
+        this.titres$ = undefined;
+      }),
+    );
   }
 
 

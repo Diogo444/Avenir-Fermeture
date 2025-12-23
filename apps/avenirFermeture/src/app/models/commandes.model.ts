@@ -37,3 +37,10 @@ export interface Commande {
   created_at: string;
   updated_at: string;
 }
+
+export interface CommandesListResponse {
+  items: Commande[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

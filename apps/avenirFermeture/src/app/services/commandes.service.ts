@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Commande } from '../models/commandes.model';
+import { Commande, CommandesListResponse } from '../models/commandes.model';
 import { CreateCommandeDto } from '../models/create-commande.dto';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class CommandesService {
   private readonly http = inject(HttpClient);
 
   getCommandes() {
-    return this.http.get<Commande[]>(`${this.apiurl}/commandes`);
+    return this.http.get<CommandesListResponse>(`${this.apiurl}/commandes`);
   }
 
   getCommandesByClientId(clientId: number) {

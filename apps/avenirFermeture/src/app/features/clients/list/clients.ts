@@ -7,19 +7,19 @@ import { MatListModule } from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
-import { Api } from '../../../../services/api/api';
-import { ClientsService } from '../../../../services/clients.service';
-import { ReferentielsService } from '../../../../services/referentiels.service';
+import { ClientsService } from '../../../services/clients.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
 import { CommonModule } from '@angular/common';
-import { Client } from '../../../../models/clients.model';
+import { Client } from '../../../models/clients.model';
 import { Router } from '@angular/router';
-import { NgxIntlTelInputWrapperModule } from '../../../../shared/ngx-intl-tel-input-wrapper.module';
+import { NgxIntlTelInputWrapperModule } from '../../../shared/ngx-intl-tel-input-wrapper.module';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-import { getTitre } from '../../../../models/titres.model';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { PhoneFormatPipe } from '../../../../shared/utils/pipes/phone-format.pipe';
+import { getTitre } from '../../../models/titres.model';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, startWith, switchMap, tap } from 'rxjs/operators';
+import { PhoneFormatPipe } from '../../../shared/utils/pipes/phone-format.pipe';
 
 
 
@@ -61,7 +61,9 @@ export class Clients implements OnInit {
 
   private readonly clientsService = inject(ClientsService);
   private readonly referentielsService = inject(ReferentielsService);
-  private readonly router = inject(Router)
+  private readonly router = inject(Router);
+  private readonly hasEmail$ = new BehaviorSubject<boolean>(false);
+  private readonly hasPhone$ = new BehaviorSubject<boolean>(false);
 
   ngOnInit(): void {
     // Load filter options
@@ -70,14 +72,48 @@ export class Clients implements OnInit {
       error: () => {},
     });
 
-    // Initial load
-    this.loadClients();
+    const search$ = this.searchCtrl.valueChanges.pipe(
+      startWith(this.searchCtrl.value ?? ''),
+      debounceTime(250),
+      distinctUntilChanged(),
+    );
+    const title$ = this.titleCtrl.valueChanges.pipe(
+      startWith(this.titleCtrl.value ?? ''),
+      distinctUntilChanged(),
+    );
 
-    // Reactive search and title filter
-    this.searchCtrl.valueChanges.pipe(debounceTime(250), distinctUntilChanged()).subscribe(() => {
-      this.loadClients();
-    });
-    this.titleCtrl.valueChanges.subscribe(() => this.loadClients());
+    combineLatest([search$, title$, this.hasEmail$, this.hasPhone$])
+      .pipe(
+        tap(() => {
+          this.isLoading = true;
+          this.message = null;
+        }),
+        switchMap(([q, title, hasEmail, hasPhone]) => {
+          const query = (q ?? '').trim();
+          const titleValue = (title ?? '').trim();
+          return this.clientsService
+            .getClients({
+              q: query || undefined,
+              title: titleValue || undefined,
+              hasEmail: hasEmail || undefined,
+              hasPhone: hasPhone || undefined,
+              sort: 'createdAt',
+              order: 'DESC',
+              pageSize: 100,
+            })
+            .pipe(
+              catchError((error) => {
+                this.message = 'Une erreur est survenue lors de la récupération des clients.';
+                console.error(error);
+                return of([] as Client[]);
+              }),
+            );
+        }),
+      )
+      .subscribe((data) => {
+        this.isLoading = false;
+        this.client = data;
+      });
   }
 
 
@@ -91,8 +127,7 @@ export class Clients implements OnInit {
   }
 
   deleteClient(id: number){
-clientsService
-    this.api.deleteClient(id).subscribe({
+    this.clientsService.deleteClient(id).subscribe({
       next: () => {
         this.client = this.client.filter(c => c.id !== id);
       },
@@ -106,12 +141,12 @@ clientsService
   // Toggle filters
   toggleEmailFilter() {
     this.hasEmail = !this.hasEmail;
-    this.loadClients();
+    this.hasEmail$.next(this.hasEmail);
   }
 
   togglePhoneFilter() {
     this.hasPhone = !this.hasPhone;
-    this.loadClients();
+    this.hasPhone$.next(this.hasPhone);
   }
 
   clearFilters() {
@@ -119,32 +154,8 @@ clientsService
     this.titleCtrl.setValue('');
     this.hasEmail = false;
     this.hasPhone = false;
-    this.loadClients();
-  }
-
-  private loadClients() {
-    this.clientsServiceoading = true;
-    this.api
-      .getClients({
-        q: this.searchCtrl.value || undefined,
-        title: this.titleCtrl.value || undefined,
-        hasEmail: this.hasEmail || undefined,
-        hasPhone: this.hasPhone || undefined,
-        sort: 'createdAt',
-        order: 'DESC',
-        pageSize: 100,
-      })
-      .subscribe({
-        next: (data) => {
-          this.isLoading = false;
-          this.client = data;
-        },
-        error: (error) => {
-          this.isLoading = false;
-          this.message = 'Une erreur est survenue lors de la récupération des clients.';
-          console.error(error);
-        },
-      });
+    this.hasEmail$.next(this.hasEmail);
+    this.hasPhone$.next(this.hasPhone);
   }
 
 }

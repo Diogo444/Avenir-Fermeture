@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Client } from '../../../../models/clients.model';
-import { ClientsService } from '../../../../services/clients.service';
+import { Client } from '../../../models/clients.model';
+import { ClientsService } from '../../../services/clients.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,16 +37,10 @@ export class OneClientComponent implements OnInit {
   isLoading = true;
 
   ngOnInit(): void {
-    this.getClient();
-  }
-
-  getClient(): void {
-    if (this.codeClient) {
-      this.clientsService.getClientByCode(this.codeClient).subscribe(client => {
-        this.client = client;
-        this.isLoading = false;
-      });
-    }
+    this.route.data.subscribe((data) => {
+      this.client = (data['client'] as Client | null) ?? null;
+      this.isLoading = false;
+    });
   }
 
 
@@ -64,7 +58,7 @@ export class OneClientComponent implements OnInit {
     if (this.client) {
       const confirmDelete = confirm(`Êtes-vous sûr de vouloir supprimer le client ${this.client.firstName} ${this.client.lastName} ?`);
       if (confirmDelete) {
-        this.api.deleteClient(this.client.id).subscribe(() => {
+        this.clientsService.deleteClient(this.client.id).subscribe(() => {
           alert('Client supprimé avec succès.');
           this.router.navigate(['/clients']);
         });

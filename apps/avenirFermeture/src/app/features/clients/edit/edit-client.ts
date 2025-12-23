@@ -122,8 +122,9 @@ export class EditClient implements OnInit {
       ]);
     }
 
+    const titleValue = this.clientData?.titleId ?? this.clientData?.title ?? '';
     this.clientForm = this.fb.group({
-      title: [this.clientData?.title ?? '', [Validators.required]],
+      title: [titleValue, [Validators.required]],
       lastName: [this.clientData?.lastName ?? '', [Validators.required]],
       firstName: [this.clientData?.firstName ?? '', [Validators.required]],
       email: [this.clientData?.email ?? '', [Validators.required, Validators.email]],
@@ -152,8 +153,9 @@ export class EditClient implements OnInit {
       const phone_2 = parsePhone(rawValue.phone2);
       const phone_3 = parsePhone(rawValue.phone3);
 
+      const titleValue = rawValue.title;
       const payload: CreateClientDto = {
-        title: rawValue.title,
+        ...(typeof titleValue === 'number' ? { titleId: titleValue } : { title: titleValue }),
         code_client: rawValue.codeClient,
         lastName: rawValue.lastName,
         firstName: rawValue.firstName,
