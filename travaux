@@ -1,0 +1,24 @@
+Analyse statique effectuée sans aucune modification. Les outils Nx MCP ne sont pas disponibles ici, donc je me suis basé sur la lecture des fichiers.
+
+Organisation
+
+Les modèles sont dispersés et parfois liés aux composants (ex. produit.model.ts utilisé depuis commandes.model.ts), ce qui crée un couplage fort; à factoriser dans un espace commun (apps/avenirFermeture/src/app/models ou une lib Nx dédiée).
+La structure components/view vs components/utils mélange features et UI partagée; une organisation par feature (clients/commandes/dashboard) + shared UI rendrait le code plus lisible et évolutif (apps/avenirFermeture/src/app/components/view).
+Le service API est monolithique; le scinder par domaine (clients/commandes/référentiels) simplifie la maintenance et permet du caching ciblé (api.ts).
+Le passage d’état via localStorage pour des données de navigation (code/id client) entraîne du couplage et des bugs “état fantôme”; préférer params de route + service partagé / resolver (one-client.ts, create-commandes.ts).
+Logique répliquée (formatage téléphone, snackbars, parsing) entre plusieurs composants; à factoriser en util/pipe/service (clients.ts, addClient.ts, general.ts).
+
+
+Requêtes front-end (roquettes)
+
+Appels répétés aux référentiels statiques (titres, produits, fournisseurs, états) dans plusieurs vues; mettre un cache shareReplay(1) ou un store léger dans api.ts.
+Recherche clients: valueChanges déclenche un call par frappe sans annuler les requêtes en vol; utiliser combineLatest + switchMap pour éviter les courses et réduire le trafic (clients.ts).
+Page client: mêmes données client récupérées par plusieurs composants (parent + infos générales); un resolver parent ou un service partagé évite les doublons (one-client.ts, general.ts).
+create-commandes charge 3 listes via 3 GET; possible d’avoir un endpoint “bootstrap” (ou forkJoin) pour réduire le nombre de requêtes (create-commandes.ts).
+Back-end / DB
+
+Relations eager: true + relations explicites sur les commandes chargent un graphe très lourd même pour un listing; prévoir des DTO “list” vs “detail”, et n’inclure les relations que sur demande (commande.entity.ts, commandes.service.ts).
+Les endpoints de listing ne paginent pas tous (commandes) et n’exposent pas de total; la pagination côté API évite des réponses massives (commandes.service.ts).
+Recherche clients via LOWER/LIKE sur plusieurs colonnes désactive les index; envisager colonne normalisée, index full-text ou endpoint de recherche dédié (clients.service.ts).
+Lookup par nom de titre à chaque create/update ajoute des requêtes; passer titleId ou mettre en cache côté serveur pour réduire la latence (clients.service.ts).
+synchronize activé par défaut en prod potentielle; mieux vaut migrations + désactivation pour stabilité et perf (app.module.ts).
