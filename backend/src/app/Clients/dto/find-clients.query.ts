@@ -11,5 +11,5 @@ export interface FindClientsQuery {
   order?: 'ASC' | 'DESC' | string;
   page?: number | string;
   pageSize?: number | string;
+  include?: 'summary' | 'detail' | string;
 }
-

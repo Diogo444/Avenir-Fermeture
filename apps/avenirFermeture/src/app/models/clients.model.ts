@@ -1,4 +1,18 @@
-export type ClientList = Client[]
+export interface ClientListItem {
+  id: number
+  code_client: string
+  title: string | null
+  titleId?: number | null
+  firstName: string
+  lastName: string
+  email: string
+  phone_1: string | null
+  rue: string | null
+  code_postal: number | null
+  ville: string | null
+}
+
+export type ClientList = ClientListItem[]
 
 export interface Client {
   id: number

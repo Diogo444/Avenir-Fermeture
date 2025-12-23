@@ -135,6 +135,28 @@
   margin-bottom: 1rem;
 }
 
+.table-wrapper {
+  display: block;
+}
+
+.load-more-anchor {
+  height: 1px;
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 4px;
+}
+
+.end-of-list {
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+  padding: 8px 0 4px;
+}
+
 @media (max-width: 768px) {
   .filters-row { grid-template-columns: 1fr; }
   .title-row { flex-direction: column; gap: 8px; align-items: flex-start; }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Client } from '../models/clients.model';
+import { Client, ClientListItem } from '../models/clients.model';
 import { CreateClientDto } from '../models/create-client.dto';
 import { NumberClients } from '../models/number_clients.model';
 
@@ -23,6 +23,7 @@ export class ClientsService {
     pageSize?: number;
     sort?: 'createdAt' | 'updatedAt' | 'lastName' | 'firstName';
     order?: 'ASC' | 'DESC';
+    include?: 'summary' | 'detail';
   }) {
     let httpParams = new HttpParams();
     if (params) {
@@ -32,7 +33,7 @@ export class ClientsService {
         }
       });
     }
-    return this.http.get<Client[]>(`${this.apiurl}/clients`, { params: httpParams });
+    return this.http.get<ClientListItem[]>(`${this.apiurl}/clients`, { params: httpParams });
   }
 
   getNumberClients() {

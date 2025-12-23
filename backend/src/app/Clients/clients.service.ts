@@ -60,72 +60,115 @@ export class ClientsService {
     return saved;
   }
 
-  async findAll(query?: FindClientsQuery) {
-    const qb = this.clientRepository
-      .createQueryBuilder('client')
-      .leftJoinAndSelect('client.title', 'title');
+  async findAll(query: FindClientsQuery = {}) {
+    const {
+      q,
+      title: titleName,
+      hasEmail,
+      hasPhone,
+      city,
+      code_postal,
+      sort,
+      order,
+      page,
+      pageSize,
+      include,
+    } = query;
 
-    if (query) {
-      const { q, title: titleName, hasEmail, hasPhone, city, code_postal, sort, order, page, pageSize } = query;
-
-      if (q && q.trim() !== '') {
-        const like = `%${q.trim()}%`;
-        qb.andWhere(
-          `(
-            client.code_client LIKE :like OR
-            client.firstName LIKE :like OR
-            client.lastName LIKE :like OR
-            client.email LIKE :like OR
-            client.rue LIKE :like OR
-            client.ville LIKE :like
-          )`,
-          { like },
-        );
-      }
-
-      if (titleName) {
-        qb.andWhere('title.name = :titleName', { titleName });
-      }
-
-      if (city && city.trim() !== '') {
-        qb.andWhere('client.ville LIKE :cityLike', { cityLike: `%${city.trim()}%` });
-      }
-
-      if (typeof code_postal !== 'undefined' && code_postal !== null && `${code_postal}`.trim() !== '') {
-        const codePostalValue = `${code_postal}`.trim();
-        const codePostalNumber = Number(codePostalValue);
-        if (!Number.isNaN(codePostalNumber)) {
-          qb.andWhere('client.code_postal = :codePostal', { codePostal: codePostalNumber });
-        } else {
-          qb.andWhere('CAST(client.code_postal AS CHAR) LIKE :cpLike', { cpLike: `%${codePostalValue}%` });
-        }
-      }
-
-      if (hasEmail === 'true' || hasEmail === true) {
-        qb.andWhere("client.email IS NOT NULL AND client.email <> ''");
-      }
-
-      if (hasPhone === 'true' || hasPhone === true) {
-        qb.andWhere(
-          `(
-            (client.phone_1 IS NOT NULL AND client.phone_1 <> '') OR
-            (client.phone_2 IS NOT NULL AND client.phone_2 <> '') OR
-            (client.phone_3 IS NOT NULL AND client.phone_3 <> '')
-          )`,
-        );
-      }
-
-      // Sorting
-      const sortField = ['createdAt', 'updatedAt', 'lastName', 'firstName'].includes(sort || '') ? (sort as string) : 'createdAt';
-      const sortOrder = (order || 'DESC').toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
-      qb.orderBy(`client.${sortField}`, sortOrder as 'ASC' | 'DESC');
-
-      // Pagination (optional)
-      const size = Math.min(Math.max(Number(pageSize) || 50, 1), 200);
-      const pageNum = Math.max(Number(page) || 1, 1);
-      qb.skip((pageNum - 1) * size).take(size);
+    const includeMode = include === 'detail' ? 'detail' : 'summary';
+    const qb = this.clientRepository.createQueryBuilder('client');
+    if (includeMode === 'detail') {
+      qb.leftJoinAndSelect('client.title', 'title');
     } else {
-      qb.orderBy('client.createdAt', 'DESC').take(50);
+      qb.leftJoin('client.title', 'title');
+    }
+
+    if (q && q.trim() !== '') {
+      const like = `%${q.trim()}%`;
+      qb.andWhere(
+        `(
+          client.code_client LIKE :like OR
+          client.firstName LIKE :like OR
+          client.lastName LIKE :like OR
+          client.email LIKE :like OR
+          client.rue LIKE :like OR
+          client.ville LIKE :like
+        )`,
+        { like },
+      );
+    }
+
+    if (titleName) {
+      qb.andWhere('title.name = :titleName', { titleName });
+    }
+
+    if (city && city.trim() !== '') {
+      qb.andWhere('client.ville LIKE :cityLike', { cityLike: `%${city.trim()}%` });
+    }
+
+    if (typeof code_postal !== 'undefined' && code_postal !== null && `${code_postal}`.trim() !== '') {
+      const codePostalValue = `${code_postal}`.trim();
+      const codePostalNumber = Number(codePostalValue);
+      if (!Number.isNaN(codePostalNumber)) {
+        qb.andWhere('client.code_postal = :codePostal', { codePostal: codePostalNumber });
+      } else {
+        qb.andWhere('CAST(client.code_postal AS CHAR) LIKE :cpLike', { cpLike: `%${codePostalValue}%` });
+      }
+    }
+
+    if (hasEmail === 'true' || hasEmail === true) {
+      qb.andWhere("client.email IS NOT NULL AND client.email <> ''");
+    }
+
+    if (hasPhone === 'true' || hasPhone === true) {
+      qb.andWhere(
+        `(
+          (client.phone_1 IS NOT NULL AND client.phone_1 <> '') OR
+          (client.phone_2 IS NOT NULL AND client.phone_2 <> '') OR
+          (client.phone_3 IS NOT NULL AND client.phone_3 <> '')
+        )`,
+      );
+    }
+
+    // Sorting
+    const sortField = ['createdAt', 'updatedAt', 'lastName', 'firstName'].includes(sort || '')
+      ? (sort as string)
+      : 'createdAt';
+    const sortOrder = (order || 'DESC').toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    qb.orderBy(`client.${sortField}`, sortOrder as 'ASC' | 'DESC');
+
+    // Pagination
+    const size = Math.min(Math.max(Number(pageSize) || 50, 1), 200);
+    const pageNum = Math.max(Number(page) || 1, 1);
+    qb.skip((pageNum - 1) * size).take(size);
+
+    if (includeMode === 'summary') {
+      qb.select('client.id', 'id')
+        .addSelect('client.code_client', 'code_client')
+        .addSelect('client.firstName', 'firstName')
+        .addSelect('client.lastName', 'lastName')
+        .addSelect('client.email', 'email')
+        .addSelect('client.phone_1', 'phone_1')
+        .addSelect('client.rue', 'rue')
+        .addSelect('client.code_postal', 'code_postal')
+        .addSelect('client.ville', 'ville')
+        .addSelect('title.id', 'titleId')
+        .addSelect('title.name', 'title');
+
+      const rows = await qb.getRawMany();
+      return rows.map((row) => ({
+        id: Number(row.id),
+        code_client: row.code_client,
+        title: row.title ?? null,
+        titleId: row.titleId !== null && typeof row.titleId !== 'undefined' ? Number(row.titleId) : null,
+        firstName: row.firstName,
+        lastName: row.lastName,
+        email: row.email,
+        phone_1: row.phone_1 ?? null,
+        rue: row.rue ?? null,
+        code_postal: row.code_postal !== null && typeof row.code_postal !== 'undefined' ? Number(row.code_postal) : null,
+        ville: row.ville ?? null,
+      }));
     }
 
     const clients = await qb.getMany();
@@ -181,7 +224,7 @@ export class ClientsService {
     return { ...c, title: title?.name ?? null, titleId: title?.id ?? null };
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.clientRepository.delete(id);
   }
 
@@ -192,4 +235,5 @@ export class ClientsService {
     const parsed = Number(value);
     return Number.isNaN(parsed) ? null : parsed;
   }
+
 }

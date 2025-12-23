@@ -31,17 +31,23 @@
 
       <!-- Informations générales -->
       <mat-tab label="Informations générales">
-        <app-general [client]="client"></app-general>
+        <ng-template matTabContent>
+          <app-general [client]="client"></app-general>
+        </ng-template>
       </mat-tab>
 
       <!-- Paiements -->
       <mat-tab label="commandes">
-        <app-commandes [client]="client"></app-commandes>
+        <ng-template matTabContent>
+          <app-commandes [client]="client"></app-commandes>
+        </ng-template>
       </mat-tab>
 
       <!-- Facture -->
       <mat-tab label="Facture">
-        <app-facture></app-facture>
+        <ng-template matTabContent>
+          <app-facture></app-facture>
+        </ng-template>
       </mat-tab>
 
     </mat-tab-group>

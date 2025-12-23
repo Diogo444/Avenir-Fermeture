@@ -68,7 +68,8 @@
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
   } @else {
-    <table mat-table [dataSource]="client" class="mat-elevation-z8">
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="client" class="mat-elevation-z8">
 
       <!-- Title Column -->
       <ng-container matColumnDef="title">
@@ -115,10 +116,20 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClientClick(row)"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClientClick(row)"></tr>
 
-    </table>
+      </table>
+      <div #loadMoreAnchor class="load-more-anchor" aria-hidden="true"></div>
+    </div>
+
+    @if (isLoadingMore) {
+      <div class="loading-more">
+        <mat-progress-spinner mode="indeterminate" diameter="32"></mat-progress-spinner>
+      </div>
+    } @else if (!hasMore && client.length > 0) {
+      <div class="end-of-list">Fin de la liste.</div>
+    }
   }
 
 </div>
