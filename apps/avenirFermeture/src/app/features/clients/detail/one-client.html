@@ -31,12 +31,12 @@
 
       <!-- Informations générales -->
       <mat-tab label="Informations générales">
-        <app-general></app-general>
+        <app-general [client]="client"></app-general>
       </mat-tab>
 
       <!-- Paiements -->
       <mat-tab label="commandes">
-        <app-commandes></app-commandes>
+        <app-commandes [client]="client"></app-commandes>
       </mat-tab>
 
       <!-- Facture -->

@@ -32,7 +32,7 @@
           <div>
             <span class="info-label">{{ client.phone_1_label || 'Téléphone 1' }}</span>
             @if(client.phone_1?.trim()){
-              <span class="info-value">{{ parseNumber(client.phone_1) }}</span>
+              <span class="info-value">{{ client.phone_1 | phoneFormat }}</span>
             } @else {
               <span class="info-value">Non renseigné</span>
             }
@@ -43,7 +43,7 @@
           <div>
             <span class="info-label">{{ client.phone_2_label || 'Téléphone 2' }}</span>
             @if(client.phone_2?.trim()){
-              <span class="info-value">{{ parseNumber(client.phone_2) }}</span>
+              <span class="info-value">{{ client.phone_2 | phoneFormat }}</span>
             } @else {
               <span class="info-value">Non renseigné</span>
             }
@@ -54,7 +54,7 @@
           <div>
             <span class="info-label">{{ client.phone_3_label || 'Téléphone 3' }}</span>
             @if(client.phone_3?.trim()){
-              <span class="info-value">{{ parseNumber(client.phone_3) }}</span>
+              <span class="info-value">{{ client.phone_3 | phoneFormat }}</span>
             } @else {
               <span class="info-value">Non renseigné</span>
             }

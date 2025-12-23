@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Client } from '../../../models/clients.model';
-import { Api } from '../../../services/api/api';
+import { Client } from '../../../../models/clients.model';
+import { ClientsService } from '../../../../services/clients.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Facture } from '../../utils/one-client/facture/facture';
-import { Commandes } from '../../utils/one-client/commandes/commandes';
-import { General } from '../../utils/one-client/infos-general/infos/general';
+import { Facture } from './components/facture/facture';
+import { Commandes } from './components/commandes/commandes';
+import { General } from './components/infos-general/infos/general';
 
 @Component({
   selector: 'app-one-client',
@@ -30,22 +30,19 @@ import { General } from '../../utils/one-client/infos-general/infos/general';
 export class OneClientComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private api = inject(Api);
+  private clientsService = inject(ClientsService);
 
   codeClient: string | null = this.route.snapshot.paramMap.get('code-client');
   client: Client | null = null;
   isLoading = true;
 
   ngOnInit(): void {
-    localStorage.setItem('code_client', this.codeClient || '');
     this.getClient();
   }
 
   getClient(): void {
     if (this.codeClient) {
-      this.api.getClientByCode(this.codeClient).subscribe(client => {
-        // mettre l'id dans le localstorage
-        localStorage.setItem('id_client', client.id.toString());
+      this.clientsService.getClientByCode(this.codeClient).subscribe(client => {
         this.client = client;
         this.isLoading = false;
       });

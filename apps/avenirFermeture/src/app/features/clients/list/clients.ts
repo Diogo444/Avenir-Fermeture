@@ -7,17 +7,19 @@ import { MatListModule } from '@angular/material/list';
 import {MatTableModule} from '@angular/material/table';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
-import { Api } from '../../../services/api/api';
+import { Api } from '../../../../services/api/api';
+import { ClientsService } from '../../../../services/clients.service';
+import { ReferentielsService } from '../../../../services/referentiels.service';
 import { CommonModule } from '@angular/common';
-import { Client } from '../../../models/clients.model';
+import { Client } from '../../../../models/clients.model';
 import { Router } from '@angular/router';
-import { NgxIntlTelInputWrapperModule } from '../../../shared/ngx-intl-tel-input-wrapper.module';
+import { NgxIntlTelInputWrapperModule } from '../../../../shared/ngx-intl-tel-input-wrapper.module';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-import { getTitre } from '../../../models/titres.model';
+import { getTitre } from '../../../../models/titres.model';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { PhoneFormatPipe } from '../../../../shared/utils/pipes/phone-format.pipe';
 
 
 
@@ -37,8 +39,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
     MatTableModule,
     ReactiveFormsModule,
     NgxIntlTelInputWrapperModule,
-    MatProgressSpinnerModule
-
+    MatProgressSpinnerModule,
+    PhoneFormatPipe
   ],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
@@ -57,12 +59,13 @@ export class Clients implements OnInit {
   hasPhone = false;
   titles: getTitre[] = [];
 
-  private readonly api = inject(Api)
+  private readonly clientsService = inject(ClientsService);
+  private readonly referentielsService = inject(ReferentielsService);
   private readonly router = inject(Router)
 
   ngOnInit(): void {
     // Load filter options
-    this.api.getTitres().subscribe({
+    this.referentielsService.getTitres().subscribe({
       next: (titles) => (this.titles = titles),
       error: () => {},
     });
@@ -77,17 +80,7 @@ export class Clients implements OnInit {
     this.titleCtrl.valueChanges.subscribe(() => this.loadClients());
   }
 
-  parseNumber(phoneNumber: string | null): string {
-    // Example: parse and format using google-libphonenumber
-      const phoneUtil = PhoneNumberUtil.getInstance();
-      try {
-        const parsed = phoneUtil.parse(phoneNumber || '');
-        return phoneUtil.format(parsed, PhoneNumberFormat.INTERNATIONAL);
-      } catch (e) {
-        console.error('Invalid phone number', e);
-        return phoneNumber || '';
-      }
-  }
+
 
   addClient(){
     this.router.navigate(['/cree-client']);
@@ -98,7 +91,7 @@ export class Clients implements OnInit {
   }
 
   deleteClient(id: number){
-
+clientsService
     this.api.deleteClient(id).subscribe({
       next: () => {
         this.client = this.client.filter(c => c.id !== id);
@@ -130,7 +123,7 @@ export class Clients implements OnInit {
   }
 
   private loadClients() {
-    this.isLoading = true;
+    this.clientsServiceoading = true;
     this.api
       .getClients({
         q: this.searchCtrl.value || undefined,

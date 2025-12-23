@@ -3,11 +3,11 @@ import { Route } from '@angular/router';
 export const appRoutes: Route[] = [
   {
     path: '',
-    loadComponent: () => import('./components/view/dashboard/dashboard').then(m => m.Dashboard),
+    loadComponent: () => import('./features/dashboard/home/dashboard').then(m => m.Dashboard),
   },
   {
     path: 'clients',
-    loadComponent: () => import('./components/view/clients/clients').then(m => m.Clients),
+    loadComponent: () => import('./features/clients/list/clients').then(m => m.Clients),
   },
   {
     path: 'commercial',
@@ -24,19 +24,19 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'cree-client',
-    loadComponent: () => import('./components/view/addClient/addClient').then(m => m.AddClient),
+    loadComponent: () => import('./features/clients/add/addClient').then(m => m.AddClient),
   },
   {
     path: 'edit-client/:code-client',
-    loadComponent: () => import('./components/view/edit-client/edit-client').then(m => m.EditClient),
+    loadComponent: () => import('./features/clients/edit/edit-client').then(m => m.EditClient),
   },
   {
     path: 'one-client/create-commande',
-    loadComponent: () => import('./components/view/create-commandes/create-commandes').then(m => m.CreateCommandes),
+    loadComponent: () => import('./features/commandes/create/create-commandes').then(m => m.CreateCommandes),
   },
   {
     path: 'one-client/:code-client',
-    loadComponent: () => import('./components/view/one-client/one-client').then(m => m.OneClientComponent),
+    loadComponent: () => import('./features/clients/detail/one-client').then(m => m.OneClientComponent),
 
   },
   {

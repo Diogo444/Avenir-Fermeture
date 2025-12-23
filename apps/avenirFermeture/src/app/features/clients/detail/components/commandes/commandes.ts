@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,8 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTreeModule } from '@angular/material/tree';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
-import { Api } from '../../../../services/api/api';
-import { Commande, StatutCommande, TypeAcompte } from '../../../../models/commandes.model';
+import { CommandesService } from '../../../../../../services/commandes.service';
+import { Client } from '../../../../../../models/clients.model';
+import { Commande, StatutCommande, TypeAcompte } from '../../../../../../models/commandes.model';
 
 type OrderStatus = 'En cours' | 'Terminée' | 'Annulée';
 type FilterStatus = 'Tous' | 'En cours' | 'Terminées' | 'Annulées';
@@ -90,7 +91,8 @@ const ACOMPTE_LABELS: Record<TypeAcompte, string> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Commandes implements OnInit {
-  private api = inject(Api);
+  @Input() client!: Client;
+  private commandesService = inject(CommandesService);
   private cdr = inject(ChangeDetectorRef);
   private allOrders: OrderNode[] = [];
   private readonly currencyFormatter = new Intl.NumberFormat('fr-FR', {
@@ -126,10 +128,7 @@ export class Commandes implements OnInit {
   }
 
   private loadCommandes() {
-    const idClientValue = localStorage.getItem('id_client');
-    const idClient = idClientValue ? Number(idClientValue) : Number.NaN;
-
-    if (!idClientValue || Number.isNaN(idClient)) {
+    if (!this.client?.id) {
       this.allOrders = [];
       this.isLoading = false;
       this.applyFilters();
@@ -138,8 +137,8 @@ export class Commandes implements OnInit {
     }
 
     this.isLoading = true;
-    this.api
-      .getCommandesByClientId(idClient)
+    this.commandesService
+      .getCommandesByClientId(this.client.id)
       .pipe(
         catchError(() => {
           this.allOrders = [];

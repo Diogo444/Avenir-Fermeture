@@ -1,7 +1,7 @@
 import { Client } from './clients.model';
 import { EtatProduit } from './etat-produit.model';
 import { Fournisseur } from './fournisseur.model';
-import { Produit } from '../components/view/ajoutProduit/dto/produit.model';
+import { Produit } from './produit.model';
 
 export type StatutCommande = 'EN_COURS' | 'TERMINEE' | 'ANNULEE';
 export type TypeAcompte = 'SIGNATURE' | 'METRE' | 'LIVRAISON' | 'POSE';
