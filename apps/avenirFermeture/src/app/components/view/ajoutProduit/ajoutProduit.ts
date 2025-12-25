@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getTitre } from '../../../models/titres.model';
 import { CreateFournisseurDto } from '../../../models/create-fournisseur.dto';
 import { Fournisseur } from '../../../models/fournisseur.model';
+import { Status } from '../../../models/status.model';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -38,6 +39,10 @@ export class AjoutProduit implements OnInit {
 
   fournisseurName = '';
   fournisseurs: Fournisseur[] = [];
+
+  Status: Status[] = [];
+  statutName = '';
+  statutColor = '#000000';
 
 
   private readonly api = inject(Api);
@@ -161,10 +166,35 @@ export class AjoutProduit implements OnInit {
     });
   }
 
+  onSubmitStatut() {
+    const statutName = this.statutName;
+    const statutColor = this.statutColor;
+    this.api.CreateStatus({ name: statutName, color: statutColor }).subscribe({
+      next: () => {
+        this.openSnackBar('Le statut ' + statutName + ' a bien été ajouté !');
+        this.getStatus();
+        this.statutName = '';
+        this.statutColor = '#000000';
+      },
+      error: (error: Error) => {
+        this.openSnackBar("Erreur lors de l'ajout du statut " + statutName + '.');
+        console.error('Error adding statut:', error);
+      },
+    });
+  }
+
+  getStatus() {
+    this.api.GetStatus().subscribe((status) => {
+      this.Status = status;
+      console.log(this.Status);
+    });
+  }
+
   ngOnInit(): void {
     this.getProduit();
     this.getCommercial();
     this.getTitres();
     this.getFournisseur();
+    this.getStatus();
   }
 }

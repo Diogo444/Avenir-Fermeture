@@ -33,21 +33,11 @@
     <form (ngSubmit)="onSubmitCommercial()">
       <mat-form-field appearance="fill">
         <mat-label>Nom du commercial</mat-label>
-        <input
-          matInput
-          [(ngModel)]="commercialLastName"
-          name="commercialLastName"
-          required
-        />
+        <input matInput [(ngModel)]="commercialLastName" name="commercialLastName" required />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Prénom du commercial</mat-label>
-        <input
-          matInput
-          [(ngModel)]="commercialFirstName"
-          name="commercialFirstName"
-          required
-        />
+        <input matInput [(ngModel)]="commercialFirstName" name="commercialFirstName" required />
       </mat-form-field>
       <button mat-raised-button color="primary" type="submit">Ajouter</button>
     </form>
@@ -63,7 +53,7 @@
     <ul>
       @for (commercial of commercial; track $index) {
 
-        <li>{{ commercial.lastName }} - {{ commercial.firstName }}</li>
+      <li>{{ commercial.lastName }} - {{ commercial.firstName }}</li>
       }
     </ul>
   </mat-card-content>
@@ -78,7 +68,7 @@
     <ul>
       @for (titre of titres; track $index) {
 
-        <li>{{ titre.name }}</li>
+      <li>{{ titre.name }}</li>
       }
     </ul>
   </mat-card-content>
@@ -96,7 +86,7 @@
       <button mat-raised-button color="primary" type="submit">Ajouter</button>
     </form>
   </mat-card-content>
-  
+
   <!-- Ajouter un fournisseur -->
   <mat-card-header>
     <mat-card-title>Ajouter un fournisseur</mat-card-title>
@@ -106,12 +96,7 @@
     <form (ngSubmit)="onSubmitFournisseur()">
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Nom du fournisseur</mat-label>
-        <input
-          matInput
-          [(ngModel)]="fournisseurName"
-          name="fournisseurName"
-          required
-        />
+        <input matInput [(ngModel)]="fournisseurName" name="fournisseurName" required />
       </mat-form-field>
 
       <button mat-raised-button color="primary" type="submit">
@@ -128,11 +113,48 @@
   <mat-card-content>
     <ul>
       @for (fournisseur of fournisseurs; track fournisseur.id) {
-        <li>{{ fournisseur.nom }}</li>
+      <li>{{ fournisseur.nom }}</li>
       }
     </ul>
   </mat-card-content>
 
-  
+  <mat-card-header>
+    <mat-card-title>Ajouter un statut</mat-card-title>
+  </mat-card-header>
 
+  <mat-card-content>
+    <form (ngSubmit)="onSubmitStatut()">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Nom du statut</mat-label>
+        <input matInput [(ngModel)]="statutName" name="statutName" required />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Couleur du statut</mat-label>
+        <input matInput type="color" [(ngModel)]="statutColor" name="statutColor" required />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">
+        Ajouter
+      </button>
+    </form>
+  </mat-card-content>
+  <!-- Liste des statuts et afficher une boule de couleur pour chaque statut -->
+  <mat-card-header>
+    <mat-card-title>Statuts existants</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      @for (statut of Status; track $index) {
+  <li class="flex items-center gap-2">
+    <span
+      [style.backgroundColor]="statut.color"
+      style="display:inline-block; width:20px; height:20px; border-radius:50%;"
+    ></span>
+    {{ statut.name }}
+  </li>
+}
+
+    </ul>
+  </mat-card-content>
 </mat-card>
+

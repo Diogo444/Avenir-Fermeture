@@ -12,6 +12,7 @@ import { TitresModule } from './titres/titres.module';
 import { CommandesModule } from './commandes/commandes.module';
 import { FournisseursModule } from './fournisseurs/fournisseurs.module';
 import { EtatProduitModule } from './etatProduit/etat-produit.module';
+import { StatusModule } from './status/status.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { EtatProduitModule } from './etatProduit/etat-produit.module';
     CommandesModule,
     FournisseursModule,
     EtatProduitModule,
+    StatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

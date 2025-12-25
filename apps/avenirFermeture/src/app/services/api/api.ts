@@ -14,6 +14,7 @@ import { CreateCommandeDto } from '../../models/create-commande.dto';
 import { Fournisseur } from '../../models/fournisseur.model';
 import { EtatProduit } from '../../models/etat-produit.model';
 import { CreateFournisseurDto } from '../../models/create-fournisseur.dto';
+import { Status } from '../../models/status.model';
 
 
 @Injectable({
@@ -169,6 +170,14 @@ export class Api {
 
   getFournisseurById(id: number) {
     return this.http.get<Fournisseur>(`${this.apiurl}/fournisseurs/${id}`);
+  }
+
+  CreateStatus(status: Status) {
+    return this.http.post<Status>(`${this.apiurl}/status`, status);
+  }
+
+  GetStatus() {
+    return this.http.get<Status[]>(`${this.apiurl}/status`);
   }
 
 
