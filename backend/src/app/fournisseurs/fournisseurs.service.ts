@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateFournisseurDto } from './dto/create-fournisseur.dto';
@@ -13,7 +13,13 @@ export class FournisseursService {
   ) {}
 
   create(createFournisseurDto: CreateFournisseurDto) {
-    const fournisseur = this.fournisseurRepository.create(createFournisseurDto);
+    const dto = createFournisseurDto as CreateFournisseurDto & { name?: unknown };
+    const nom = typeof dto.nom === 'string' && dto.nom.trim() !== '' ? dto.nom : dto.name;
+    if (typeof nom !== 'string' || nom.trim() === '') {
+      throw new BadRequestException('Le champ "nom" est obligatoire.');
+    }
+
+    const fournisseur = this.fournisseurRepository.create({ nom: nom.trim() });
     return this.fournisseurRepository.save(fournisseur);
   }
 

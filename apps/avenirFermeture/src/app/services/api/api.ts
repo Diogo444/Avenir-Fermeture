@@ -13,6 +13,7 @@ import { Commande, CommandesListResponse } from '../../models/commandes.model';
 import { CreateCommandeDto } from '../../models/create-commande.dto';
 import { Fournisseur } from '../../models/fournisseur.model';
 import { EtatProduit } from '../../models/etat-produit.model';
+import { CreateFournisseurDto } from '../../models/create-fournisseur.dto';
 
 
 @Injectable({
@@ -156,6 +157,18 @@ export class Api {
         this.titres$ = undefined;
       }),
     );
+  }
+
+  createFournisseur(fournisseur: CreateFournisseurDto) {
+    return this.http.post<Fournisseur>(`${this.apiurl}/fournisseurs`, fournisseur).pipe(
+      tap(() => {
+        this.fournisseurs$ = undefined;
+      }),
+    );
+  }
+
+  getFournisseurById(id: number) {
+    return this.http.get<Fournisseur>(`${this.apiurl}/fournisseurs/${id}`);
   }
 
 

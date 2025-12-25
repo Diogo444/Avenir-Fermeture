@@ -96,4 +96,43 @@
       <button mat-raised-button color="primary" type="submit">Ajouter</button>
     </form>
   </mat-card-content>
+  
+  <!-- Ajouter un fournisseur -->
+  <mat-card-header>
+    <mat-card-title>Ajouter un fournisseur</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form (ngSubmit)="onSubmitFournisseur()">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Nom du fournisseur</mat-label>
+        <input
+          matInput
+          [(ngModel)]="fournisseurName"
+          name="fournisseurName"
+          required
+        />
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">
+        Ajouter
+      </button>
+    </form>
+  </mat-card-content>
+
+  <!-- Liste des fournisseurs -->
+  <mat-card-header>
+    <mat-card-title>Fournisseurs existants</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <ul>
+      @for (fournisseur of fournisseurs; track fournisseur.id) {
+        <li>{{ fournisseur.nom }}</li>
+      }
+    </ul>
+  </mat-card-content>
+
+  
+
 </mat-card>

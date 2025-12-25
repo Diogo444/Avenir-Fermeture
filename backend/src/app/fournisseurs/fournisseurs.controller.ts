@@ -16,8 +16,9 @@ export class FournisseursController {
   constructor(private readonly fournisseursService: FournisseursService) {}
 
   @Post()
-  create(@Body() createFournisseurDto: CreateFournisseurDto) {
-    return this.fournisseursService.create(createFournisseurDto);
+  create(@Body() dto: CreateFournisseurDto) {
+    console.log('BODY =>', dto);
+    return this.fournisseursService.create(dto);
   }
 
   @Get()

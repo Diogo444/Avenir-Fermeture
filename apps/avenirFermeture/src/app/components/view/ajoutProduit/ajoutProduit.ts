@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
 import { Commercial } from '../../../models/commercial.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getTitre } from '../../../models/titres.model';
+import { CreateFournisseurDto } from '../../../models/create-fournisseur.dto';
+import { Fournisseur } from '../../../models/fournisseur.model';
 
 @Component({
   selector: 'app-ajout-produit',
@@ -33,6 +35,10 @@ export class AjoutProduit implements OnInit {
 
   commercialLastName = '';
   commercialFirstName = '';
+
+  fournisseurName = '';
+  fournisseurs: Fournisseur[] = [];
+
 
   private readonly api = inject(Api);
   private _snackBar = inject(MatSnackBar);
@@ -127,9 +133,38 @@ export class AjoutProduit implements OnInit {
     });
   }
 
+  onSubmitFournisseur() {
+    const fournisseurName = this.fournisseurName;
+    this.api
+      .createFournisseur({ nom: fournisseurName } satisfies CreateFournisseurDto)
+      .subscribe({
+        next: () => {
+          this.openSnackBar(
+            'Le fournisseur ' + fournisseurName + ' a bien été ajouté !'
+          );
+          this.fournisseurName = '';
+          this.getFournisseur();
+        },
+        error: (error: Error) => {
+          this.openSnackBar(
+            "Erreur lors de l'ajout du fournisseur " + fournisseurName + '.'
+          );
+          console.error('Error adding fournisseur:', error);
+        },
+      }); 
+  }
+
+  getFournisseur() {
+    this.api.getFournisseurs().subscribe((fournisseurs) => {
+      this.fournisseurs = fournisseurs;
+      console.log(this.fournisseurs);
+    });
+  }
+
   ngOnInit(): void {
     this.getProduit();
     this.getCommercial();
     this.getTitres();
+    this.getFournisseur();
   }
 }
