@@ -1,7 +1,7 @@
 import { Client } from './clients.model';
-import { EtatProduit } from './etat-produit.model';
 import { Fournisseur } from './fournisseur.model';
 import { Produit } from './produit.model';
+import { Status } from './status.model';
 
 export type StatutCommande = 'EN_COURS' | 'TERMINEE' | 'ANNULEE';
 export type TypeAcompte = 'SIGNATURE' | 'METRE' | 'LIVRAISON' | 'POSE';
@@ -12,7 +12,8 @@ export interface CommandeProduit {
   note: string | null;
   avenant: boolean;
   produit: Produit;
-  etat_produit: EtatProduit | null;
+  status: Status | null;
+  fournisseur?: Fournisseur | null;
 }
 
 export interface Commande {

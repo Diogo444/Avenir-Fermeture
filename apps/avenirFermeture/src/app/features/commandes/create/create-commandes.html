@@ -51,25 +51,52 @@
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Date de signature</mat-label>
-                <input matInput type="date" formControlName="date_signature" required />
+                <input
+                  matInput
+                  [matDatepicker]="signaturePicker"
+                  formControlName="date_signature"
+                  [min]="minDateSignature"
+                  required
+                />
+                <mat-datepicker-toggle matSuffix [for]="signaturePicker"></mat-datepicker-toggle>
+                <mat-datepicker #signaturePicker></mat-datepicker>
                 @if (commandeForm.get('date_signature')?.hasError('required')) {
                   <mat-error>Date requise</mat-error>
+                }
+                @if (commandeForm.get('date_signature')?.hasError('beforeToday')) {
+                  <mat-error>La date ne peut pas être antérieure à aujourd’hui</mat-error>
                 }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Montant HT</mat-label>
-                <input matInput type="number" formControlName="montant_ht" required />
+                <input matInput type="number" formControlName="montant_ht" min="0" step="0.01" required />
                 @if (commandeForm.get('montant_ht')?.hasError('required')) {
                   <mat-error>Montant HT requis</mat-error>
+                }
+                @if (commandeForm.get('montant_ht')?.hasError('min')) {
+                  <mat-error>Le montant HT doit être positif</mat-error>
                 }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Montant TTC</mat-label>
-                <input matInput type="number" formControlName="montant_ttc" required />
+                <input
+                  matInput
+                  type="number"
+                  formControlName="montant_ttc"
+                  [min]="commandeForm.get('montant_ht')?.value || 0"
+                  step="0.01"
+                  required
+                />
                 @if (commandeForm.get('montant_ttc')?.hasError('required')) {
                   <mat-error>Montant TTC requis</mat-error>
+                }
+                @if (commandeForm.get('montant_ttc')?.hasError('min')) {
+                  <mat-error>Le montant TTC doit être positif</mat-error>
+                }
+                @if (commandeForm.hasError('ttcLessThanHt')) {
+                  <mat-error>Le montant TTC doit être supérieur ou égal au montant HT</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -90,16 +117,6 @@
                       <mat-icon class="option-icon">{{ option.icon }}</mat-icon>
                       {{ option.label }}
                     </mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Fournisseur</mat-label>
-                <mat-select formControlName="fournisseurId">
-                  <mat-option [value]="null">Aucun fournisseur</mat-option>
-                  @for (fournisseur of fournisseurs; track fournisseur.id) {
-                    <mat-option [value]="fournisseur.id">{{ fournisseur.nom }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -160,21 +177,46 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="form-field">
-                      <mat-label>Quantité</mat-label>
-                      <input matInput type="number" formControlName="quantite" required />
-                      @if (produit.get('quantite')?.hasError('required')) {
-                        <mat-error>Quantité requise</mat-error>
+                      <mat-label>Fournisseur</mat-label>
+                      <mat-select formControlName="fournisseurId" required>
+                        <mat-option [value]="null" disabled>Choisir un fournisseur</mat-option>
+                        @for (fournisseur of fournisseurs; track fournisseur.id) {
+                          <mat-option [value]="fournisseur.id">{{ fournisseur.nom }}</mat-option>
+                        }
+                      </mat-select>
+                      @if (produit.get('fournisseurId')?.hasError('required')) {
+                        <mat-error>Fournisseur requis</mat-error>
                       }
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="form-field">
+                      <mat-label>Quantité</mat-label>
+                      <input matInput type="number" formControlName="quantite" min="1" required />
+                      @if (produit.get('quantite')?.hasError('required')) {
+                        <mat-error>Quantité requise</mat-error>
+                      }
+                      @if (produit.get('quantite')?.hasError('min')) {
+                        <mat-error>La quantité doit être au minimum de 1</mat-error>
+                      }
+                    </mat-form-field>
+                  </div>
+
+                  <div class="form-row">
+                    <mat-form-field appearance="outline" class="form-field">
                       <mat-label>État du produit</mat-label>
-                      <mat-select formControlName="etatProduitId">
-                        <mat-option [value]="null">Non défini</mat-option>
-                        @for (etat of etatsProduits; track etat.id) {
-                          <mat-option [value]="etat.id">
-                            <span class="color-dot" [style.backgroundColor]="etat.couleur_hex"></span>
-                            {{ etat.nom }}
+                      <mat-select formControlName="statusId">
+                        <mat-select-trigger>
+                          <span class="color-dot" [style.backgroundColor]="getStatusColor(produit.get('statusId')?.value)"></span>
+                          {{ getStatusLabel(produit.get('statusId')?.value) }}
+                        </mat-select-trigger>
+                        <mat-option [value]="null">
+                          <span class="color-dot" [style.backgroundColor]="'#9ca3af'"></span>
+                          Non défini
+                        </mat-option>
+                        @for (statut of statuses; track $index) {
+                          <mat-option [value]="statut.id">
+                            <span class="color-dot" [style.backgroundColor]="statut.color"></span>
+                            {{ statut.name }}
                           </mat-option>
                         }
                       </mat-select>
@@ -207,24 +249,59 @@
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Date de métré</mat-label>
-                <input matInput type="date" formControlName="date_metre" />
+                <input matInput [matDatepicker]="metrePicker" formControlName="date_metre" [min]="minDateMetre" />
+                <mat-datepicker-toggle matSuffix [for]="metrePicker"></mat-datepicker-toggle>
+                <mat-datepicker #metrePicker></mat-datepicker>
+                @if (commandeForm.get('date_metre')?.hasError('beforeToday')) {
+                  <mat-error>La date ne peut pas être antérieure à aujourd’hui</mat-error>
+                }
+                @if (commandeForm.hasError('metreBeforeSignature')) {
+                  <mat-error>La date de métré ne peut pas être antérieure à la date de signature</mat-error>
+                }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Date d’avenant</mat-label>
-                <input matInput type="date" formControlName="date_avenant" />
+                <input matInput [matDatepicker]="avenantPicker" formControlName="date_avenant" [min]="minDateAvenant" />
+                <mat-datepicker-toggle matSuffix [for]="avenantPicker"></mat-datepicker-toggle>
+                <mat-datepicker #avenantPicker></mat-datepicker>
+                @if (commandeForm.get('date_avenant')?.hasError('beforeToday')) {
+                  <mat-error>La date ne peut pas être antérieure à aujourd’hui</mat-error>
+                }
+                @if (commandeForm.hasError('avenantBeforeSignature')) {
+                  <mat-error>La date d’avenant ne peut pas être antérieure à la date de signature</mat-error>
+                }
               </mat-form-field>
             </div>
 
             <div class="form-row">
               <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Date limite de pose</mat-label>
-                <input matInput type="date" formControlName="date_limite_pose" />
+                <mat-label>Date de livraison souhaitée</mat-label>
+                <input matInput [matDatepicker]="livraisonPicker" formControlName="date_livraison_souhaitee" [min]="minDateLivraison" />
+                <mat-datepicker-toggle matSuffix [for]="livraisonPicker"></mat-datepicker-toggle>
+                <mat-datepicker #livraisonPicker></mat-datepicker>
+                @if (commandeForm.get('date_livraison_souhaitee')?.hasError('beforeToday')) {
+                  <mat-error>La date ne peut pas être antérieure à aujourd’hui</mat-error>
+                }
+                @if (commandeForm.hasError('livraisonBeforeSignature')) {
+                  <mat-error>La date de livraison ne peut pas être antérieure à la date de signature</mat-error>
+                }
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Date de livraison souhaitée</mat-label>
-                <input matInput type="date" formControlName="date_livraison_souhaitee" />
+                <mat-label>Date limite de pose</mat-label>
+                <input matInput [matDatepicker]="posePicker" formControlName="date_limite_pose" [min]="minDateLimitePose" />
+                <mat-datepicker-toggle matSuffix [for]="posePicker"></mat-datepicker-toggle>
+                <mat-datepicker #posePicker></mat-datepicker>
+                @if (commandeForm.get('date_limite_pose')?.hasError('beforeToday')) {
+                  <mat-error>La date ne peut pas être antérieure à aujourd’hui</mat-error>
+                }
+                @if (commandeForm.hasError('limitePoseBeforeSignature')) {
+                  <mat-error>La date limite de pose ne peut pas être antérieure à la date de signature</mat-error>
+                }
+                @if (commandeForm.hasError('limitePoseBeforeLivraison')) {
+                  <mat-error>La date limite de pose ne peut pas être antérieure à la date de livraison</mat-error>
+                }
               </mat-form-field>
             </div>
           </div>

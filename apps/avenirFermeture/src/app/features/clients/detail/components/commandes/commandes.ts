@@ -209,8 +209,8 @@ export class Commandes implements OnInit {
     const produits = (commande.commandesProduits ?? []).map(item => ({
       typeProduit: item.produit?.nom ?? 'Produit',
       quantite: item.quantite ?? 0,
-      etatProduit: item.etat_produit?.nom ?? 'Non défini',
-      etatCouleur: item.etat_produit?.couleur_hex ?? null,
+      etatProduit: item.status?.name ?? 'Non défini',
+      etatCouleur: item.status?.color ?? null,
       note: item.note ?? null,
       avenant: item.avenant ?? false,
     }));

@@ -7,8 +7,8 @@ import { CreateCommandeDto } from './dto/create-commande.dto';
 import { UpdateCommandeDto } from './dto/update-commande.dto';
 import { Client } from '../clients/entities/client.entity';
 import { Produit } from '../produits/entities/produit.entity';
-import { EtatProduit } from '../etatProduit/entities/etat-produit.entity';
 import { Fournisseur } from '../fournisseurs/entities/fournisseur.entity';
+import { Status } from '../status/entities/status.entity';
 import { CreateCommandeProduitDto } from './dto/create-commande-produit.dto';
 import { StatutCommande } from './commandes.types';
 import { FindCommandesQuery } from './dto/find-commandes.query';
@@ -24,8 +24,8 @@ export class CommandesService {
     private readonly clientRepository: Repository<Client>,
     @InjectRepository(Produit)
     private readonly produitRepository: Repository<Produit>,
-    @InjectRepository(EtatProduit)
-    private readonly etatProduitRepository: Repository<EtatProduit>,
+    @InjectRepository(Status)
+    private readonly statusRepository: Repository<Status>,
     @InjectRepository(Fournisseur)
     private readonly fournisseurRepository: Repository<Fournisseur>,
   ) {}
@@ -74,8 +74,9 @@ export class CommandesService {
       qb.leftJoinAndSelect('commande.client', 'client')
         .leftJoinAndSelect('commande.fournisseur', 'fournisseur')
         .leftJoinAndSelect('commande.commandesProduits', 'commandesProduits')
+        .leftJoinAndSelect('commandesProduits.fournisseur', 'fournisseurProduit')
         .leftJoinAndSelect('commandesProduits.produit', 'produit')
-        .leftJoinAndSelect('commandesProduits.etat_produit', 'etat_produit');
+        .leftJoinAndSelect('commandesProduits.status', 'status');
     }
 
     qb.orderBy('commande.created_at', 'DESC')
@@ -93,8 +94,9 @@ export class CommandesService {
       relations: [
         'fournisseur',
         'commandesProduits',
+        'commandesProduits.fournisseur',
         'commandesProduits.produit',
-        'commandesProduits.etat_produit',
+        'commandesProduits.status',
       ],
       order: { created_at: 'DESC' },
     });
@@ -107,8 +109,9 @@ export class CommandesService {
         'client',
         'fournisseur',
         'commandesProduits',
+        'commandesProduits.fournisseur',
         'commandesProduits.produit',
-        'commandesProduits.etat_produit',
+        'commandesProduits.status',
       ],
     });
     if (!commande) {
@@ -234,33 +237,46 @@ export class CommandesService {
     }
 
     const produitIds = Array.from(new Set(items.map(item => item.produitId)));
-    const etatIds = Array.from(
-      new Set(items.map(item => item.etatProduitId).filter((id): id is number => typeof id === 'number')),
+    const statusIds = Array.from(
+      new Set(items.map(item => item.statusId).filter((id): id is number => typeof id === 'number')),
+    );
+    const fournisseurIds = Array.from(
+      new Set(items.map(item => item.fournisseurId).filter((id): id is number => typeof id === 'number')),
     );
 
     const produits = await this.produitRepository.findBy({ id: In(produitIds) });
-    const etats = etatIds.length
-      ? await this.etatProduitRepository.findBy({ id: In(etatIds) })
+    const statuses = statusIds.length
+      ? await this.statusRepository.findBy({ id: In(statusIds) })
+      : [];
+    const fournisseurs = fournisseurIds.length
+      ? await this.fournisseurRepository.findBy({ id: In(fournisseurIds) })
       : [];
 
     const produitMap = new Map(produits.map(produit => [produit.id, produit]));
-    const etatMap = new Map(etats.map(etat => [etat.id, etat]));
+    const statusMap = new Map(statuses.map(status => [status.id, status]));
+    const fournisseurMap = new Map(fournisseurs.map(fournisseur => [fournisseur.id, fournisseur]));
 
     const missingProduits = produitIds.filter(id => !produitMap.has(id));
     if (missingProduits.length > 0) {
       throw new NotFoundException(`Produit(s) introuvable(s): ${missingProduits.join(', ')}`);
     }
 
-    const missingEtats = etatIds.filter(id => !etatMap.has(id));
-    if (missingEtats.length > 0) {
-      throw new NotFoundException(`Etat produit introuvable: ${missingEtats.join(', ')}`);
+    const missingStatuses = statusIds.filter(id => !statusMap.has(id));
+    if (missingStatuses.length > 0) {
+      throw new NotFoundException(`Statut introuvable: ${missingStatuses.join(', ')}`);
+    }
+
+    const missingFournisseurs = fournisseurIds.filter(id => !fournisseurMap.has(id));
+    if (missingFournisseurs.length > 0) {
+      throw new NotFoundException(`Fournisseur(s) introuvable(s): ${missingFournisseurs.join(', ')}`);
     }
 
     return items.map(item =>
       this.commandeProduitRepository.create({
         produit: produitMap.get(item.produitId) ?? null,
         quantite: Number(item.quantite ?? 0),
-        etat_produit: item.etatProduitId ? etatMap.get(item.etatProduitId) ?? null : null,
+        status: item.statusId ? statusMap.get(item.statusId) ?? null : null,
+        fournisseur: item.fournisseurId ? fournisseurMap.get(item.fournisseurId) ?? null : null,
         note: item.note ?? null,
         avenant: item.avenant ?? false,
       }),

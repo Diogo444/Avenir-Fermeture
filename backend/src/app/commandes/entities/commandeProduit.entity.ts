@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Commande } from './commande.entity';
 import { Produit } from '../../produits/entities/produit.entity';
-import { EtatProduit } from '../../etatProduit/entities/etat-produit.entity';
+import { Fournisseur } from '../../fournisseurs/entities/fournisseur.entity';
+import { Status } from '../../status/entities/status.entity';
 
 @Entity('commande_produits')
 export class CommandeProduit {
@@ -17,8 +18,13 @@ export class CommandeProduit {
   @Column('int')
   quantite: number;
 
-  @ManyToOne(() => EtatProduit, (etat) => etat.commandesProduits, { eager: true, nullable: true })
-  etat_produit: EtatProduit | null;
+  @ManyToOne(() => Status, { eager: true, nullable: true })
+  @JoinColumn({ name: 'status_id' })
+  status: Status | null;
+
+  @ManyToOne(() => Fournisseur, { eager: true, nullable: true })
+  @JoinColumn({ name: 'fournisseur_id' })
+  fournisseur: Fournisseur | null;
 
   @Column({ type: 'text', nullable: true })
   note: string;

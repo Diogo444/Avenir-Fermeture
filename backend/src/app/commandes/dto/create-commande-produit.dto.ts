@@ -1,7 +1,8 @@
 export class CreateCommandeProduitDto {
   produitId: number;
+  fournisseurId?: number | null;
   quantite: number;
-  etatProduitId?: number;
+  statusId?: number | null;
   note?: string;
   avenant?: boolean;
 }

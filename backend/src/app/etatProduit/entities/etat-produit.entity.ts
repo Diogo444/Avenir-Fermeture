@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { CommandeProduit } from "../../commandes/entities/commandeProduit.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('etat_produit')
 export class EtatProduit {
@@ -11,7 +10,4 @@ export class EtatProduit {
 
   @Column({length: 7})
   couleur_hex: string;
-
-  @OneToMany(() => CommandeProduit, (commandeProduit) => commandeProduit.etat_produit)
-  commandesProduits: CommandeProduit[];
 }

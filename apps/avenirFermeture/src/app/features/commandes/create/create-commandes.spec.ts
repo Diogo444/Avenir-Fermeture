@@ -18,7 +18,7 @@ describe('CreateCommandes', () => {
           useValue: {
             getProduits: jest.fn(() => of([])),
             getFournisseurs: jest.fn(() => of([])),
-            getEtatProduits: jest.fn(() => of([])),
+            GetStatus: jest.fn(() => of([])),
             getClientByCode: jest.fn(() => of({ id: 1 })),
             createCommande: jest.fn(() => of({})),
           },

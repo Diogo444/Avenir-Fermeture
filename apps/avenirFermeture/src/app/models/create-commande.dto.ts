@@ -2,8 +2,9 @@ import { StatutCommande, TypeAcompte } from './commandes.model';
 
 export interface CreateCommandeProduitDto {
   produitId: number;
+  fournisseurId: number;
   quantite: number;
-  etatProduitId?: number | null;
+  statusId?: number | null;
   note?: string | null;
   avenant?: boolean;
 }
