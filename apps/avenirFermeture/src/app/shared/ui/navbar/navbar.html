@@ -1,47 +1,66 @@
 <!-- Mobile header (visible on small screens) -->
 <header class="mobile-header">
-  <button class="menu-btn" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isOpen" aria-label="Ouvrir le menu">
-    <mat-icon aria-hidden="true" fontIcon="menu"></mat-icon>
+  <button
+    mat-icon-button
+    type="button"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="isOpen()"
+    aria-label="Ouvrir le menu"
+  >
+    <mat-icon aria-hidden="true">menu</mat-icon>
   </button>
   <span class="app-title">Avenir Fermeture</span>
-  <span></span>
+  <button
+    mat-icon-button
+    type="button"
+    (click)="toggleTheme()"
+    [attr.aria-label]="theme.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+  >
+    <mat-icon aria-hidden="true">{{
+      theme.isDark() ? 'light_mode' : 'dark_mode'
+    }}</mat-icon>
+  </button>
 </header>
 
 <!-- Backdrop for off-canvas menu -->
-<div class="backdrop" *ngIf="isOpen" (click)="closeMenu()" aria-hidden="true"></div>
+@if (isOpen()) {
+  <div class="backdrop" (click)="closeMenu()" aria-hidden="true"></div>
+}
 
 <!-- Sidebar navigation -->
-<nav class="sidebar" [ngClass]="{ open: isOpen }" aria-label="Navigation principale">
+<nav class="sidebar" [class.open]="isOpen()" aria-label="Navigation principale">
   <ul class="nav-list">
-    <a routerLink="/" (click)="onNavigate()">
-      <li class="nav-item" tabindex="0">
-        <mat-icon aria-hidden="true" fontIcon="dashboard"></mat-icon>
-        <span class="label">Tableau de bord / Dashboard</span>
+    @for (item of navItems; track item.route) {
+      <li>
+        <a
+          class="nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.exact }"
+          (click)="onNavigate()"
+        >
+          <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+          <span class="label">{{ item.label }}</span>
+        </a>
       </li>
-    </a>
-    <a routerLink="/clients" (click)="onNavigate()">
-      <li class="nav-item" tabindex="0">
-        <mat-icon aria-hidden="true" fontIcon="person"></mat-icon>
-        <span class="label">Page Clients</span>
-      </li>
-    </a>
-    <a routerLink="/commercial" (click)="onNavigate()">
-      <li class="nav-item" tabindex="0">
-        <mat-icon aria-hidden="true" fontIcon="handshake"></mat-icon>
-        <span class="label">Page Commercial</span>
-      </li>
-    </a>
-    <a routerLink="/comptabilite" (click)="onNavigate()">
-      <li class="nav-item" tabindex="0">
-        <mat-icon aria-hidden="true" fontIcon="attach_money"></mat-icon>
-        <span class="label">Page Comptabilité</span>
-      </li>
-    </a>
-    <a routerLink="/dev-ajout-produit" (click)="onNavigate()">
-      <li class="nav-item" tabindex="0">
-        <mat-icon aria-hidden="true" fontIcon="code"></mat-icon>
-        <span class="label">Ajout produit (dev)</span>
-      </li>
-    </a>
+    }
   </ul>
+
+  <!-- Theme toggle in sidebar (desktop) -->
+  <div class="sidebar-footer">
+    <button
+      mat-button
+      class="theme-toggle-sidebar"
+      type="button"
+      (click)="toggleTheme()"
+      [attr.aria-label]="theme.isDark() ? 'Passer en mode clair' : 'Passer en mode sombre'"
+    >
+      <mat-icon aria-hidden="true">{{
+        theme.isDark() ? 'light_mode' : 'dark_mode'
+      }}</mat-icon>
+      <span class="label">{{
+        theme.isDark() ? 'Mode clair' : 'Mode sombre'
+      }}</span>
+    </button>
+  </div>
 </nav>

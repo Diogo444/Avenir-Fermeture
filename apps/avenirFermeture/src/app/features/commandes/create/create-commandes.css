@@ -2,7 +2,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
-  background-color: #f5f5f5;
+  background-color: var(--app-surface-bg);
   min-height: 100vh;
 }
 
@@ -38,14 +38,14 @@
   align-items: center;
   gap: 12px;
   padding: 12px 0 20px;
-  color: #6b7280;
+  color: var(--app-text-secondary);
 }
 
 .form-section {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--app-border-color);
   border-radius: 8px;
   padding: 20px;
-  background-color: white;
+  background-color: var(--app-card-bg);
 }
 
 .section-title {
@@ -98,10 +98,10 @@
 }
 
 .product-card {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--app-border-color);
   border-radius: 12px;
   padding: 16px;
-  background: #fafafa;
+  background: var(--app-surface-variant);
 }
 
 .product-card-header {
@@ -110,7 +110,7 @@
   justify-content: space-between;
   margin-bottom: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--app-text-primary);
 }
 
 .remove-btn {
@@ -118,7 +118,7 @@
 }
 
 .remove-btn:disabled {
-  color: #bdbdbd;
+  color: var(--app-text-muted);
 }
 
 .color-dot {
@@ -127,7 +127,7 @@
   border-radius: 50%;
   display: inline-block;
   margin-right: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--app-border-color);
 }
 
 .option-icon {
@@ -147,10 +147,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f8fafc;
+  background: var(--app-surface-variant);
   border-radius: 10px;
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--app-border-color);
 }
 
 .summary-value {
@@ -170,15 +170,15 @@
 }
 
 .pill-yes {
-  background: #e3f2fd;
-  color: #1976d2;
-  border-color: #bbdefb;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-color: var(--mat-sys-outline-variant);
 }
 
 .pill-no {
-  background: #f3f4f6;
-  color: #6b7280;
-  border-color: #e5e7eb;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  border-color: var(--mat-sys-outline-variant);
 }
 
 .form-actions {
@@ -186,12 +186,12 @@
   gap: 16px;
   justify-content: flex-end;
   padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--app-divider-color);
   margin-top: 24px;
 }
 
 .reset-btn {
-  color: #666;
+  color: var(--app-text-secondary);
 }
 
 .submit-btn {

@@ -18,7 +18,7 @@
 .clients-header h1 {
   margin: 0;
   font-size: 24px;
-  color: #1e293b; /* slate-800 */
+  color: var(--app-heading-color);
 }
 
 .title-row {
@@ -41,16 +41,24 @@
   min-width: 0; /* allow input to shrink */
 }
 
-.clients-header .search-bar { flex: 1; }
+.clients-header .search-bar {
+  flex: 1;
+}
 
 /* Cible le conteneur interne de mat-form-field pour arrondir les coins */
 .clients-header .search-bar .mdc-notched-outline > * {
   border-radius: 9999px !important;
 }
 
-.title-filter { min-width: 180px; }
+.title-filter {
+  min-width: 180px;
+}
 
-.quick-filters { display: flex; gap: 8px; align-items: center; }
+.quick-filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 .quick-filters .toggle {
   height: 40px;
   border-radius: 9999px;
@@ -96,20 +104,18 @@
 }
 
 .client-list {
-  border: 1px solid #e2e8f0; /* slate-200 */
+  border: 1px solid var(--app-border-color);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .client-list .mat-mdc-list-item {
-  border-bottom: 1px solid #e2e8f0; /* slate-200 */
+  border-bottom: 1px solid var(--app-border-color);
 }
 
 .client-list .mat-mdc-list-item:last-child {
   border-bottom: none;
 }
-
-
 
 /* Applique l'effet hover uniquement sur les lignes de données */
 .mat-row:hover,
@@ -127,10 +133,10 @@
 }
 
 .error-message {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--app-error-bg);
+  color: var(--app-error-text);
   padding: 1rem;
-  border: 1px solid #f5c6cb;
+  border: 1px solid var(--app-error-border);
   border-radius: 0.25rem;
   margin-bottom: 1rem;
 }
@@ -152,13 +158,21 @@
 
 .end-of-list {
   text-align: center;
-  color: #64748b;
+  color: var(--app-text-muted);
   font-size: 13px;
   padding: 8px 0 4px;
 }
 
 @media (max-width: 768px) {
-  .filters-row { grid-template-columns: 1fr; }
-  .title-row { flex-direction: column; gap: 8px; align-items: flex-start; }
-  .search-group { flex-wrap: wrap; }
+  .filters-row {
+    grid-template-columns: 1fr;
+  }
+  .title-row {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .search-group {
+    flex-wrap: wrap;
+  }
 }

@@ -3,7 +3,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: #f5f5f5;
+  background: var(--app-surface-bg);
   min-height: 100vh;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .loading-container p {
-  color: #666;
+  color: var(--app-text-secondary);
   font-size: 16px;
 }
 
@@ -42,11 +42,11 @@
 
 .error-container h2 {
   margin: 0;
-  color: #333;
+  color: var(--app-text-primary);
 }
 
 .error-container p {
-  color: #666;
+  color: var(--app-text-secondary);
 }
 
 /* Header */
@@ -54,11 +54,11 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: white;
+  background: var(--app-card-bg);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--app-shadow-sm);
 }
 
 .back-button {
@@ -76,7 +76,7 @@
   margin: 0;
   font-size: 28px;
   font-weight: 500;
-  color: #333;
+  color: var(--app-text-primary);
 }
 
 .client-code {
@@ -110,9 +110,9 @@
 
 /* Tabs */
 .client-tabs {
-  background: white;
+  background: var(--app-card-bg);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--app-shadow-sm);
 }
 
 /* Responsive Design */

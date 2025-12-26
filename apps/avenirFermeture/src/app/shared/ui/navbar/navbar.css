@@ -7,28 +7,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  background: #0f172a; /* slate-900 */
-  color: #e2e8f0; /* slate-200 */
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--app-surface-bg);
+  color: var(--app-text-primary);
+  border-bottom: 1px solid var(--app-divider-color);
 }
 
-.menu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(148, 163, 184, 0.12);
+.mobile-header button[mat-icon-button] {
   color: inherit;
-  cursor: pointer;
-}
-
-.menu-btn mat-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
 }
 
 .app-title {
@@ -39,12 +24,16 @@
 .sidebar {
   height: 100vh;
   width: 240px;
-  background: #0f172a; /* slate-900 */
-  color: #e2e8f0; /* slate-200 */
+  background: var(--app-surface-bg);
+  color: var(--app-text-primary);
   padding: 16px 12px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--app-divider-color);
 }
-a{
+
+a.nav-item {
   text-decoration: none;
   color: inherit;
 }
@@ -58,6 +47,11 @@ a{
   gap: 8px;
 }
 
+.nav-list > li {
+  margin: 0;
+  padding: 0;
+}
+
 .nav-item {
   display: flex;
   align-items: center;
@@ -67,14 +61,15 @@ a{
   cursor: pointer;
   user-select: none;
   outline: none;
-  transition: background-color 160ms ease, transform 120ms ease, box-shadow 160ms ease;
+  transition: background-color 160ms ease, transform 120ms ease,
+    box-shadow 160ms ease;
 }
 
 .nav-item mat-icon {
   font-size: 22px;
   width: 22px;
   height: 22px;
-  color: #93c5fd; /* blue-300 */
+  color: var(--mat-sys-primary);
 }
 
 .nav-item .label {
@@ -85,15 +80,19 @@ a{
 
 .nav-item:hover,
 .nav-item:focus-visible {
-  background: rgba(148, 163, 184, 0.18); /* slate-400 @ 18% */
+  background: var(--app-surface-variant);
   transform: translateX(2px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--app-shadow-sm);
 }
 
-/* Optional: active state class if you manage selection */
 .nav-item.active {
-  background: rgba(59, 130, 246, 0.18); /* blue-500 @ 18% */
-  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.35);
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  box-shadow: inset 0 0 0 1px var(--mat-sys-outline-variant);
+}
+
+.nav-item.active mat-icon {
+  color: var(--mat-sys-on-primary-container);
 }
 
 /* ---------- Mobile (off-canvas) ---------- */
@@ -128,8 +127,45 @@ a{
   .backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(1px);
     z-index: 900;
   }
+}
+
+/* Sidebar footer with theme toggle */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--app-divider-color);
+}
+
+.theme-toggle-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: background-color 160ms ease, transform 120ms ease;
+}
+
+.theme-toggle-sidebar:hover,
+.theme-toggle-sidebar:focus-visible {
+  background: var(--app-surface-variant);
+  transform: translateX(2px);
+}
+
+.theme-toggle-sidebar mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: var(--mat-sys-primary);
 }

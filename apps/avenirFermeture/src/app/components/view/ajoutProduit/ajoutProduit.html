@@ -1,160 +1,158 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Ajouter un produit</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form (ngSubmit)="onSubmitProduit()">
-      <mat-form-field appearance="fill">
-        <mat-label>Nom du produit</mat-label>
-        <input matInput [(ngModel)]="produitName" name="productName" required />
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">Ajouter</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+<div class="admin-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Ajouter un produit</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmitProduit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom du produit</mat-label>
+          <input matInput [(ngModel)]="produitName" name="productName" required />
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Ajouter</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-<!-- Liste des produits existants -->
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Produits existants</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <ul>
-      <li *ngFor="let produit of produits">{{ produit.nom }}</li>
-    </ul>
-  </mat-card-content>
-</mat-card>
+  <!-- Liste des produits existants -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Produits existants</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li *ngFor="let produit of produits">{{ produit.nom }}</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
 
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Ajouter un commercial</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form (ngSubmit)="onSubmitCommercial()">
-      <mat-form-field appearance="fill">
-        <mat-label>Nom du commercial</mat-label>
-        <input matInput [(ngModel)]="commercialLastName" name="commercialLastName" required />
-      </mat-form-field>
-      <mat-form-field>
-        <mat-label>Prénom du commercial</mat-label>
-        <input matInput [(ngModel)]="commercialFirstName" name="commercialFirstName" required />
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">Ajouter</button>
-    </form>
-  </mat-card-content>
-</mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Ajouter un commercial</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmitCommercial()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom du commercial</mat-label>
+          <input matInput [(ngModel)]="commercialLastName" name="commercialLastName" required />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Prénom du commercial</mat-label>
+          <input matInput [(ngModel)]="commercialFirstName" name="commercialFirstName" required />
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Ajouter</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
-<!-- Liste des commerciaux existants -->
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Commercial existant</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <ul>
-      @for (commercial of commercial; track $index) {
+  <!-- Liste des commerciaux existants -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Commercial existant</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        @for (commercial of commercial; track $index) {
 
-      <li>{{ commercial.lastName }} - {{ commercial.firstName }}</li>
-      }
-    </ul>
-  </mat-card-content>
-</mat-card>
+        <li>{{ commercial.lastName }} - {{ commercial.firstName }}</li>
+        }
+      </ul>
+    </mat-card-content>
+  </mat-card>
 
-<!-- Liste des titres existants -->
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Titre existant</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <ul>
-      @for (titre of titres; track $index) {
+  <!-- Liste des titres existants -->
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Titre existant</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        @for (titre of titres; track $index) {
 
-      <li>{{ titre.name }}</li>
-      }
-    </ul>
-  </mat-card-content>
-</mat-card>
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>Ajouter un titre</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form (ngSubmit)="onSubmitTitre()">
-      <mat-form-field appearance="fill">
-        <mat-label>Nom du titre</mat-label>
-        <input matInput [(ngModel)]="titreName" name="titreName" required />
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit">Ajouter</button>
-    </form>
-  </mat-card-content>
+        <li>{{ titre.name }}</li>
+        }
+      </ul>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Ajouter un titre</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmitTitre()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom du titre</mat-label>
+          <input matInput [(ngModel)]="titreName" name="titreName" required />
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Ajouter</button>
+      </form>
+    </mat-card-content>
 
-  <!-- Ajouter un fournisseur -->
-  <mat-card-header>
-    <mat-card-title>Ajouter un fournisseur</mat-card-title>
-  </mat-card-header>
+    <!-- Ajouter un fournisseur -->
+    <mat-card-header>
+      <mat-card-title>Ajouter un fournisseur</mat-card-title>
+    </mat-card-header>
 
-  <mat-card-content>
-    <form (ngSubmit)="onSubmitFournisseur()">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Nom du fournisseur</mat-label>
-        <input matInput [(ngModel)]="fournisseurName" name="fournisseurName" required />
-      </mat-form-field>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmitFournisseur()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom du fournisseur</mat-label>
+          <input matInput [(ngModel)]="fournisseurName" name="fournisseurName" required />
+        </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit">
-        Ajouter
-      </button>
-    </form>
-  </mat-card-content>
+        <button mat-raised-button color="primary" type="submit">
+          Ajouter
+        </button>
+      </form>
+    </mat-card-content>
 
-  <!-- Liste des fournisseurs -->
-  <mat-card-header>
-    <mat-card-title>Fournisseurs existants</mat-card-title>
-  </mat-card-header>
+    <!-- Liste des fournisseurs -->
+    <mat-card-header>
+      <mat-card-title>Fournisseurs existants</mat-card-title>
+    </mat-card-header>
 
-  <mat-card-content>
-    <ul>
-      @for (fournisseur of fournisseurs; track fournisseur.id) {
-      <li>{{ fournisseur.nom }}</li>
-      }
-    </ul>
-  </mat-card-content>
+    <mat-card-content>
+      <ul>
+        @for (fournisseur of fournisseurs; track fournisseur.id) {
+        <li>{{ fournisseur.nom }}</li>
+        }
+      </ul>
+    </mat-card-content>
 
-  <mat-card-header>
-    <mat-card-title>Ajouter un statut</mat-card-title>
-  </mat-card-header>
+    <mat-card-header>
+      <mat-card-title>Ajouter un statut</mat-card-title>
+    </mat-card-header>
 
-  <mat-card-content>
-    <form (ngSubmit)="onSubmitStatut()">
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Nom du statut</mat-label>
-        <input matInput [(ngModel)]="statutName" name="statutName" required />
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="w-full">
-        <mat-label>Couleur du statut</mat-label>
-        <input matInput type="color" [(ngModel)]="statutColor" name="statutColor" required />
-      </mat-form-field>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmitStatut()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nom du statut</mat-label>
+          <input matInput [(ngModel)]="statutName" name="statutName" required />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Couleur du statut</mat-label>
+          <input matInput type="color" [(ngModel)]="statutColor" name="statutColor" required />
+        </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit">
-        Ajouter
-      </button>
-    </form>
-  </mat-card-content>
-  <!-- Liste des statuts et afficher une boule de couleur pour chaque statut -->
-  <mat-card-header>
-    <mat-card-title>Statuts existants</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <ul>
-      @for (statut of Status; track $index) {
-  <li class="flex items-center gap-2">
-    <span
-      [style.backgroundColor]="statut.color"
-      style="display:inline-block; width:20px; height:20px; border-radius:50%;"
-    ></span>
-    {{ statut.name }}
-  </li>
-}
+        <button mat-raised-button color="primary" type="submit">
+          Ajouter
+        </button>
+      </form>
+    </mat-card-content>
+    <!-- Liste des statuts et afficher une boule de couleur pour chaque statut -->
+    <mat-card-header>
+      <mat-card-title>Statuts existants</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        @for (statut of Status; track $index) {
+        <li class="status-item">
+          <span [style.backgroundColor]="statut.color" class="status-dot"></span>
+          {{ statut.name }}
+        </li>
+        }
 
-    </ul>
-  </mat-card-content>
-</mat-card>
-
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

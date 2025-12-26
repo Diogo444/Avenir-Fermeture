@@ -1,11 +1,19 @@
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+/* eslint-disable @typescript-eslint/no-empty-function */
+import {
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import {MatTableModule} from '@angular/material/table';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ClientsService } from '../../../services/clients.service';
 import { ReferentielsService } from '../../../services/referentiels.service';
@@ -18,12 +26,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { getTitre } from '../../../models/titres.model';
 import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, startWith, tap, takeUntil } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  startWith,
+  tap,
+  takeUntil,
+} from 'rxjs/operators';
 import { PhoneFormatPipe } from '../../../shared/utils/pipes/phone-format.pipe';
-
-
-
-
 
 @Component({
   selector: 'app-clients',
@@ -41,14 +52,22 @@ import { PhoneFormatPipe } from '../../../shared/utils/pipes/phone-format.pipe';
     ReactiveFormsModule,
     NgxIntlTelInputWrapperModule,
     MatProgressSpinnerModule,
-    PhoneFormatPipe
+    PhoneFormatPipe,
   ],
   templateUrl: './clients.html',
   styleUrl: './clients.css',
 })
 export class Clients implements OnInit, OnDestroy {
   client: ClientListItem[] = [];
-  displayedColumns: string[] = ['title', 'lastName', 'firstName', 'email', 'phone', 'city', 'action'];
+  displayedColumns: string[] = [
+    'title',
+    'lastName',
+    'firstName',
+    'email',
+    'phone',
+    'city',
+    'action',
+  ];
 
   isLoading = true;
   isLoadingMore = false;
@@ -96,11 +115,11 @@ export class Clients implements OnInit, OnDestroy {
     this.observer?.disconnect();
     this.observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some(entry => entry.isIntersecting)) {
+        if (entries.some((entry) => entry.isIntersecting)) {
           this.onLoadMoreAnchor();
         }
       },
-      { root: null, rootMargin: '200px', threshold: 0 },
+      { root: null, rootMargin: '200px', threshold: 0 }
     );
     this.observer.observe(value.nativeElement);
   }
@@ -115,11 +134,11 @@ export class Clients implements OnInit, OnDestroy {
     const search$ = this.searchCtrl.valueChanges.pipe(
       startWith(this.searchCtrl.value ?? ''),
       debounceTime(250),
-      distinctUntilChanged(),
+      distinctUntilChanged()
     );
     const title$ = this.titleCtrl.valueChanges.pipe(
       startWith(this.titleCtrl.value ?? ''),
-      distinctUntilChanged(),
+      distinctUntilChanged()
     );
 
     combineLatest([search$, title$, this.hasEmail$, this.hasPhone$])
@@ -127,7 +146,7 @@ export class Clients implements OnInit, OnDestroy {
         tap(() => {
           this.message = null;
         }),
-        takeUntil(this.destroy$),
+        takeUntil(this.destroy$)
       )
       .subscribe(([q, title, hasEmail, hasPhone]) => {
         const query = (q ?? '').trim();
@@ -151,24 +170,26 @@ export class Clients implements OnInit, OnDestroy {
     this.observer?.disconnect();
   }
 
-
-  addClient(){
+  addClient() {
     this.router.navigate(['/cree-client']);
   }
 
-  onClientClick(client: ClientListItem){
+  onClientClick(client: ClientListItem) {
+    localStorage.setItem('code_client', client.code_client.toString());
+    localStorage.setItem('id_client', client.id.toString());
     this.router.navigate([`/one-client/${client.code_client}`]);
   }
 
-  deleteClient(id: number){
+  deleteClient(id: number) {
     this.clientsService.deleteClient(id).subscribe({
       next: () => {
-        this.client = this.client.filter(c => c.id !== id);
+        this.client = this.client.filter((c) => c.id !== id);
       },
       error: (error) => {
-        this.message = "Une erreur est survenue lors de la suppression du client.";
+        this.message =
+          'Une erreur est survenue lors de la suppression du client.';
         console.error(error);
-      }
+      },
     });
   }
 
@@ -236,11 +257,12 @@ export class Clients implements OnInit, OnDestroy {
       .pipe(
         catchError((error) => {
           if (requestId === this.activeRequestId) {
-            this.message = 'Une erreur est survenue lors de la récupération des clients.';
+            this.message =
+              'Une erreur est survenue lors de la récupération des clients.';
           }
           console.error(error);
           return of([] as ClientListItem[]);
-        }),
+        })
       )
       .subscribe((data) => {
         if (requestId !== this.activeRequestId) {

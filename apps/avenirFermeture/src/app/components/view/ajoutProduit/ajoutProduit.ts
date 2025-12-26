@@ -14,6 +14,9 @@ import { CreateFournisseurDto } from '../../../models/create-fournisseur.dto';
 import { Fournisseur } from '../../../models/fournisseur.model';
 import { Status } from '../../../models/status.model';
 
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+
 @Component({
   selector: 'app-ajout-produit',
   imports: [
@@ -23,6 +26,8 @@ import { Status } from '../../../models/status.model';
     FormsModule,
     MatCardModule,
     CommonModule,
+    MatIconModule,
+    MatDividerModule,
   ],
   templateUrl: './ajoutProduit.html',
   styleUrl: './ajoutProduit.css',
@@ -43,7 +48,6 @@ export class AjoutProduit implements OnInit {
   Status: Status[] = [];
   statutName = '';
   statutColor = '#000000';
-
 
   private readonly api = inject(Api);
   private _snackBar = inject(MatSnackBar);
@@ -141,7 +145,9 @@ export class AjoutProduit implements OnInit {
   onSubmitFournisseur() {
     const fournisseurName = this.fournisseurName;
     this.api
-      .createFournisseur({ nom: fournisseurName } satisfies CreateFournisseurDto)
+      .createFournisseur({
+        nom: fournisseurName,
+      } satisfies CreateFournisseurDto)
       .subscribe({
         next: () => {
           this.openSnackBar(
@@ -156,7 +162,7 @@ export class AjoutProduit implements OnInit {
           );
           console.error('Error adding fournisseur:', error);
         },
-      }); 
+      });
   }
 
   getFournisseur() {
@@ -177,7 +183,9 @@ export class AjoutProduit implements OnInit {
         this.statutColor = '#000000';
       },
       error: (error: Error) => {
-        this.openSnackBar("Erreur lors de l'ajout du statut " + statutName + '.');
+        this.openSnackBar(
+          "Erreur lors de l'ajout du statut " + statutName + '.'
+        );
         console.error('Error adding statut:', error);
       },
     });
