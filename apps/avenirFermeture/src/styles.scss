@@ -104,6 +104,11 @@ body {
   --app-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --app-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   
+  // Primary accent backgrounds
+  --app-primary-soft-bg: #e3f2fd;
+  --app-primary-color: #1976d2;
+  --app-hover-overlay: rgba(0, 0, 0, 0.04);
+  
   // Status colors (these stay mostly the same)
   --app-error-bg: #f8d7da;
   --app-error-text: #721c24;
@@ -128,6 +133,10 @@ body {
     --app-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
     --app-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
     
+    --app-primary-soft-bg: rgba(33, 150, 243, 0.15);
+    --app-primary-color: #64b5f6;
+    --app-hover-overlay: rgba(255, 255, 255, 0.05);
+    
     --app-error-bg: #450a0a;
     --app-error-text: #fca5a5;
     --app-error-border: #7f1d1d;
@@ -151,6 +160,10 @@ html.dark-theme {
   --app-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
   --app-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
   
+  --app-primary-soft-bg: rgba(33, 150, 243, 0.15);
+  --app-primary-color: #64b5f6;
+  --app-hover-overlay: rgba(255, 255, 255, 0.05);
+  
   --app-error-bg: #450a0a;
   --app-error-text: #fca5a5;
   --app-error-border: #7f1d1d;
@@ -172,6 +185,10 @@ html.light-theme {
   
   --app-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --app-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  --app-primary-soft-bg: #e3f2fd;
+  --app-primary-color: #1976d2;
+  --app-hover-overlay: rgba(0, 0, 0, 0.04);
   
   --app-error-bg: #f8d7da;
   --app-error-text: #721c24;

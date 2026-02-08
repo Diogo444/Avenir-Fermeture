@@ -80,8 +80,8 @@
 }
 
 .client-code {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: var(--app-primary-soft-bg);
+  color: var(--app-primary-color);
   padding: 4px 12px;
   border-radius: 16px;
   font-size: 14px;

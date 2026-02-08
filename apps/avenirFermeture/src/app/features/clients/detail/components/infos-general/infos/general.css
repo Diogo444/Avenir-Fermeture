@@ -8,13 +8,15 @@
 
 /* Carte Infos */
 .info-card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--app-shadow-sm);
   border-radius: 8px;
   transition: box-shadow 0.3s ease;
+  background: var(--app-card-bg);
+  border: 1px solid var(--app-border-color);
 }
 
 .info-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--app-shadow-md);
 }
 
 /* En-tête de carte */
@@ -28,12 +30,17 @@ mat-card-header mat-icon[mat-card-avatar] {
   font-size: 32px;
   width: 40px;
   height: 40px;
-  color: #1976d2;
-  background: #e3f2fd;
+  color: var(--app-primary-color);
+  background: var(--app-primary-soft-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+mat-card-title {
+  color: var(--app-heading-color);
+  font-weight: 500;
 }
 
 /* Grille d'infos */
@@ -48,17 +55,19 @@ mat-card-header mat-icon[mat-card-avatar] {
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  background: #f9f9f9;
+  background: var(--app-surface-variant);
   border-radius: 8px;
   transition: background 0.2s ease;
+  border: 1px solid var(--app-border-color);
 }
 
 .info-item:hover {
-  background: #f0f0f0;
+  background: var(--app-card-bg);
+  border-color: var(--app-primary-color);
 }
 
 .info-item mat-icon {
-  color: #1976d2;
+  color: var(--app-primary-color);
   margin-top: 2px;
 }
 
@@ -71,7 +80,7 @@ mat-card-header mat-icon[mat-card-avatar] {
 
 .info-label {
   font-size: 12px;
-  color: #666;
+  color: var(--app-text-secondary);
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 0.5px;
@@ -79,7 +88,7 @@ mat-card-header mat-icon[mat-card-avatar] {
 
 .info-value {
   font-size: 16px;
-  color: #333;
+  color: var(--app-text-primary);
   font-weight: 400;
 }
 
