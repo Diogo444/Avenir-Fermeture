@@ -1,4 +1,7 @@
+import { IsString, IsNotEmpty } from 'class-validator';
+
 export class CreateProduitDto {
-  id: number;
+  @IsString()
+  @IsNotEmpty()
   nom: string;
 }

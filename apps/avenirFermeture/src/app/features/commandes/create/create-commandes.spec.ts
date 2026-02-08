@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CreateCommandes } from './create-commandes';
-import { Api } from '../../../services/api/api';
+import { ProduitsService } from '../../../services/produits.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
+import { ClientsService } from '../../../services/clients.service';
+import { CommandesService } from '../../../services/commandes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -14,14 +17,23 @@ describe('CreateCommandes', () => {
       imports: [CreateCommandes],
       providers: [
         {
-          provide: Api,
+          provide: ProduitsService,
+          useValue: { getProduits: jest.fn(() => of([])) },
+        },
+        {
+          provide: ReferentielsService,
           useValue: {
-            getProduits: jest.fn(() => of([])),
             getFournisseurs: jest.fn(() => of([])),
-            GetStatus: jest.fn(() => of([])),
-            getClientByCode: jest.fn(() => of({ id: 1 })),
-            createCommande: jest.fn(() => of({})),
+            getStatus: jest.fn(() => of([])),
           },
+        },
+        {
+          provide: ClientsService,
+          useValue: { getClientByCode: jest.fn(() => of({ id: 1 })) },
+        },
+        {
+          provide: CommandesService,
+          useValue: { createCommande: jest.fn(() => of({})) },
         },
         { provide: MatSnackBar, useValue: { open: jest.fn() } },
         { provide: Router, useValue: { navigate: jest.fn() } },

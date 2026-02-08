@@ -10,8 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import {MatRadioModule} from '@angular/material/radio';
 
 import { CommonModule } from '@angular/common';
-import { Api } from '../../../services/api/api';
-import { Router } from '@angular/router';
+import { ClientsService } from '../../../services/clients.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CreateClientDto } from '../../../models/create-client.dto';
 
 import { CountryISO, ChangeData } from 'ngx-intl-tel-input';
@@ -52,7 +53,9 @@ export class EditClient implements OnInit {
 
   clientForm!: FormGroup;
   private fb = inject(FormBuilder);
-  private api = inject(Api);
+  private clientsService = inject(ClientsService);
+  private referentielsService = inject(ReferentielsService);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private _snackBar = inject(MatSnackBar);
 
@@ -74,14 +77,14 @@ export class EditClient implements OnInit {
   }
 
   getTitre() {
-    this.api.getTitres().subscribe((titles) => {
+    this.referentielsService.getTitres().subscribe((titles) => {
 
       this.title = titles;
     });
   }
   getClientsByCodeClient(code_client: string) {
     this.isLoading = true;
-    this.api.getClientByCode(code_client).subscribe({
+    this.clientsService.getClientByCode(code_client).subscribe({
       next: (client) => {
         this.clientData = client;
         // Initialiser le formulaire après avoir récupéré les données
@@ -101,13 +104,12 @@ export class EditClient implements OnInit {
 
 
   ngOnInit(): void {
-    // le code client ce trouve dans le localStorage avec le nom code_client
-    const code_client = localStorage.getItem('code_client');
+    const code_client = this.route.snapshot.paramMap.get('code-client');
     if (code_client) {
       this.getTitre();
       this.getClientsByCodeClient(code_client);
     } else {
-      console.error('Aucun code client trouvé dans le localStorage.');
+      console.error('Aucun code client trouvé dans la route.');
       this.router.navigate(['/clients']);
     }
   }
@@ -173,7 +175,7 @@ export class EditClient implements OnInit {
 
 
 
-      this.api.updateClient(this.clientData.code_client, payload).subscribe({
+      this.clientsService.updateClient(this.clientData.code_client, payload).subscribe({
         next: () => {
           this.openSnackBar('Le client ' + rawValue.firstName + ' ' + rawValue.lastName + ' a bien été mis à jour !');
           this.router.navigate([`/one-client/${rawValue.codeClient}`]);

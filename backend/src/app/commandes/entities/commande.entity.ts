@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -18,6 +19,7 @@ export class Commande {
   // faire la relation avec l'id client
   @ManyToOne(() => Client, (client) => client.commandes)
   @JoinColumn({ name: 'client_id' })
+  @Index()
   client: Client;
 
   @Column({ unique: true })
@@ -30,6 +32,7 @@ export class Commande {
   numero_devis: string;
 
   @Column({ type: 'date' })
+  @Index()
   date_signature: Date;
 
   @Column('decimal', { precision: 10, scale: 2 })
@@ -50,6 +53,7 @@ export class Commande {
     enum: StatutCommande,
     default: StatutCommande.EN_COURS,
   })
+  @Index()
   statut_commande: StatutCommande;
 
   @Column({ type: 'boolean', default: false })

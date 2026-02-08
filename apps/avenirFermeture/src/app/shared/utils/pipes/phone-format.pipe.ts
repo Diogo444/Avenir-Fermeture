@@ -6,20 +6,20 @@ import { PhoneNumberUtil, PhoneNumberFormat } from 'google-libphonenumber';
   standalone: true
 })
 export class PhoneFormatPipe implements PipeTransform {
-  transform(phoneNumber: string | null | undefined): string {
-    const phoneUtil = PhoneNumberUtil.getInstance();
+  private readonly phoneUtil = PhoneNumberUtil.getInstance();
 
+  transform(phoneNumber: string | null | undefined): string {
     if (phoneNumber == null || phoneNumber.trim() === '') {
       return '';
     }
 
     try {
-      const number = phoneUtil.parseAndKeepRawInput(phoneNumber, 'FR');
-      if (phoneUtil.isValidNumber(number)) {
-        return phoneUtil.format(number, PhoneNumberFormat.NATIONAL);
+      const number = this.phoneUtil.parseAndKeepRawInput(phoneNumber, 'FR');
+      if (this.phoneUtil.isValidNumber(number)) {
+        return this.phoneUtil.format(number, PhoneNumberFormat.NATIONAL);
       }
       return phoneNumber;
-    } catch (e) {
+    } catch {
       return phoneNumber;
     }
   }

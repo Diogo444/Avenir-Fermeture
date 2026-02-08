@@ -18,11 +18,11 @@ export class CommandeProduit {
   @Column('int')
   quantite: number;
 
-  @ManyToOne(() => Status, { eager: true, nullable: true })
+  @ManyToOne(() => Status, { nullable: true })
   @JoinColumn({ name: 'status_id' })
   status: Status | null;
 
-  @ManyToOne(() => Fournisseur, { eager: true, nullable: true })
+  @ManyToOne(() => Fournisseur, { nullable: true })
   @JoinColumn({ name: 'fournisseur_id' })
   fournisseur: Fournisseur | null;
 

@@ -24,7 +24,7 @@ export class ClientsService {
 
     let titre: Titre | null = null;
     if (typeof titleId !== 'undefined') {
-      if (titleId !== null && titleId !== '') {
+      if (titleId !== null) {
         const normalizedId = this.normalizeId(titleId);
         if (normalizedId === null) {
           throw new NotFoundException(`Titre invalide`);
@@ -43,7 +43,6 @@ export class ClientsService {
 
     const clientData: Partial<Client> = {
       ...rest,
-      ...(rest.code_postal && { code_postal: +rest.code_postal }),
       ...(titre ? { title: titre } : {}),
     };
 
@@ -190,7 +189,7 @@ export class ClientsService {
 
     let titre: Titre | undefined;
     if (typeof titleId !== 'undefined') {
-      if (titleId === null || titleId === '') {
+      if (titleId === null) {
         titre = undefined; // do not change relation if empty
       } else {
         const normalizedId = this.normalizeId(titleId);
@@ -213,7 +212,6 @@ export class ClientsService {
 
     const clientToUpdate: Partial<Client> = {
       ...rest,
-      ...(rest.code_postal && { code_postal: +rest.code_postal }),
       ...((typeof titleId !== 'undefined' || typeof titleName !== 'undefined') && titre ? { title: titre } : {}),
     };
 

@@ -17,7 +17,6 @@ export class FournisseursController {
 
   @Post()
   create(@Body() dto: CreateFournisseurDto) {
-    console.log('BODY =>', dto);
     return this.fournisseursService.create(dto);
   }
 

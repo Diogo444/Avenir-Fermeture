@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,10 +12,8 @@ export class StatusService {
     private statusRepository: Repository<Status>,
   ){}
   create(createStatusDto: CreateStatusDto) {
-    if (!createStatusDto?.name || `${createStatusDto.name}`.trim() === '') {
-      throw new BadRequestException('name is required');
-    }
-    return this.statusRepository.save(createStatusDto);
+    const status = this.statusRepository.create(createStatusDto);
+    return this.statusRepository.save(status);
   }
 
   findAll() {

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-// import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProduitsModule } from './produits/produits.module';
@@ -16,16 +17,22 @@ import { StatusModule } from './status/status.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306', 10),
-      username: process.env.DB_USER || 'root',
-      password: process.env.DB_PASS || '',
-      database: process.env.DB_NAME || 'avenir_fermeture',
-      autoLoadEntities: true,
-      synchronize: process.env.DB_SYNC === 'true',
-      logging: process.env.TYPEORM_LOGGING === 'true',
+    ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'mysql',
+        host: config.get<string>('DB_HOST', 'localhost'),
+        port: config.get<number>('DB_PORT', 3306),
+        username: config.get<string>('DB_USER', 'root'),
+        password: config.get<string>('DB_PASS', ''),
+        database: config.get<string>('DB_NAME', 'avenir_fermeture'),
+        autoLoadEntities: true,
+        synchronize: config.get<string>('DB_SYNC', 'false') === 'true',
+        logging: config.get<string>('TYPEORM_LOGGING', 'false') === 'true',
+      }),
     }),
     ProduitsModule,
     DashboardModule,

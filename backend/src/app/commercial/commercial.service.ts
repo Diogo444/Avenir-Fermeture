@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommercialDto } from './dto/create-commercial.dto';
 import { UpdateCommercialDto } from './dto/update-commercial.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,8 +20,12 @@ export class CommercialService {
     return this.commercialRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} commercial`;
+  async findOne(id: number) {
+    const commercial = await this.commercialRepository.findOneBy({ id });
+    if (!commercial) {
+      throw new NotFoundException(`Commercial #${id} introuvable`);
+    }
+    return commercial;
   }
 
   update(id: number, updateCommercialDto: UpdateCommercialDto) {

@@ -15,7 +15,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
-import { Api } from '../../../services/api/api';
+import { ProduitsService } from '../../../services/produits.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
+import { ClientsService } from '../../../services/clients.service';
+import { CommandesService } from '../../../services/commandes.service';
 import { Produit } from '../../../models/produit.model';
 import { Fournisseur } from '../../../models/fournisseur.model';
 import { Status } from '../../../models/status.model';
@@ -51,7 +54,10 @@ interface AcompteOption {
 })
 export class CreateCommandes implements OnInit {
   private fb = inject(FormBuilder);
-  private api = inject(Api);
+  private produitsService = inject(ProduitsService);
+  private referentielsService = inject(ReferentielsService);
+  private clientsService = inject(ClientsService);
+  private commandesService = inject(CommandesService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
@@ -192,7 +198,7 @@ export class CreateCommandes implements OnInit {
     };
 
     this.isSubmitting = true;
-    this.api
+    this.commandesService
       .createCommande(payload)
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
@@ -263,9 +269,9 @@ export class CreateCommandes implements OnInit {
   private loadSelects(): void {
     this.isLoading = true;
     forkJoin({
-      produits: this.api.getProduits().pipe(catchError(() => of([] as Produit[]))),
-      fournisseurs: this.api.getFournisseurs().pipe(catchError(() => of([] as Fournisseur[]))),
-      statuses: this.api.GetStatus().pipe(catchError(() => of([] as Status[]))),
+      produits: this.produitsService.getProduits().pipe(catchError(() => of([] as Produit[]))),
+      fournisseurs: this.referentielsService.getFournisseurs().pipe(catchError(() => of([] as Fournisseur[]))),
+      statuses: this.referentielsService.getStatus().pipe(catchError(() => of([] as Status[]))),
     })
       .pipe(finalize(() => {
         this.isLoading = false;
@@ -291,7 +297,7 @@ export class CreateCommandes implements OnInit {
     if (!this.codeClient) {
       return;
     }
-    this.api.getClientByCode(this.codeClient).subscribe({
+    this.clientsService.getClientByCode(this.codeClient).subscribe({
       next: client => {
         this.clientId = client.id;
       },

@@ -45,8 +45,8 @@ export class Client {
   @Column()
   rue: string;
 
-  @Column()
-  code_postal: number;
+  @Column({ type: 'varchar', length: 10 })
+  code_postal: string;
 
   @Column()
   ville: string;

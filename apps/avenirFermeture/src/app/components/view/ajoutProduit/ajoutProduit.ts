@@ -4,7 +4,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { Api } from '../../../services/api/api';
+import { ProduitsService } from '../../../services/produits.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
 import { Produit } from '../../../models/produit.model';
 import { CommonModule } from '@angular/common';
 import { Commercial } from '../../../models/commercial.model';
@@ -49,7 +50,8 @@ export class AjoutProduit implements OnInit {
   statutName = '';
   statutColor = '#000000';
 
-  private readonly api = inject(Api);
+  private readonly produitsService = inject(ProduitsService);
+  private readonly referentielsService = inject(ReferentielsService);
   private _snackBar = inject(MatSnackBar);
 
   durationInSeconds = 5;
@@ -61,7 +63,7 @@ export class AjoutProduit implements OnInit {
   }
 
   onSubmitProduit() {
-    this.api.ajoutProduit({ nom: this.produitName } as Produit).subscribe({
+    this.produitsService.ajoutProduit({ nom: this.produitName } as Produit).subscribe({
       next: () => {
         this.openSnackBar(
           'Le produit ' + this.produitName + ' a bien été ajouté !'
@@ -78,7 +80,7 @@ export class AjoutProduit implements OnInit {
     this.produitName = '';
   }
   onSubmitCommercial() {
-    this.api
+    this.referentielsService
       .createCommercial({
         firstName: this.commercialFirstName,
         lastName: this.commercialLastName,
@@ -111,25 +113,25 @@ export class AjoutProduit implements OnInit {
   }
 
   getProduit() {
-    this.api.getProduits().subscribe((produits) => {
+    this.produitsService.getProduits().subscribe((produits) => {
       this.produits = produits;
     });
   }
   getCommercial() {
-    this.api.getCommercials().subscribe((commercials) => {
+    this.referentielsService.getCommercials().subscribe((commercials) => {
       this.commercial = commercials;
     });
   }
 
   getTitres() {
-    this.api.getTitres().subscribe((titres) => {
+    this.referentielsService.getTitres().subscribe((titres) => {
       this.titres = titres;
     });
   }
 
   onSubmitTitre() {
     const titreName = this.titreName;
-    this.api.ajoutTitre({ name: titreName } as getTitre).subscribe({
+    this.referentielsService.ajoutTitre({ name: titreName } as getTitre).subscribe({
       next: () => {
         this.openSnackBar('Le titre ' + titreName + ' a bien été ajouté !');
         this.getTitres();
@@ -144,7 +146,7 @@ export class AjoutProduit implements OnInit {
 
   onSubmitFournisseur() {
     const fournisseurName = this.fournisseurName;
-    this.api
+    this.referentielsService
       .createFournisseur({
         nom: fournisseurName,
       } satisfies CreateFournisseurDto)
@@ -166,16 +168,15 @@ export class AjoutProduit implements OnInit {
   }
 
   getFournisseur() {
-    this.api.getFournisseurs().subscribe((fournisseurs) => {
+    this.referentielsService.getFournisseurs().subscribe((fournisseurs) => {
       this.fournisseurs = fournisseurs;
-      console.log(this.fournisseurs);
     });
   }
 
   onSubmitStatut() {
     const statutName = this.statutName;
     const statutColor = this.statutColor;
-    this.api.CreateStatus({ name: statutName, color: statutColor }).subscribe({
+    this.referentielsService.createStatus({ name: statutName, color: statutColor }).subscribe({
       next: () => {
         this.openSnackBar('Le statut ' + statutName + ' a bien été ajouté !');
         this.getStatus();
@@ -192,9 +193,8 @@ export class AjoutProduit implements OnInit {
   }
 
   getStatus() {
-    this.api.GetStatus().subscribe((status) => {
+    this.referentielsService.getStatus().subscribe((status) => {
       this.Status = status;
-      console.log(this.Status);
     });
   }
 

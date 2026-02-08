@@ -10,7 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import {MatRadioModule} from '@angular/material/radio';
 
 import { CommonModule } from '@angular/common';
-import { Api } from '../../../services/api/api';
+import { ClientsService } from '../../../services/clients.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
 import { Router } from '@angular/router';
 import { CreateClientDto } from '../../../models/create-client.dto';
 
@@ -49,7 +50,8 @@ export class AddClient implements OnInit {
 
   clientForm!: FormGroup;
   private fb = inject(FormBuilder);
-  private api = inject(Api);
+  private clientsService = inject(ClientsService);
+  private referentielsService = inject(ReferentielsService);
   private router = inject(Router);
   private _snackBar = inject(MatSnackBar);
 
@@ -71,7 +73,7 @@ export class AddClient implements OnInit {
   }
 
   getTitre() {
-    this.api.getTitres().subscribe((titles) => {
+    this.referentielsService.getTitres().subscribe((titles) => {
 
       this.title = titles;
     });
@@ -134,15 +136,13 @@ export class AddClient implements OnInit {
 
 
 
-      this.api.createClient(payload).subscribe({
+      this.clientsService.createClient(payload).subscribe({
         next: () => {
           this.openSnackBar('Le client ' + rawValue.firstName + ' ' + rawValue.lastName + ' a bien été ajouté !');
           this.router.navigate(['/clients']);
         },
         error: (err) => {
           this.openSnackBar("Erreur lors de l'ajout du client " + rawValue.firstName + ' ' + rawValue.lastName + '.');
-          console.error('Erreur lors de la creation du client', err);
-
           console.error('Erreur lors de la creation du client', err);
         }
       });

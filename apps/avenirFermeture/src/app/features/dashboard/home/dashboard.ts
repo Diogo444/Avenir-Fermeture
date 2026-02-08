@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
-import { Api } from '../../../services/api/api';
+import { ClientsService } from '../../../services/clients.service';
 import { NumberClients } from '../../../models/number_clients.model';
 
 
@@ -16,7 +16,7 @@ import { NumberClients } from '../../../models/number_clients.model';
 })
 export class Dashboard implements OnInit{
   client_number: NumberClients | null = null;
-  private readonly api = inject(Api)
+  private readonly clientsService = inject(ClientsService)
 
   // Plans d'action
   weekActions = [
@@ -67,7 +67,7 @@ export class Dashboard implements OnInit{
   ];
 
   ngOnInit(): void {
-      this.api.getNumberClients().subscribe({
+      this.clientsService.getNumberClients().subscribe({
         next: (data) => {
           this.client_number = data;
 
