@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTreeModule } from '@angular/material/tree';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { catchError, finalize, of } from 'rxjs';
 import { CommandesService } from '../../../../../services/commandes.service';
 import { Client } from '../../../../../models/clients.model';
@@ -21,6 +21,7 @@ interface OrderProductDetail {
   quantite: number;
   etatProduit: string;
   etatCouleur: string | null;
+  fournisseur: string;
   note?: string | null;
   avenant: boolean;
 }
@@ -43,6 +44,7 @@ interface OrderDetails {
 }
 
 interface OrderNode {
+  id: number;
   type: 'order';
   reference: string;
   status: OrderStatus;
@@ -51,6 +53,7 @@ interface OrderNode {
 }
 
 interface OrderDetailNode {
+  id: number;
   type: 'detail';
   reference: string;
   status: OrderStatus;
@@ -78,7 +81,6 @@ const ACOMPTE_LABELS: Record<TypeAcompte, string> = {
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
     MatIconModule,
     MatChipsModule,
     MatButtonModule,
@@ -93,6 +95,7 @@ const ACOMPTE_LABELS: Record<TypeAcompte, string> = {
 export class Commandes implements OnInit {
   @Input() client!: Client;
   private commandesService = inject(CommandesService);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
   private allOrders: OrderNode[] = [];
   private readonly currencyFormatter = new Intl.NumberFormat('fr-FR', {
@@ -125,6 +128,38 @@ export class Commandes implements OnInit {
 
   get totalAvenants(): number {
     return this.allOrders.reduce((total, order) => total + order.details.avenantsCount, 0);
+  }
+
+  goToCreateCommande(): void {
+    const codeClient = this.client?.code_client || localStorage.getItem('code_client') || '';
+    if (codeClient) {
+      this.router.navigate([`/one-client/${codeClient}/create-commande`]);
+      return;
+    }
+    this.router.navigate(['/one-client/create-commande']);
+  }
+
+  editCommande(orderId: number): void {
+    const codeClient = this.client?.code_client || localStorage.getItem('code_client') || '';
+    if (!codeClient) {
+      return;
+    }
+    this.router.navigate([`/one-client/${codeClient}/edit-commande/${orderId}`]);
+  }
+
+  deleteCommande(orderId: number, reference: string): void {
+    const confirmed = confirm(`Supprimer la commande "${reference}" ?`);
+    if (!confirmed) {
+      return;
+    }
+    this.commandesService.deleteCommande(orderId).subscribe({
+      next: () => {
+        this.loadCommandes();
+      },
+      error: () => {
+        alert('La commande n’a pas pu être supprimée.');
+      },
+    });
   }
 
   private loadCommandes() {
@@ -171,7 +206,7 @@ export class Commandes implements OnInit {
       }
 
       const produitsText = order.details.produits
-        .map(produit => [produit.typeProduit, produit.note ?? '', produit.etatProduit].join(' '))
+        .map(produit => [produit.typeProduit, produit.fournisseur, produit.note ?? '', produit.etatProduit].join(' '))
         .join(' ');
 
       const haystack = [
@@ -211,6 +246,7 @@ export class Commandes implements OnInit {
       quantite: item.quantite ?? 0,
       etatProduit: item.status?.name ?? 'Non défini',
       etatCouleur: item.status?.color ?? null,
+      fournisseur: item.fournisseur?.nom ?? commande.fournisseur?.nom ?? '-',
       note: item.note ?? null,
       avenant: item.avenant ?? false,
     }));
@@ -233,6 +269,7 @@ export class Commandes implements OnInit {
     };
 
     const orderNode: OrderNode = {
+      id: commande.id,
       type: 'order',
       reference: commande.reference_commande,
       status: STATUS_LABELS[commande.statut_commande] ?? 'En cours',
@@ -242,6 +279,7 @@ export class Commandes implements OnInit {
 
     orderNode.children = [
       {
+        id: orderNode.id,
         type: 'detail',
         reference: orderNode.reference,
         status: orderNode.status,

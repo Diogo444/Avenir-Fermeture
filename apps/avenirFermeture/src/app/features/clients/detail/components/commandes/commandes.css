@@ -246,6 +246,17 @@ button[mat-raised-button] {
   gap: 10px;
 }
 
+.order-action-btn {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  color: var(--mat-sys-primary);
+}
+
+.order-action-btn.danger {
+  color: #c62828;
+}
+
 .status-pill {
   font-size: 12px;
   font-weight: 600;
@@ -299,11 +310,6 @@ button[mat-raised-button] {
   border-radius: 10px;
   padding: 12px;
   box-shadow: var(--app-shadow-sm);
-}
-
-.detail-card-avenants {
-  background: var(--app-surface-variant);
-  border-color: var(--mat-sys-primary);
 }
 
 .detail-card-products {
@@ -464,32 +470,6 @@ button[mat-raised-button] {
   background: var(--mat-sys-surface-container-high);
   color: var(--mat-sys-on-surface-variant);
   border-color: var(--mat-sys-outline-variant);
-}
-
-.avenants-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.avenants-count,
-.dp-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.dp-panel {
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--mat-sys-primary-container);
-}
-
-.dp-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--mat-sys-on-primary-container);
 }
 
 /* Empty state */

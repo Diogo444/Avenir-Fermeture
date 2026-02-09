@@ -19,7 +19,19 @@ export class CommandesService {
     return this.http.get<Commande[]>(`${this.apiurl}/commandes/client/${clientId}`);
   }
 
+  getCommandeById(id: number) {
+    return this.http.get<Commande>(`${this.apiurl}/commandes/${id}`);
+  }
+
   createCommande(commande: CreateCommandeDto) {
     return this.http.post<Commande>(`${this.apiurl}/commandes`, commande);
+  }
+
+  updateCommande(id: number, commande: CreateCommandeDto) {
+    return this.http.patch<Commande>(`${this.apiurl}/commandes/${id}`, commande);
+  }
+
+  deleteCommande(id: number) {
+    return this.http.delete<{ deleted: boolean }>(`${this.apiurl}/commandes/${id}`);
   }
 }

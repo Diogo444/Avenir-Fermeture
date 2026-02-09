@@ -5,7 +5,7 @@ import { ReferentielsService } from '../../../services/referentiels.service';
 import { ClientsService } from '../../../services/clients.service';
 import { CommandesService } from '../../../services/commandes.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 describe('CreateCommandes', () => {
@@ -33,10 +33,15 @@ describe('CreateCommandes', () => {
         },
         {
           provide: CommandesService,
-          useValue: { createCommande: jest.fn(() => of({})) },
+          useValue: {
+            createCommande: jest.fn(() => of({})),
+            getCommandeById: jest.fn(() => of(null)),
+            updateCommande: jest.fn(() => of({})),
+          },
         },
         { provide: MatSnackBar, useValue: { open: jest.fn() } },
         { provide: Router, useValue: { navigate: jest.fn() } },
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } },
       ],
     }).compileComponents();
 

@@ -36,6 +36,14 @@ export const appRoutes: Route[] = [
     loadComponent: () => import('./features/commandes/create/create-commandes').then(m => m.CreateCommandes),
   },
   {
+    path: 'one-client/:code-client/create-commande',
+    loadComponent: () => import('./features/commandes/create/create-commandes').then(m => m.CreateCommandes),
+  },
+  {
+    path: 'one-client/:code-client/edit-commande/:commandeId',
+    loadComponent: () => import('./features/commandes/create/create-commandes').then(m => m.CreateCommandes),
+  },
+  {
     path: 'one-client/:code-client',
     loadComponent: () => import('./features/clients/detail/one-client').then(m => m.OneClientComponent),
     resolve: {

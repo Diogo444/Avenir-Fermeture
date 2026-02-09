@@ -4,7 +4,7 @@
       <mat-icon>inventory_2</mat-icon>
       <h2>Commandes</h2>
     </div>
-    <button mat-raised-button color="primary" [routerLink]="['/one-client/create-commande']">
+    <button mat-raised-button color="primary" (click)="goToCreateCommande()">
       <mat-icon>add</mat-icon>
       Créer une commande
     </button>
@@ -118,6 +118,10 @@
                       </span>
                     </div>
                     <div class="product-row">
+                      <span class="label">Fournisseur</span>
+                      <span class="value">{{ produit.fournisseur }}</span>
+                    </div>
+                    <div class="product-row">
                       <span class="label">Avenant</span>
                       <span class="value">{{ produit.avenant ? 'Oui' : 'Non' }}</span>
                     </div>
@@ -145,8 +149,14 @@
               <span class="value">{{ node.details.typeAcompte }}</span>
             </div>
             <div class="detail-row">
-              <span class="label">Fournisseur</span>
-              <span class="value">{{ node.details.fournisseur }}</span>
+              <span class="label">Total lié à la commande</span>
+              <span class="value">{{ node.details.avenantsCount }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Permis / DP</span>
+              <span class="pill" [class.pill-yes]="node.details.permisDp" [class.pill-no]="!node.details.permisDp">
+                {{ node.details.permisDp ? 'Oui' : 'Non' }}
+              </span>
             </div>
           </div>
 
@@ -173,24 +183,6 @@
             </div>
           </div>
 
-          <div class="detail-card detail-card-avenants">
-            <div class="detail-title">
-              <mat-icon>bookmarks</mat-icon>
-              <span>Avenants</span>
-            </div>
-            <div class="avenants-summary">
-              <div class="avenants-count">
-                <span class="label">Total lié à la commande</span>
-                <span class="value">{{ node.details.avenantsCount }}</span>
-              </div>
-              <div class="dp-panel">
-                <span class="dp-label">Permis / DP</span>
-                <span class="pill" [class.pill-yes]="node.details.permisDp" [class.pill-no]="!node.details.permisDp">
-                  {{ node.details.permisDp ? 'Oui' : 'Non' }}
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </mat-tree-node>
@@ -205,6 +197,24 @@
         <div class="order-header">
           <div class="order-ref">{{ node.reference }}</div>
           <div class="order-badges">
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Modifier la commande"
+              class="order-action-btn"
+              (click)="$event.stopPropagation(); editCommande(node.id)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Supprimer la commande"
+              class="order-action-btn danger"
+              (click)="$event.stopPropagation(); deleteCommande(node.id, node.reference)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
             <span
               class="status-pill"
               [class.status-in-progress]="node.status === 'En cours'"

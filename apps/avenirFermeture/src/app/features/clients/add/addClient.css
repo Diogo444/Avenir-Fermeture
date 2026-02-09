@@ -146,7 +146,7 @@
   width: 100%;
   height: 56px;
   display: block;
-  border: 1px solid rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 4px;
   background: transparent;
   transition: all 0.2s ease-in-out;
@@ -154,19 +154,19 @@
 
 /* Hover state */
 :host ::ng-deep .mat-like-field .iti:hover {
-  border-color: rgba(0, 0, 0, 0.87);
+  border-color: var(--mat-sys-outline);
 }
 
 /* Focus state */
 :host ::ng-deep .mat-like-field .iti:focus-within {
-  border-color: #3f51b5;
+  border-color: var(--mat-sys-primary);
   border-width: 2px;
   box-shadow: none;
 }
 
 /* Focus label color */
 .form-field:focus-within label.mat-label {
-  color: #3f51b5;
+  color: var(--mat-sys-primary);
 }
 
 /* Flag container */
@@ -195,7 +195,7 @@
   pointer-events: none;
   user-select: none;
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--app-text-primary);
   margin-left: 8px;
 }
 
@@ -208,7 +208,8 @@
   box-shadow: none !important;
   padding: 0 16px 0 105px !important;
   background: transparent !important;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--app-text-primary);
+  -webkit-text-fill-color: var(--app-text-primary);
   font-size: 16px;
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
@@ -216,7 +217,7 @@
 }
 
 :host ::ng-deep .mat-like-field input.custom-intl-input::placeholder {
-  color: rgba(0, 0, 0, 0.42);
+  color: var(--app-text-muted);
   opacity: 1;
   font-size: 16px;
 }
@@ -225,7 +226,7 @@
 :host ::ng-deep .mat-like-field .iti__arrow {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 5px solid rgba(0, 0, 0, 0.54);
+  border-top: 5px solid var(--app-text-secondary);
   margin-left: 6px;
 }
 

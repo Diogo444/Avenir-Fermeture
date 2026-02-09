@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, forkJoin, of } from 'rxjs';
 import { ProduitsService } from '../../../services/produits.service';
 import { ReferentielsService } from '../../../services/referentiels.service';
@@ -23,7 +23,7 @@ import { Produit } from '../../../models/produit.model';
 import { Fournisseur } from '../../../models/fournisseur.model';
 import { Status } from '../../../models/status.model';
 import { CreateCommandeDto } from '../../../models/create-commande.dto';
-import { TypeAcompte } from '../../../models/commandes.model';
+import { Commande, TypeAcompte } from '../../../models/commandes.model';
 
 interface AcompteOption {
   value: TypeAcompte;
@@ -54,6 +54,7 @@ interface AcompteOption {
 })
 export class CreateCommandes implements OnInit {
   private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
   private produitsService = inject(ProduitsService);
   private referentielsService = inject(ReferentielsService);
   private clientsService = inject(ClientsService);
@@ -70,6 +71,9 @@ export class CreateCommandes implements OnInit {
   isSubmitting = false;
   codeClient = '';
   clientId: number | null = null;
+  commandeId: number | null = null;
+  isEditMode = false;
+  private loadedCommande: Commande | null = null;
 
   readonly today = this.startOfDay(new Date());
 
@@ -81,10 +85,14 @@ export class CreateCommandes implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.codeClient = localStorage.getItem('code_client') || '';
+    const routeCodeClient = this.route.snapshot.paramMap.get('code-client');
+    const routeCommandeId = this.route.snapshot.paramMap.get('commandeId');
+    this.codeClient = routeCodeClient || localStorage.getItem('code_client') || '';
+    this.commandeId = routeCommandeId ? Number(routeCommandeId) : null;
+    this.isEditMode = this.commandeId !== null && !Number.isNaN(this.commandeId);
     this.initializeForm();
     this.resolveClientId();
-    this.loadSelects();
+    this.loadInitialData();
   }
 
   get produitsArray(): FormArray {
@@ -95,23 +103,38 @@ export class CreateCommandes implements OnInit {
     return this.produitsArray.controls.filter(control => control.get('avenant')?.value).length;
   }
 
-  get minDateSignature(): Date {
+  get minDateSignature(): Date | null {
+    if (this.isEditMode) {
+      return null;
+    }
     return this.today;
   }
 
-  get minDateMetre(): Date {
+  get minDateMetre(): Date | null {
+    if (this.isEditMode) {
+      return null;
+    }
     return this.maxDate(this.today, this.commandeForm?.get('date_signature')?.value);
   }
 
-  get minDateAvenant(): Date {
+  get minDateAvenant(): Date | null {
+    if (this.isEditMode) {
+      return null;
+    }
     return this.maxDate(this.today, this.commandeForm?.get('date_signature')?.value);
   }
 
-  get minDateLivraison(): Date {
+  get minDateLivraison(): Date | null {
+    if (this.isEditMode) {
+      return null;
+    }
     return this.maxDate(this.today, this.commandeForm?.get('date_signature')?.value);
   }
 
-  get minDateLimitePose(): Date {
+  get minDateLimitePose(): Date | null {
+    if (this.isEditMode) {
+      return null;
+    }
     const livraison = this.commandeForm?.get('date_livraison_souhaitee')?.value;
     const signature = this.commandeForm?.get('date_signature')?.value;
     return this.maxDate(this.today, livraison ?? signature);
@@ -144,7 +167,7 @@ export class CreateCommandes implements OnInit {
       return;
     }
 
-    const clientId = this.clientId ?? this.parseStoredClientId();
+    const clientId = this.clientId ?? this.loadedCommande?.client?.id ?? this.parseStoredClientId();
     if (!clientId) {
       this.openSnackBar('Client introuvable. Rechargez la page du client.');
       return;
@@ -198,21 +221,29 @@ export class CreateCommandes implements OnInit {
     };
 
     this.isSubmitting = true;
-    this.commandesService
-      .createCommande(payload)
+    const request$ =
+      this.isEditMode && this.commandeId
+        ? this.commandesService.updateCommande(this.commandeId, payload)
+        : this.commandesService.createCommande(payload);
+
+    request$
       .pipe(finalize(() => (this.isSubmitting = false)))
       .subscribe({
         next: () => {
-          this.openSnackBar('La commande a bien été créée.');
+          this.openSnackBar(this.isEditMode ? 'La commande a bien été modifiée.' : 'La commande a bien été créée.');
           this.router.navigate([`/one-client/${this.codeClient}`]);
         },
         error: () => {
-          this.openSnackBar("La commande n’a pas pu être créée.");
+          this.openSnackBar(this.isEditMode ? 'La commande n’a pas pu être modifiée.' : "La commande n’a pas pu être créée.");
         },
       });
   }
 
   onReset(): void {
+    if (this.isEditMode && this.loadedCommande) {
+      this.patchFormForEdit(this.loadedCommande);
+      return;
+    }
     this.commandeForm.reset({
       type_acompte: 'SIGNATURE',
       permis_dp: false,
@@ -266,26 +297,106 @@ export class CreateCommandes implements OnInit {
     });
   }
 
-  private loadSelects(): void {
+  private loadInitialData(): void {
     this.isLoading = true;
-    forkJoin({
+    const selects$ = forkJoin({
       produits: this.produitsService.getProduits().pipe(catchError(() => of([] as Produit[]))),
       fournisseurs: this.referentielsService.getFournisseurs().pipe(catchError(() => of([] as Fournisseur[]))),
       statuses: this.referentielsService.getStatus().pipe(catchError(() => of([] as Status[]))),
-    })
+    });
+
+    if (this.isEditMode && this.commandeId) {
+      forkJoin({
+        selects: selects$,
+        commande: this.commandesService.getCommandeById(this.commandeId).pipe(catchError(() => of(null))),
+      })
+        .pipe(finalize(() => {
+          this.isLoading = false;
+        }))
+        .subscribe(({ selects, commande }) => {
+          this.applySelects(selects.produits, selects.fournisseurs, selects.statuses);
+          if (!commande) {
+            this.openSnackBar('Commande introuvable.');
+            this.onClose();
+            return;
+          }
+          this.patchFormForEdit(commande);
+        });
+      return;
+    }
+
+    selects$
       .pipe(finalize(() => {
         this.isLoading = false;
       }))
       .subscribe(({ produits, fournisseurs, statuses }) => {
-        this.produits = produits;
-        this.fournisseurs = fournisseurs;
-        this.statuses = statuses;
-        this.statusById = new Map(
-          statuses
-            .filter((status): status is Status & { id: number } => typeof status.id === 'number')
-            .map(status => [status.id, status]),
-        );
+        this.applySelects(produits, fournisseurs, statuses);
       });
+  }
+
+  private applySelects(produits: Produit[], fournisseurs: Fournisseur[], statuses: Status[]) {
+    this.produits = produits;
+    this.fournisseurs = fournisseurs;
+    this.statuses = statuses;
+    this.statusById = new Map(
+      statuses
+        .filter((status): status is Status & { id: number } => typeof status.id === 'number')
+        .map(status => [status.id, status]),
+    );
+  }
+
+  private patchFormForEdit(commande: Commande): void {
+    this.loadedCommande = commande;
+    this.clientId = commande.client?.id ?? this.clientId;
+    if (commande.client?.code_client) {
+      this.codeClient = commande.client.code_client;
+    }
+
+    if (this.clientId) {
+      localStorage.setItem('id_client', String(this.clientId));
+    }
+    if (this.codeClient) {
+      localStorage.setItem('code_client', this.codeClient);
+    }
+
+    this.commandeForm.patchValue({
+      reference_commande: commande.reference_commande ?? '',
+      numero_devis: commande.numero_devis ?? '',
+      numero_commande_interne: commande.numero_commande_interne ?? '',
+      date_signature: this.normalizeToStartOfDayDate(commande.date_signature),
+      montant_ht: commande.montant_ht ?? null,
+      montant_ttc: commande.montant_ttc ?? null,
+      type_acompte: commande.type_acompte ?? 'SIGNATURE',
+      permis_dp: !!commande.permis_dp,
+      commentaires: commande.commentaires ?? '',
+      date_metre: this.normalizeToStartOfDayDate(commande.date_metre),
+      date_avenant: this.normalizeToStartOfDayDate(commande.date_avenant),
+      date_limite_pose: this.normalizeToStartOfDayDate(commande.date_limite_pose),
+      date_livraison_souhaitee: this.normalizeToStartOfDayDate(commande.date_livraison_souhaitee),
+    });
+
+    while (this.produitsArray.length > 0) {
+      this.produitsArray.removeAt(0);
+    }
+
+    const produits = commande.commandesProduits ?? [];
+    if (produits.length === 0) {
+      this.produitsArray.push(this.createProduitGroup());
+      return;
+    }
+
+    for (const produit of produits) {
+      this.produitsArray.push(
+        this.fb.group({
+          produitId: [produit.produit?.id ?? null, [Validators.required]],
+          fournisseurId: [produit.fournisseur?.id ?? commande.fournisseur?.id ?? null, [Validators.required]],
+          quantite: [produit.quantite ?? 1, [Validators.required, Validators.min(1)]],
+          statusId: [produit.status?.id ?? null],
+          note: [produit.note ?? ''],
+          avenant: [!!produit.avenant],
+        }),
+      );
+    }
   }
 
   private resolveClientId(): void {
@@ -322,6 +433,9 @@ export class CreateCommandes implements OnInit {
   }
 
   private readonly notBeforeTodayValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    if (this.isEditMode) {
+      return null;
+    }
     const date = this.normalizeToStartOfDayDate(control.value);
     if (!date) {
       return null;

@@ -2,8 +2,8 @@
   <mat-card class="commande-form-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>post_add</mat-icon>
-        Créer une commande
+        <mat-icon>{{ isEditMode ? 'edit_note' : 'post_add' }}</mat-icon>
+        {{ isEditMode ? 'Modifier une commande' : 'Créer une commande' }}
       </mat-card-title>
       <button mat-icon-button class="close-btn" (click)="onClose()">
         <mat-icon>close</mat-icon>
@@ -336,9 +336,9 @@
               @if (isSubmitting) {
                 <mat-spinner diameter="18"></mat-spinner>
               } @else {
-                <mat-icon>save</mat-icon>
+                <mat-icon>{{ isEditMode ? 'edit' : 'save' }}</mat-icon>
               }
-              Enregistrer la commande
+              {{ isEditMode ? 'Enregistrer les modifications' : 'Enregistrer la commande' }}
             </button>
           </div>
         </form>
