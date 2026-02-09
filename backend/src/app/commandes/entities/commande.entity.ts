@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Client } from '../../clients/entities/client.entity';
+import { Client } from '../../Clients/entities/client.entity';
 import { CommandeProduit } from './commandeProduit.entity';
 import { Fournisseur } from '../../fournisseurs/entities/fournisseur.entity';
 import { StatutCommande, TypeAcompte } from '../commandes.types';

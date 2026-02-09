@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Client } from '../clients/entities/client.entity';
+import { Client } from '../Clients/entities/client.entity';
 
 @Injectable()
 export class DashboardService {

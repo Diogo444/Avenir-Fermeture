@@ -4,7 +4,7 @@ import { CommandesController } from './commandes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Commande } from './entities/commande.entity';
 import { CommandeProduit } from './entities/commandeProduit.entity';
-import { Client } from '../clients/entities/client.entity';
+import { Client } from '../Clients/entities/client.entity';
 import { Produit } from '../produits/entities/produit.entity';
 import { Fournisseur } from '../fournisseurs/entities/fournisseur.entity';
 import { Status } from '../status/entities/status.entity';

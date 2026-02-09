@@ -7,7 +7,7 @@ import { ProduitsModule } from './produits/produits.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CommercialModule } from './commercial/commercial.module';
 
-import { ClientsModule } from './clients/clients.module';
+import { ClientsModule } from './Clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TitresModule } from './titres/titres.module';
 import { CommandesModule } from './commandes/commandes.module';
